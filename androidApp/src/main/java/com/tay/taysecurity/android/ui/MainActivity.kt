@@ -1,48 +1,32 @@
 package com.tay.taysecurity.android.ui
 
-import android.content.BroadcastReceiver
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
-import android.telephony.PhoneStateListener
-import android.telephony.TelephonyManager
-import android.util.Log
+import android.telecom.TelecomManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.tay.taysecurity.android.component.Navigation
 import com.tay.taysecurity.android.utils.MyApplicationTheme
-import com.tay.taysecurity.android.utils.tayToast
+
 
 class MainActivity : ComponentActivity() {
 
-
-    private val broadcast = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val telephonyManager: TelephonyManager = context?.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager;
+    private val REQUEST_CODE_SET_DEFAULT_DIALER = 123
 
 
-            telephonyManager.listen(object: PhoneStateListener(){
-                override fun onCallStateChanged(state: Int, phoneNumber: String?) {
-                    super.onCallStateChanged(state, phoneNumber)
-                    when (state) {
-                        TelephonyManager.CALL_STATE_IDLE -> {
-                            Log.d("TAGTay","not llamada")
-                            tayToast("not llamada")
-                        }
-                        TelephonyManager.CALL_STATE_RINGING -> {
-                            Log.d("TAGTay", "entrada")
-                            tayToast(" entrada")
-                        }
-                        TelephonyManager.CALL_STATE_OFFHOOK -> {
-                            tayToast(" en la llamada")
-                        }
-                    }
-                }
-            }, PhoneStateListener.LISTEN_CALL_STATE);
+    companion object {
+        fun newInstance(context: Context){
+            context.startActivity(Intent(context,MainActivity::class.java))
         }
+    }
 
+
+    override fun onStart() {
+        super.onStart()
+        checkDefaultDialer()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,13 +38,29 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-       // registerReceiver(broadcast, filter)
+    override fun onActivityResult(requestCode: Int, resultCode: Int,data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SET_DEFAULT_DIALER) {
+            checkSetDefaultDialerResult(resultCode)
+        }
     }
 
-    override fun onPause() {
-        super.onPause()
-       // unregisterReceiver(broadcast)
+    private fun checkDefaultDialer() {
+        val telecomManager = getSystemService(TELECOM_SERVICE) as TelecomManager
+        val isAlreadyDefaultDialer = this.packageName == telecomManager.defaultDialerPackage
+        if (!isAlreadyDefaultDialer) {
+            val intent = Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
+                .putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, this.packageName)
+            this.startActivityForResult(intent, REQUEST_CODE_SET_DEFAULT_DIALER)
+        }
+    }
+
+    private fun checkSetDefaultDialerResult(resultCode: Int) {
+        val message = when (resultCode) {
+            RESULT_OK -> "User accepted request to become default dialer"
+            RESULT_CANCELED -> "User declined request to become default dialer"
+            else -> "Unexpected result code: $resultCode"
+        }
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

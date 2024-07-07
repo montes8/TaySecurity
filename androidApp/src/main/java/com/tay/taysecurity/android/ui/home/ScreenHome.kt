@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.ScreenIdentifier
+import com.tay.taysecurity.android.utils.manager.TaySureCall
 
 @Composable
 fun ScreenHome(navController: NavController){
@@ -51,7 +52,8 @@ fun ScreenHome(navController: NavController){
                 border = BorderStroke(1.dp, Color.White),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.black)),
                 onClick = {
-                    navController.navigate(ScreenIdentifier.BlockingCallScreen.route)
+                    TaySureCall.taySureFinalizeCall()
+                  //  navController.navigate(ScreenIdentifier.BlockingCallScreen.route)
                 }) {
                 Text(text = "Configuración de llamada", color = Color.White,
                     style = typography.bodyMedium,

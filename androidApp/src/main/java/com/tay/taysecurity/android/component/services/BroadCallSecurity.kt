@@ -1,6 +1,5 @@
 package com.tay.taysecurity.android.component.services
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -11,7 +10,6 @@ import com.tay.taysecurity.android.utils.tayToast
 
 class BroadCallSecurity : BroadcastReceiver() {
 
-    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     override fun onReceive(context: Context?, intent: Intent?) {
         val state = intent!!.getStringExtra(TelephonyManager.EXTRA_STATE)
         when (state) {
@@ -20,12 +18,20 @@ class BroadCallSecurity : BroadcastReceiver() {
                 context?.tayToast("not llamada")
             }
             TelephonyManager.EXTRA_STATE_RINGING -> {
+                val bundle = intent.extras
+                val phoneNr = bundle!!.getString("incoming_number")
+                Log.e("TAGTay", "incoming number : $phoneNr")
                 Log.d("TAGTay", "entrada")
                 context?.tayToast(" entrada")
+
+
             }
             TelephonyManager.EXTRA_STATE_OFFHOOK -> {
                 context?.tayToast(" en la llamada")
             }
         }
     }
+
+
+
 }
