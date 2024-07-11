@@ -1,5 +1,10 @@
 package com.tay.taysecurity.android.ui.home
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.telecom.Call
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -26,11 +32,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.tay.taysecurity.android.R
-import com.tay.taysecurity.android.component.ScreenIdentifier
 import com.tay.taysecurity.android.utils.manager.TaySureCall
+import com.tay.taysecurity.android.utils.uiTayDialedNumber
+import com.tay.taysecurity.android.utils.uiTayViewDialedNumber
 
 @Composable
 fun ScreenHome(navController: NavController){
+    val context = LocalContext.current
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row (modifier = Modifier
@@ -52,7 +61,12 @@ fun ScreenHome(navController: NavController){
                 border = BorderStroke(1.dp, Color.White),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.black)),
                 onClick = {
-                    TaySureCall.taySureFinalizeCall()
+                    context.uiTayViewDialedNumber()
+                     val i = Intent()
+                     i.setClass(context, Call::class.java)
+                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(i)
+                    //TaySureCall.taySureFinalizeCall()
                   //  navController.navigate(ScreenIdentifier.BlockingCallScreen.route)
                 }) {
                 Text(text = "Configuración de llamada", color = Color.White,
@@ -73,7 +87,6 @@ fun ScreenHome(navController: NavController){
                     fontSize = 16.sp)
             }
         }
-
 
     }
 
