@@ -1,10 +1,8 @@
 package com.tay.taysecurity.android.component.services
 
-import android.content.Intent
 import android.telecom.Call
 import android.telecom.InCallService
 import android.util.Log
-import com.tay.taysecurity.android.ui.MainActivity
 import com.tay.taysecurity.android.utils.manager.TaySureCall
 
 
@@ -14,6 +12,7 @@ class TaySureCallService : InCallService() {
         super.onCallAdded(call)
         TaySureCall.taySureCall =  call
         Log.d("TAGTay","onCallAdded")
+        Log.d("TAGTay", "TaySureCall : ${TaySureCall.taySureNumber}")
        // val i = Intent()
        // i.setClass(this, Call::class.java)
        // i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

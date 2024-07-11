@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.telephony.TelephonyManager
 import android.util.Log
+import com.tay.taysecurity.android.utils.manager.TaySureCall
 import com.tay.taysecurity.android.utils.tayToast
 
 
@@ -19,7 +20,8 @@ class BroadCallSecurity : BroadcastReceiver() {
             }
             TelephonyManager.EXTRA_STATE_RINGING -> {
                 val bundle = intent.extras
-                val phoneNr = bundle!!.getString("incoming_number")
+                val phoneNr = bundle?.getString("incoming_number")?:""
+                TaySureCall.taySureNumber = phoneNr
                 Log.e("TAGTay", "incoming number : $phoneNr")
                 Log.d("TAGTay", "entrada")
                 context?.tayToast(" entrada")
