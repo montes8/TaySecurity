@@ -30,7 +30,7 @@ fun BottomNavigationBar(
 
     ) {
         items.forEach { screen ->
-            var selected = currentRoute == screen.route
+            val selected = currentRoute == screen.route
             BottomNavigationItem(
                 selectedContentColor = Color.Yellow,
                 unselectedContentColor = Color.White,

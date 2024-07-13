@@ -1,4 +1,4 @@
-package com.tay.taysecurity.android.ui.home
+package com.tay.taysecurity.android.ui.home.extra
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
