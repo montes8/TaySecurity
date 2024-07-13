@@ -1,6 +1,5 @@
 package com.tay.taysecurity.android.ui.home.blocking
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,11 +17,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.tay.taysecurity.android.R
 
 @Composable
 fun BlockingScreen(
@@ -30,8 +31,8 @@ fun BlockingScreen(
 
     val checkedCall = remember { mutableStateOf(false) }
     val checkedCallTotal = remember { mutableStateOf(false) }
-    val checkedMesage = remember { mutableStateOf(false) }
-    val checkedMesageTotal = remember { mutableStateOf(false) }
+    val checkedMessage = remember { mutableStateOf(false) }
+    val checkedMessageTotal = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -40,8 +41,10 @@ fun BlockingScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Configuración de contactos",
-            style = TextStyle(color = Color.Black, fontSize = 20.sp, fontFamily = FontFamily.Default)
+            text = "Configuración de \nbloqueos",
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+            fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -53,12 +56,15 @@ fun BlockingScreen(
                     .padding(16.dp)) {
                     Text(
                         text = "Bloqueo de llamadas",
-                        style = TextStyle(color = Color.Black, fontSize = 20.sp, fontFamily = FontFamily.Default),
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                         color = Color.White
                     )
                     Text(
+                        modifier = Modifier.padding( top = 2.dp),
                         text = "Esta opción bloqueara las llamadas entrantes no registradas en tus contactos",
-                        style = TextStyle(color = Color.Black, fontSize = 10.sp, fontFamily = FontFamily.Default),
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
                         color = Color.White
                     )
                 }
@@ -87,12 +93,15 @@ fun BlockingScreen(
                     .padding(16.dp)) {
                     Text(
                         text = "Bloqueo de llamadas total",
-                        style = TextStyle(color = Color.Black, fontSize = 20.sp, fontFamily = FontFamily.Default),
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                         color = Color.White
                     )
                     Text(
+                        modifier = Modifier.padding( top = 2.dp),
                         text = "Esta opción bloqueara total las llamadas entrantes en su telfono",
-                        style = TextStyle(color = Color.Black, fontSize = 10.sp, fontFamily = FontFamily.Default),
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
                         color = Color.White
                     )
                 }
@@ -121,20 +130,23 @@ fun BlockingScreen(
                     .padding(16.dp)) {
                     Text(
                         text = "Bloqueo de mensajes",
-                        style = TextStyle(color = Color.Black, fontSize = 20.sp, fontFamily = FontFamily.Default),
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                         color = Color.White
                     )
                     Text(
+                        modifier = Modifier.padding( top = 2.dp),
                         text = "Esta opción bloqueara las mensaje entrantes no registradas en tus contactos",
-                        style = TextStyle(color = Color.Black, fontSize = 10.sp, fontFamily = FontFamily.Default),
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
                         color = Color.White
                     )
                 }
                 Switch(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = checkedMesage.value,
+                    checked = checkedMessage.value,
                     onCheckedChange = {
-                        checkedMesage.value = it
+                        checkedMessage.value = it
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
                         checkedTrackColor = Color.White,
@@ -155,20 +167,23 @@ fun BlockingScreen(
                     .padding(16.dp)) {
                     Text(
                         text = "Bloqueo de mensajes total",
-                        style = TextStyle(color = Color.Black, fontSize = 20.sp, fontFamily = FontFamily.Default),
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                         color = Color.White
                     )
                     Text(
+                        modifier = Modifier.padding( top = 2.dp),
                         text = "Esta opción bloqueara todos los mensaje entrantes en su telefono",
-                        style = TextStyle(color = Color.Black, fontSize = 10.sp, fontFamily = FontFamily.Default),
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
                         color = Color.White
                     )
                 }
                 Switch(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = checkedMesageTotal.value,
+                    checked = checkedMessageTotal.value,
                     onCheckedChange = {
-                        checkedMesageTotal.value = it
+                        checkedMessageTotal.value = it
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
                         checkedTrackColor = Color.White,
