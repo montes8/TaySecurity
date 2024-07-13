@@ -34,17 +34,17 @@ fun Drawer(
 ) {
     Column {
         Image(
-            painter = painterResource(id = R.drawable.bg),
+            painter = painterResource(id = R.drawable.ic_bg_header),
             contentDescription = "Bg Image",
             modifier = Modifier
-                .height(160.dp)
+                .height(200.dp)
                 .fillMaxWidth(),
-            contentScale = ContentScale.FillWidth
+            contentScale = ContentScale.FillBounds
         )
 
         Spacer(modifier = Modifier
             .fillMaxWidth()
-            .height(15.dp))
+            .height(8.dp))
 
         val currentRoute = currentRoute(navController)
         items.forEach { item ->
@@ -73,22 +73,22 @@ fun DrawerItem(
             .height(56.dp)
             .padding(6.dp)
             .clip(RoundedCornerShape(12))
-            .background(if (selected) Color.Blue.copy(alpha = 0.25f) else Color.Transparent)
+            .background(if (selected) Color.Black else Color.Transparent)
             .padding(8.dp)
             .clickable { onItemClick(item) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            modifier = Modifier.size(32.dp),
+            modifier = Modifier.size(24.dp),
             imageVector = item.icon,
             contentDescription = item.title,
-            tint = if(selected) Color.Blue else Color.Gray
+            tint = if(selected) Color.White else Color.Gray
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text= item.title,
             style = TextStyle(fontSize = 18.sp),
-            color = if(selected) Color.Blue else Color.Black
+            color = if(selected) Color.White else Color.Black
         )
     }
 }

@@ -42,11 +42,12 @@ class MainActivity : ComponentActivity() {
             val systemUiController = rememberSystemUiController()
             val darkMode = remember { mutableStateOf(false) }
 
-            SideEffect {
+            //color de status bar
+           /* SideEffect {
                 systemUiController.setStatusBarColor(
                     color = Color(0xFF46E68D)
                 )
-            }
+            }*/
 
             MyApplicationTheme(
                 darkTheme = darkMode.value
