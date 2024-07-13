@@ -45,11 +45,22 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation(projects.shared)
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.material3)
-    implementation(libs.androidx.activity.compose)
-    debugImplementation(libs.compose.ui.tooling)
+    implementation("androidx.compose.ui:ui:1.4.0")
+    implementation("androidx.compose.ui:ui-tooling:1.4.0")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.4.0")
+    implementation("androidx.compose.foundation:foundation:1.4.0")
+    implementation("androidx.compose.material:material:1.4.0")
+    implementation("androidx.activity:activity-compose:1.7.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.16.0")
+
+    implementation("com.google.android.material:material:1.6.0")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.2.0")
+    implementation("com.airbnb.android:lottie-compose:4.2.1")
+    implementation("androidx.compose.material:material-icons-extended:1.2.0")
+    implementation("androidx.navigation:navigation-compose:2.4.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.2.0")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 }
 
 kapt {

@@ -1,47 +1,41 @@
 package com.tay.taysecurity.android.ui.home
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.telecom.Call
+import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Text
+import androidx.compose.material.DrawerValue
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarResult
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.rememberDrawerState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.tay.taysecurity.android.R
-import com.tay.taysecurity.android.utils.manager.TaySureCall
-import com.tay.taysecurity.android.utils.uiTayDialedNumber
-import com.tay.taysecurity.android.utils.uiTayViewDialedNumber
+import androidx.navigation.compose.rememberNavController
+import com.tay.taysecurity.android.component.BottomNavigationBar
+import com.tay.taysecurity.android.component.Dialog
+import com.tay.taysecurity.android.component.Drawer
+import com.tay.taysecurity.android.component.TopBar
+import com.tay.taysecurity.android.component.navigation.Destinations
+import com.tay.taysecurity.android.component.navigation.NavigationHost
+import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ScreenHome(navController: NavController){
+fun ScreenHome( darkMode: MutableState<Boolean>){
     val context = LocalContext.current
 
 
-    Column(modifier = Modifier.fillMaxSize()) {
+  /*  Column(modifier = Modifier.fillMaxSize()) {
         Row (modifier = Modifier
             .fillMaxWidth()
             .height(56.dp).padding(top = 24.dp)
@@ -88,6 +82,62 @@ fun ScreenHome(navController: NavController){
             }
         }
 
+    }*/
+
+
+
+    val navController = rememberNavController()
+    val scaffoldState = rememberScaffoldState(
+        drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    )
+    val scope = rememberCoroutineScope()
+    val openDialog = remember { mutableStateOf(false) }
+
+    val navigationItems = listOf(
+        Destinations.Pantalla1,
+        Destinations.Pantalla2,
+        Destinations.Pantalla3
+    )
+
+    Scaffold(
+        scaffoldState = scaffoldState,
+        bottomBar = { BottomNavigationBar(navController = navController, items = navigationItems) },
+        floatingActionButton = { FloatingActionButton(onClick = {}) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = "Fab Icon")
+        } },
+        isFloatingActionButtonDocked = false,
+        floatingActionButtonPosition = FabPosition.End,
+        topBar = {
+            TopBar(
+                scope,
+                scaffoldState,
+                openDialog = { openDialog.value = true  },
+                displaySnackBar = {
+                    scope.launch {
+                        val resultado = scaffoldState.snackbarHostState.showSnackbar(
+                            message = "Nuevo SnackBar!",
+                            duration = SnackbarDuration.Short,
+                            actionLabel = "Aceptar"
+                        )
+
+                        when(resultado){
+                            SnackbarResult.ActionPerformed -> {
+                                Log.d("MainActivity", "Snackbar Accionado")
+                            }
+                            SnackbarResult.Dismissed -> {
+                                Log.d("MainActivity", "Snackbar Ignorado")
+                            }
+                        }
+                    }
+                }
+            )
+        },
+        drawerContent = { Drawer(scope, scaffoldState, navController, items = navigationItems) },
+        drawerGesturesEnabled = true
+    ){
+        NavigationHost(navController, darkMode)
     }
+
+    Dialog(showDialog = openDialog.value, dismissDialog = { openDialog.value = false })
 
 }

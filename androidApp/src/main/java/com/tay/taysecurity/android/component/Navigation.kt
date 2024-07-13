@@ -16,7 +16,7 @@ fun Navigation() {
         route = ROOT_GRAPH_ROUTE) {
 
         composable(route = ScreenIdentifier.HomeScreen.route) {
-            ScreenHome(navController = navController)
+           // ScreenHome()
         }
 
         composable(route = ScreenIdentifier.BlockingCallScreen.route) {

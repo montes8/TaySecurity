@@ -8,7 +8,13 @@ import android.telecom.TelecomManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.tay.taysecurity.android.component.Navigation
+import com.tay.taysecurity.android.ui.home.ScreenHome
 import com.tay.taysecurity.android.utils.MyApplicationTheme
 
 
@@ -31,11 +37,28 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+            val systemUiController = rememberSystemUiController()
+            val darkMode = remember { mutableStateOf(false) }
+
+            SideEffect {
+                systemUiController.setStatusBarColor(
+                    color = Color(0xFF46E68D)
+                )
+            }
+
+            MyApplicationTheme(
+                darkTheme = darkMode.value
+            ){
+                ScreenHome(darkMode)
+            }
+        }
+       /* setContent {
             MyApplicationTheme {
                 Navigation()
             }
-        }
+        }*/
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int,data: Intent?) {
