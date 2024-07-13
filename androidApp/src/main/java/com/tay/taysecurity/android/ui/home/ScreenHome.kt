@@ -1,14 +1,11 @@
 package com.tay.taysecurity.android.ui.home
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarResult
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.rememberDrawerState
@@ -19,19 +16,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.dev.leonardom.introuduccionajetpackcompose.navigation.NavigationHost
 import com.tay.taysecurity.android.component.BottomNavigationBar
 import com.tay.taysecurity.android.component.Dialog
-import com.tay.taysecurity.android.component.Drawer
+import com.tay.taysecurity.android.component.drawer.Drawer
 import com.tay.taysecurity.android.component.TopBar
-import com.tay.taysecurity.android.component.navigation.Destinations
-import com.tay.taysecurity.android.component.navigation.NavigationHost
-import kotlinx.coroutines.launch
+import com.tay.taysecurity.android.component.drawer.Destinations
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ScreenHome( darkMode: MutableState<Boolean>){
+fun ScreenHome(){
     val context = LocalContext.current
 
 
@@ -94,9 +89,9 @@ fun ScreenHome( darkMode: MutableState<Boolean>){
     val openDialog = remember { mutableStateOf(false) }
 
     val navigationItems = listOf(
-        Destinations.Pantalla1,
-        Destinations.Pantalla2,
-        Destinations.Pantalla3
+        Destinations.ContactScreen,
+        Destinations.SecurityScreen,
+        Destinations.ExtraScreen
     )
 
     Scaffold(
@@ -111,31 +106,13 @@ fun ScreenHome( darkMode: MutableState<Boolean>){
             TopBar(
                 scope,
                 scaffoldState,
-                openDialog = { openDialog.value = true  },
-                displaySnackBar = {
-                    scope.launch {
-                        val resultado = scaffoldState.snackbarHostState.showSnackbar(
-                            message = "Nuevo SnackBar!",
-                            duration = SnackbarDuration.Short,
-                            actionLabel = "Aceptar"
-                        )
-
-                        when(resultado){
-                            SnackbarResult.ActionPerformed -> {
-                                Log.d("MainActivity", "Snackbar Accionado")
-                            }
-                            SnackbarResult.Dismissed -> {
-                                Log.d("MainActivity", "Snackbar Ignorado")
-                            }
-                        }
-                    }
-                }
+                openDialog = { openDialog.value = true},
             )
         },
         drawerContent = { Drawer(scope, scaffoldState, navController, items = navigationItems) },
         drawerGesturesEnabled = true
     ){
-        NavigationHost(navController, darkMode)
+        NavigationHost(navController)
     }
 
     Dialog(showDialog = openDialog.value, dismissDialog = { openDialog.value = false })

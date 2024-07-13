@@ -1,4 +1,4 @@
-package com.tay.taysecurity.android.component.navigation
+package com.tay.taysecurity.android.component.drawer
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

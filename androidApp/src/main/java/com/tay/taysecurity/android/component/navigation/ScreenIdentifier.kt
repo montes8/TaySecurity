@@ -1,4 +1,4 @@
-package com.tay.taysecurity.android.component
+package com.tay.taysecurity.android.component.navigation
 
 const val ROOT_GRAPH_ROUTE = "root"
 

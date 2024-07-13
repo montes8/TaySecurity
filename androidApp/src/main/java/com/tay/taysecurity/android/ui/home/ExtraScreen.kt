@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Pantalla3() {
+fun ExtraScreen() {
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()

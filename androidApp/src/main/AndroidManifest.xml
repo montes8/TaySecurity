@@ -43,7 +43,7 @@
 
 
         <service
-            android:name=".component.services.TaySureCallService"
+            android:name=".utils.services.TaySureCallService"
             android:exported="true"
             android:permission="android.permission.BIND_INCALL_SERVICE">
             <meta-data
@@ -54,7 +54,7 @@
                 <action android:name="android.telecom.InCallService"/>
             </intent-filter>
         </service>
-        <receiver android:name=".component.services.BroadCallSecurity"
+        <receiver android:name=".utils.services.BroadCallSecurity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE"/>

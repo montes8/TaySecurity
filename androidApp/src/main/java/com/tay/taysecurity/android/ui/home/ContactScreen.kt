@@ -21,8 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun Pantalla1(
-    navegarPantalla2: (String) -> Unit
+fun ContactScreen(
 ) {
     var textValue by remember { mutableStateOf("") }
 
@@ -44,7 +43,7 @@ fun Pantalla1(
             label = { Text("Introducir Texto") }
         )
 
-        Button(onClick = { navegarPantalla2(textValue) }) {
+        Button(onClick = {  }) {
             Text("Enviar")
         }
     }
