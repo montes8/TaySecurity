@@ -7,7 +7,7 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddIcCall
+import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.rememberDrawerState
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -39,7 +39,7 @@ fun ScreenHome(){
     val openDialog = remember { mutableStateOf(false) }
 
     val navigationItems = listOf(
-        Destinations.ContactScreen,
+        Destinations.BlockingScreen,
         Destinations.SecurityScreen,
         Destinations.ExtraScreen
     )
@@ -50,7 +50,7 @@ fun ScreenHome(){
         floatingActionButton = { FloatingActionButton(onClick = {
             context.uiTayViewCallButton()
         }, backgroundColor = Color.Black, contentColor = Color.Black) {
-            Icon(imageVector = Icons.Default.AddIcCall, contentDescription = "Fab Icon", tint = Color.White)
+            Icon(imageVector = Icons.Default.Call, contentDescription = "Fab Icon", tint = Color.White)
         } },
         isFloatingActionButtonDocked = false,
         floatingActionButtonPosition = FabPosition.End,

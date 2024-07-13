@@ -32,11 +32,11 @@ fun BottomNavigationBar(
         items.forEach { screen ->
             val selected = currentRoute == screen.route
             BottomNavigationItem(
-                selectedContentColor = Color.Yellow,
+                selectedContentColor = Color.Magenta,
                 unselectedContentColor = Color.White,
                 icon = { Icon(imageVector = screen.icon, contentDescription = screen.title,
-                    tint = if(selected)Color.Yellow else Color.White) },
-                label = { Text(screen.title, color = if(selected)Color.Yellow else Color.White) },
+                    tint = if(selected)Color.Magenta else Color.White) },
+                label = { Text(screen.title, color = if(selected)Color.Magenta else Color.White) },
                 selected = selected,
                 onClick = {
                       navController.navigate(screen.route) {

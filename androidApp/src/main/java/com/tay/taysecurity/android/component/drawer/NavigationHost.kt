@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.tay.taysecurity.android.component.drawer.Destinations
-import com.tay.taysecurity.android.ui.home.contact.ContactScreen
+import com.tay.taysecurity.android.ui.home.blocking.BlockingScreen
 import com.tay.taysecurity.android.ui.home.extra.ExtraScreen
 import com.tay.taysecurity.android.ui.home.security.SecurityScreen
 
@@ -13,9 +13,9 @@ import com.tay.taysecurity.android.ui.home.security.SecurityScreen
 fun NavigationHost(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = Destinations.ContactScreen.route) {
-        composable(Destinations.ContactScreen.route) {
-            ContactScreen()
+    NavHost(navController = navController, startDestination = Destinations.BlockingScreen.route) {
+        composable(Destinations.BlockingScreen.route) {
+            BlockingScreen()
         }
 
         composable(

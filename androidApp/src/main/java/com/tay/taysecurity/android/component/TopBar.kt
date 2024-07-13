@@ -8,7 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,7 +39,7 @@ fun TopBar(
             IconButton(onClick = {
                 openDialog()
             }) {
-                Icon(imageVector = Icons.Default.Security, contentDescription = "Search Icon",tint = Color.White)
+                Icon(imageVector = Icons.Default.Settings, contentDescription = "Search Icon",tint = Color.White)
             }
         }
     )

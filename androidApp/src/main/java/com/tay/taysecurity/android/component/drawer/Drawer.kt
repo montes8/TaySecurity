@@ -87,13 +87,13 @@ fun DrawerItem(
             modifier = Modifier.size(24.dp),
             imageVector = item.icon,
             contentDescription = item.title,
-            tint = if(selected) Color.White else Color.Gray
+            tint = if(selected) Color.Magenta else Color.Gray
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text= item.title,
             style = TextStyle(fontSize = 18.sp),
-            color = if(selected) Color.White else Color.Black
+            color = if(selected) Color.Magenta else Color.Black
         )
     }
 }

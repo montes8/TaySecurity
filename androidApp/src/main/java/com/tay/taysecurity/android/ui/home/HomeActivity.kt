@@ -3,9 +3,7 @@ package com.tay.taysecurity.android.ui.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.telecom.TelecomManager
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,7 +18,9 @@ class HomeActivity : ComponentActivity() {
 
     companion object {
         fun newInstance(context: Context){
-            context.startActivity(Intent(context, HomeActivity::class.java))
+            val i = Intent(context, HomeActivity::class.java)
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(i)
         }
     }
 
@@ -33,7 +33,12 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { MyApplicationTheme{ ScreenHome()}}
-        TaySureCall.listContact = application.loadContactUser()
+        try {
+            TaySureCall.listContact = application.loadContactUser()
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+
         TaySureCall.tayAppView = true
     }
 
