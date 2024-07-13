@@ -5,12 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.telecom.TelecomManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.tay.taysecurity.android.model.temporary.DataTemporary
 import com.tay.taysecurity.android.utils.MyApplicationTheme
 import com.tay.taysecurity.android.utils.loadContactUser
+import com.tay.taysecurity.android.utils.manager.TaySureCall
 
 class HomeActivity : ComponentActivity() {
 
@@ -32,10 +33,8 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { MyApplicationTheme{ ScreenHome()}}
-         Handler().postDelayed({
-            // uiTayDialedNumber()
-         },5000)
-        DataTemporary.listContact = application.loadContactUser()
+        TaySureCall.listContact = application.loadContactUser()
+        TaySureCall.tayAppView = true
     }
 
 

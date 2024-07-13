@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.ContactsContract
+import android.telecom.Call
 import android.util.Log
 import android.widget.Toast
 import com.tay.taysecurity.android.model.ContactPhone
@@ -20,6 +21,21 @@ fun Context.uiTayDialedNumber(number : String = "935815994", key : String = "tel
         this.startActivity(intent)
     } catch (e: SecurityException) {
         Log.e("UI_TAY_TAG_ERROR",e.message.toString())
+    }
+}
+fun Context.uiTayViewCallButton(){
+    val intent = Intent(Intent.ACTION_CALL_BUTTON)
+    this.startActivity(intent)
+}
+
+fun Context.uiTayViewCall(){
+    try {
+        val intent = Intent()
+        intent.setClass(this, Call::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        this.startActivity(intent)
+    } catch (e: SecurityException) {
+        Log.e("ERROR_CALL",e.message.toString())
     }
 }
 
@@ -53,4 +69,21 @@ fun Application.loadContactUser(): List<ContactPhone>{
 
     cursor?.close()
     return contacts
+}
+
+
+fun validNumberBlocking(list :List<ContactPhone>,numberCall:String):Boolean{
+    var numberBlocking = true
+    val incomingCall = numberCall.filter{it.isDigit()}
+    val incomingLengthCall = incomingCall.length
+    list.forEach { contact ->
+      val currentNumber = contact.phoneNumber.filter {it.isDigit()}
+        val currentLengthNumber = currentNumber.length
+        if (currentLengthNumber >= incomingLengthCall){
+            numberBlocking = currentNumber.substring(currentLengthNumber - incomingLengthCall,currentLengthNumber) == incomingCall.substring(0,incomingLengthCall)
+        }else{
+            numberBlocking = false
+        }
+    }
+   return !numberBlocking
 }

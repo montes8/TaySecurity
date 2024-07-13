@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.telephony.TelephonyManager
 import android.util.Log
+import com.tay.taysecurity.android.ui.home.HomeActivity
 import com.tay.taysecurity.android.utils.manager.TaySureCall
 import com.tay.taysecurity.android.utils.tayToast
 
@@ -17,6 +18,7 @@ class BroadCallSecurity : BroadcastReceiver() {
         val state = intent!!.getStringExtra(TelephonyManager.EXTRA_STATE)
         when (state) {
             TelephonyManager.EXTRA_STATE_IDLE -> {
+               if (TaySureCall.tayAppView) context?.let { HomeActivity.newInstance(it) }
                 Log.d("TAGTay","not llamada")
                 context?.tayToast("not llamada")
             }

@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.dev.leonardom.introuduccionajetpackcompose.navigation.NavigationHost
 import com.tay.taysecurity.android.component.BottomNavigationBar
@@ -22,10 +23,14 @@ import com.tay.taysecurity.android.component.Dialog
 import com.tay.taysecurity.android.component.TopBar
 import com.tay.taysecurity.android.component.drawer.Destinations
 import com.tay.taysecurity.android.component.drawer.Drawer
+import com.tay.taysecurity.android.utils.uiTayViewCallButton
+
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ScreenHome(){
+    val context = LocalContext.current
+
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState(
         drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -42,7 +47,9 @@ fun ScreenHome(){
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = { BottomNavigationBar(navController = navController, items = navigationItems) },
-        floatingActionButton = { FloatingActionButton(onClick = {}, backgroundColor = Color.Black, contentColor = Color.Black) {
+        floatingActionButton = { FloatingActionButton(onClick = {
+            context.uiTayViewCallButton()
+        }, backgroundColor = Color.Black, contentColor = Color.Black) {
             Icon(imageVector = Icons.Default.AddIcCall, contentDescription = "Fab Icon", tint = Color.White)
         } },
         isFloatingActionButtonDocked = false,
