@@ -10,11 +10,14 @@ import androidx.activity.compose.setContent
 import com.tay.taysecurity.android.utils.MyApplicationTheme
 import com.tay.taysecurity.android.utils.loadContactUser
 import com.tay.taysecurity.android.utils.manager.TaySureCall
+import com.tay.taysecurity.manager.appContext
+import com.tay.taysecurity.usecases.BlockingUseCase
+import dagger.hilt.android.AndroidEntryPoint
 
 class HomeActivity : ComponentActivity() {
 
     private val REQUEST_CODE_SET_DEFAULT_DIALER = 123
-
+    var viewModel : HomeViewModel? = null
 
     companion object {
         fun newInstance(context: Context){
@@ -32,9 +35,11 @@ class HomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = HomeViewModel()
         setContent { MyApplicationTheme{ ScreenHome()}}
         try {
             TaySureCall.listContact = application.loadContactUser()
+            viewModel?.insertConctacAll(TaySureCall.listContact)
         }catch (e:Exception){
             e.printStackTrace()
         }

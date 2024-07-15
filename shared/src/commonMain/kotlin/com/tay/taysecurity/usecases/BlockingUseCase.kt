@@ -6,10 +6,17 @@ import com.tay.taysecurity.usecases.repository.IContactDataBase
 
 class BlockingUseCase {
 
-    private val iUserDataBase : IContactDataBase = ContactDataBase()
+    private val iContactDataBase : IContactDataBase = ContactDataBase()
 
-    suspend fun login(user : String , pass : String) : ContactModel{
-      //  return iUserDataBase.getLogin(user,pass)
-        return ContactModel()
+    suspend fun getContactAll() : List<ContactModel>{
+        return iContactDataBase.getContactAll()
     }
+
+    suspend fun inserContactAll(list: List<ContactModel>): Boolean {
+        iContactDataBase.deleteContactAll()
+        list.forEach { iContactDataBase.insertContact(it)}
+        return true
+    }
+
+
 }
