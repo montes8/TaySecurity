@@ -1,8 +1,7 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-  //  id("app.cash.sqldelight") version "2.0.1"
-    id("com.squareup.sqldelight")
+    id("app.cash.sqldelight") version "2.0.2"
     kotlin("plugin.serialization") version "1.8.0"
 }
 
@@ -33,12 +32,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            //put your multiplatform dependencies here
-
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.1.0")
-           // implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
-            implementation("com.squareup.sqldelight:runtime:1.5.5")
+            implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
         }
         commonTest.dependencies {
@@ -48,15 +44,14 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                //implementation("app.cash.sqldelight:android-driver:2.0.2")
-                implementation("com.squareup.sqldelight:android-driver:1.5.5")
-
+                implementation("app.cash.sqldelight:android-driver:2.0.2")
             }
         }
 
         val iosMain by creating {
             dependencies {
-                implementation("com.squareup.sqldelight:native-driver:1.5.5")
+                implementation("app.cash.sqldelight:native-driver:2.0.2")
+
             }
         }
 
@@ -76,10 +71,14 @@ android {
 }
 
 sqldelight {
-    database("TaysecurityDb") {
-        packageName = "com.tay.taysecurity.database"
-        sourceFolders = listOf("sqldelight")
+    databases {
+        create("TaysecurityDb") {
+            packageName.set("com.tay.taysecurity.database")
+        }
     }
 }
+
+
+
 
 

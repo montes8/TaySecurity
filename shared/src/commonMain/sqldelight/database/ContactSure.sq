@@ -1,0 +1,19 @@
+CREATE TABLE  contactEntity(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    number TEXT NOT NULL
+);
+
+selectAllContact:
+SELECT *
+FROM contactEntity;
+
+insertContact:
+INSERT OR REPLACE
+INTO contactEntity(
+     name,number
+) VALUES(?, ?);
+
+
+deleteContactAll:
+DELETE FROM contactEntity;
