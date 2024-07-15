@@ -1,4 +1,4 @@
-CREATE TABLE  contactEntity(
+CREATE TABLE  contactEntity (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     number TEXT NOT NULL
@@ -9,7 +9,7 @@ SELECT *
 FROM contactEntity;
 
 insertContact:
-INSERT OR REPLACE
+INSERT
 INTO contactEntity(
      name,number
 ) VALUES(?, ?);
