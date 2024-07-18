@@ -1,30 +1,19 @@
 package com.tay.taysecurity.android.ui.home
 
-import android.util.Log
 import com.tay.taysecurity.android.ui.BaseViewModel
 import com.tay.taysecurity.model.ContactModel
 import com.tay.taysecurity.usecases.BlockingUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class HomeViewModel: BaseViewModel()  {
-
+@HiltViewModel
+class HomeViewModel @Inject constructor(): BaseViewModel()  {
 
     private val blockingUseCase: BlockingUseCase = BlockingUseCase()
 
-    fun insertConctacAll(list : List<ContactModel>){
+    fun insertContactAll(list : List<ContactModel>){
         execute {
-            val response = blockingUseCase.inserContactAll(list)
-            Log.d("sureAdbTay","${response} guardado")
-            getConctacAll()
+             blockingUseCase.inserContactAll(list)
         }
     }
-
-    fun getConctacAll(){
-        execute {
-            val response = blockingUseCase.getContactAll()
-            Log.d("sureAdbTay","${response}")
-        }
-    }
-
-
-
 }

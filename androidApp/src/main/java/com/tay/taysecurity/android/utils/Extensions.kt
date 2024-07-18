@@ -72,17 +72,15 @@ fun Application.loadContactUser(): List<ContactModel>{
 
 
 fun validNumberBlocking(list :List<ContactModel>,numberCall:String):Boolean{
-    var numberBlocking = true
-    val incomingCall = numberCall.filter{it.isDigit()}
+    val incomingCall = numberCall.filter{it.isDigit()}.trim()
     val incomingLengthCall = incomingCall.length
     list.forEach { contact ->
-      val currentNumber = contact.phoneNumber.filter {it.isDigit()}
+      val currentNumber = contact.phoneNumber.filter {it.isDigit()}.trim()
         val currentLengthNumber = currentNumber.length
         if (currentLengthNumber >= incomingLengthCall){
-            numberBlocking = currentNumber.substring(currentLengthNumber - incomingLengthCall,currentLengthNumber) == incomingCall.substring(0,incomingLengthCall)
-        }else{
-            numberBlocking = false
+            val numberBlocking = currentNumber.substring(currentLengthNumber - incomingLengthCall,currentLengthNumber) == incomingCall.substring(0,incomingLengthCall)
+            if (numberBlocking) return false
         }
     }
-   return !numberBlocking
+    return true
 }
