@@ -13,7 +13,7 @@ class HomeViewModel @Inject constructor(): BaseViewModel()  {
 
     fun insertContactAll(list : List<ContactModel>){
         execute {
-             blockingUseCase.inserContactAll(list)
+             blockingUseCase.insertContactAll(list)
         }
     }
 }

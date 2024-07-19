@@ -12,7 +12,7 @@ class BlockingUseCase {
         return iContactDataBase.getContactAll()
     }
 
-    suspend fun inserContactAll(list: List<ContactModel>): Boolean {
+    suspend fun insertContactAll(list: List<ContactModel>): Boolean {
         iContactDataBase.deleteContactAll()
         list.forEach { iContactDataBase.insertContact(it)}
         return true
