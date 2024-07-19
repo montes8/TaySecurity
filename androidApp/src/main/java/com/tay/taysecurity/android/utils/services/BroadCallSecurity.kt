@@ -28,6 +28,7 @@ class BroadCallSecurity : BroadcastReceiver() {
                 Log.d("TAGTay", "entrada")
             }
             TelephonyManager.EXTRA_STATE_OFFHOOK -> {
+                Log.d("TAGTay","en llamada")
             }
         }
     }
