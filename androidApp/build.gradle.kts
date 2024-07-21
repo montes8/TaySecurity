@@ -16,6 +16,15 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+     signingConfigs {
+        create("release") {
+            storeFile = file("../keystore/taysecurity.jks")
+            storePassword = "taySecurity@2024"
+            keyAlias = "taySecurity2024"
+            keyPassword = "taySecurity@2024"
+        }
+    }
+
     buildFeatures {
         compose = true
     }
@@ -27,6 +36,10 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+        }
+        getByName("debug") {
+             isDebuggable = true
         }
     }
     compileOptions {
