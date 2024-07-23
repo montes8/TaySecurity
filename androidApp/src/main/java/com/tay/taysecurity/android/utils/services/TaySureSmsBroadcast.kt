@@ -49,6 +49,7 @@ class TaySureSmsBroadcast: BroadcastReceiver() {
                     )
                 }
             }
+            c.close()
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d("TAGTay","Exception")

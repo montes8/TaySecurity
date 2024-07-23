@@ -3,7 +3,6 @@ package com.tay.taysecurity.android.utils.services
 import android.os.Handler
 import android.telecom.Call
 import android.telecom.InCallService
-import android.util.Log
 import com.tay.taysecurity.android.utils.manager.TaySureCall
 import com.tay.taysecurity.android.utils.uiTayViewCall
 import com.tay.taysecurity.android.utils.validNumberBlocking
