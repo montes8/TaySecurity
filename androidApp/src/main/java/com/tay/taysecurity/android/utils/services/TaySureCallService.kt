@@ -30,6 +30,6 @@ class TaySureCallService : InCallService() {
                  }
              }
 
-          },500)
+          },1000)
     }
 }
