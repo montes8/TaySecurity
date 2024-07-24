@@ -19,17 +19,6 @@ kotlin {
         mavenCentral()
     }
     
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "shared"
-            isStatic = true
-        }
-    }
-
     sourceSets {
         commonMain.dependencies {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
@@ -51,8 +40,8 @@ kotlin {
         val iosMain by creating {
             dependencies {
                 implementation("app.cash.sqldelight:native-driver:2.0.2")
-
             }
+
         }
 
     }
