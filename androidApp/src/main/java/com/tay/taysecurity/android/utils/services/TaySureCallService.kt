@@ -3,6 +3,7 @@ package com.tay.taysecurity.android.utils.services
 import android.os.Handler
 import android.telecom.Call
 import android.telecom.InCallService
+import android.util.Log
 import com.tay.taysecurity.android.utils.manager.TaySureCall
 import com.tay.taysecurity.android.utils.uiTayViewCall
 import com.tay.taysecurity.android.utils.validNumberBlocking
@@ -19,11 +20,13 @@ class TaySureCallService : InCallService() {
     override fun onCallAdded(call: Call?) {
         super.onCallAdded(call)
         TaySureCall.taySureCall =  call
+        Log.d("TAGTay", "disconnect")
          Handler().postDelayed({
              scope.launch {
                  TaySureCall.listContact = blockingUseCase.getContactAll()
                  if (validNumberBlocking(TaySureCall.listContact,TaySureCall.taySureNumber)){
                      call?.disconnect()
+                     Log.d("TAGTay", "disconnect")
                  }else{
                      this@TaySureCallService.uiTayViewCall()
                  }

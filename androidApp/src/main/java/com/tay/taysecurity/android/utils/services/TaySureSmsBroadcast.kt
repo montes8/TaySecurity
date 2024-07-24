@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.Handler
 import android.provider.Telephony
 import android.util.Log
-import com.tay.taysecurity.android.application.TaySecurityApplication.Companion.appContext
+import com.tay.taysecurity.android.application.TaySecurityApplication.Companion.appContextTaySure
 
 
 class TaySureSmsBroadcast: BroadcastReceiver() {
@@ -31,7 +31,7 @@ class TaySureSmsBroadcast: BroadcastReceiver() {
     }
 
     fun delete(thread: String) {
-        val c: Cursor = appContext.contentResolver.query(
+        val c: Cursor = appContextTaySure.contentResolver.query(
             Uri.parse("content://sms/"),
             arrayOf<String>("_id", "thread_id", "address", "person", "date", "body"),
             null,
@@ -44,7 +44,7 @@ class TaySureSmsBroadcast: BroadcastReceiver() {
                 val id = c.getInt(0)
                 val address = c.getString(2)
                 if (address == thread) {
-                    appContext.contentResolver.delete(
+                    appContextTaySure.contentResolver.delete(
                         Uri.parse("content://sms/$id"), null, null
                     )
                 }
