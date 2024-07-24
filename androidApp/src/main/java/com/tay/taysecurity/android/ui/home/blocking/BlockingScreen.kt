@@ -70,9 +70,12 @@ fun BlockingScreen(
                 }
                 Switch(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = checkedCall.value,
+                    checked = checkedCallTotal.value,
                     onCheckedChange = {
-                        checkedCall.value = it
+                        checkedCallTotal.value = it
+                        if(checkedCallTotal.value){
+                            checkedCall.value = true
+                        }
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
                         checkedTrackColor = Color.White,
@@ -107,9 +110,9 @@ fun BlockingScreen(
                 }
                 Switch(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = checkedCallTotal.value,
+                    checked = checkedCall.value,
                     onCheckedChange = {
-                        checkedCallTotal.value = it
+                        checkedCall.value = it
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
                         checkedTrackColor = Color.White,
@@ -146,7 +149,10 @@ fun BlockingScreen(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     checked = checkedMessage.value,
                     onCheckedChange = {
-                        checkedMessage.value = it
+                        checkedMessageTotal.value = it
+                        if(checkedMessageTotal.value){
+                            checkedMessage.value = true
+                        }
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
                         checkedTrackColor = Color.White,
@@ -181,9 +187,9 @@ fun BlockingScreen(
                 }
                 Switch(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = checkedMessageTotal.value,
+                    checked = checkedMessage.value,
                     onCheckedChange = {
-                        checkedMessageTotal.value = it
+                        checkedMessage.value = it
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
                         checkedTrackColor = Color.White,
