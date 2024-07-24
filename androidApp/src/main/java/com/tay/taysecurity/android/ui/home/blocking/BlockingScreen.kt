@@ -55,14 +55,14 @@ fun BlockingScreen(
                     .weight(4.0f)
                     .padding(16.dp)) {
                     Text(
-                        text = "Bloqueo de llamadas",
+                        text = "Bloqueo de Todas  las llamadas ",
                         fontSize = 18.sp,
                         fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                         color = Color.White
                     )
                     Text(
                         modifier = Modifier.padding( top = 2.dp),
-                        text = "Esta opción bloqueara las llamadas entrantes no registradas en tus contactos",
+                        text = "Esta opción bloqueara las llamadas entrantes a tu telefono movil.",
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
                         color = Color.White
@@ -92,14 +92,14 @@ fun BlockingScreen(
                     .weight(4.0f)
                     .padding(16.dp)) {
                     Text(
-                        text = "Bloqueo de llamadas total",
+                        text = "Bloqueo de llamadas desconocidas",
                         fontSize = 18.sp,
                         fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                         color = Color.White
                     )
                     Text(
                         modifier = Modifier.padding( top = 2.dp),
-                        text = "Esta opción bloqueara total las llamadas entrantes en su telfono",
+                        text = "Esta opción bloqueara total las llamadas entrantes que no esten registrados en tus contactos.",
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
                         color = Color.White
@@ -129,14 +129,14 @@ fun BlockingScreen(
                     .weight(4.0f)
                     .padding(16.dp)) {
                     Text(
-                        text = "Bloqueo de mensajes",
+                        text = "Bloqueo de todos los mensajes entrantes",
                         fontSize = 18.sp,
                         fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                         color = Color.White
                     )
                     Text(
                         modifier = Modifier.padding( top = 2.dp),
-                        text = "Esta opción bloqueara las mensaje entrantes no registradas en tus contactos",
+                        text = "Esta opción bloqueara y eliminara todos los mensaje entrantes en tu bandeja de entrada.",
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
                         color = Color.White
@@ -166,14 +166,14 @@ fun BlockingScreen(
                     .weight(4.0f)
                     .padding(16.dp)) {
                     Text(
-                        text = "Bloqueo de mensajes total",
+                        text = "Bloqueo de mensajes desconocidos",
                         fontSize = 18.sp,
                         fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                         color = Color.White
                     )
                     Text(
                         modifier = Modifier.padding( top = 2.dp),
-                        text = "Esta opción bloqueara todos los mensaje entrantes en su telefono",
+                        text = "Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada.",
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
                         color = Color.White
