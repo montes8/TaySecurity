@@ -25,15 +25,15 @@ fun MyApplicationTheme(
 ) {
     val colors = if (darkTheme) {
         darkColors(
-            primary = Color(R.color.black),
-            secondary = Color(R.color.black),
-            secondaryVariant = Color(R.color.black)
+            primary = Color(R.color.primary),
+            secondary = Color(R.color.primary),
+            secondaryVariant = Color(R.color.primary)
         )
     } else {
         lightColors(
-            primary = Color(R.color.black),
-            secondary = Color(R.color.black),
-            secondaryVariant = Color(R.color.black)
+            primary = Color(R.color.primary),
+            secondary = Color(R.color.primary),
+            secondaryVariant = Color(R.color.primary)
         )
     }
     val typography = Typography(

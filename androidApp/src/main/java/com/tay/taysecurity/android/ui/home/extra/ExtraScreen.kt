@@ -1,5 +1,6 @@
 package com.tay.taysecurity.android.ui.home.extra
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -22,6 +23,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun ExtraScreen() {
     BoxWithConstraints(
