@@ -1,4 +1,4 @@
-package com.tay.taysecurity.repository
+package com.tay.taysecurity.repository.db
 
 import com.tay.taysecurity.manager.databaseDriverFactory
 import com.tay.taysecurity.model.ContactModel
