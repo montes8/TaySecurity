@@ -18,18 +18,23 @@ kotlin {
         google()
         mavenCentral()
     }
-    
+
     sourceSets {
-        commonMain.dependencies {
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.1.0")
-            implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
-        }
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
+        val commonMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.1.0")
+                implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+                implementation("com.google.code.gson:gson:2.9.0")
+            }
         }
 
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
 
         val androidMain by getting {
             dependencies {
@@ -41,7 +46,6 @@ kotlin {
             dependencies {
                 implementation("app.cash.sqldelight:native-driver:2.0.2")
             }
-
         }
 
     }
