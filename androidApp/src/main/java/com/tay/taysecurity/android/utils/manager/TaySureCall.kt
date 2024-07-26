@@ -1,12 +1,12 @@
 package com.tay.taysecurity.android.utils.manager
 
 import android.telecom.Call
-import com.tay.taysecurity.model.ContactModel
+import com.tay.taysecurity.model.ContactShared
 
 object TaySureCall {
 
     var taySureCall : Call? = null
-    var listContact : List<ContactModel> = ArrayList()
+    var listContact : List<ContactShared> = ArrayList()
     var taySureNumber : String = ""
     var tayAppView : Boolean = false
 

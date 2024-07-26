@@ -8,7 +8,7 @@ import android.provider.ContactsContract
 import android.telecom.Call
 import android.util.Log
 import android.widget.Toast
-import com.tay.taysecurity.model.ContactModel
+import com.tay.taysecurity.model.ContactShared
 
 fun Context.tayToast(message : String){
     Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
@@ -39,8 +39,8 @@ fun Context.uiTayViewCall(){
     }
 }
 
-fun Application.loadContactUser(): List<ContactModel>{
-    val contacts : ArrayList<ContactModel> = ArrayList()
+fun Application.loadContactUser(): List<ContactShared>{
+    val contacts : ArrayList<ContactShared> = ArrayList()
     val projection = arrayOf(
         ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
         ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
@@ -61,7 +61,7 @@ fun Application.loadContactUser(): List<ContactModel>{
 
             if(phone.isNotEmpty()){
                 contacts.add(
-                    ContactModel( name = name, phoneNumber = phone)
+                    ContactShared( name = name, phoneNumber = phone)
                 )
             }
         } while (cursor.moveToNext())
@@ -71,7 +71,7 @@ fun Application.loadContactUser(): List<ContactModel>{
 }
 
 
-fun validNumberBlocking(list :List<ContactModel>,numberCall:String):Boolean{
+fun validNumberBlocking(list :List<ContactShared>, numberCall:String):Boolean{
     val incomingCall = numberCall.filter{it.isDigit()}.trim()
     val incomingLengthCall = incomingCall.length
     list.forEach { contact ->

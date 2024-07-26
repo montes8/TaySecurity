@@ -1,7 +1,7 @@
 package com.tay.taysecurity.repository.db
 
 import com.tay.taysecurity.manager.databaseDriverFactory
-import com.tay.taysecurity.model.ContactModel
+import com.tay.taysecurity.model.ContactShared
 import com.tay.taysecurity.usecases.repository.IContactDataBase
 import database.ContactEntity
 import database.ContactSureQueries
@@ -10,12 +10,12 @@ import database.ContactSureQueries
 class ContactDataBase(private val queries:ContactSureQueries = databaseDriverFactory().contactSureQueries)
     : IContactDataBase {
 
-    override suspend fun insertContact(user: ContactModel): Boolean {
+    override suspend fun insertContact(user: ContactShared): Boolean {
         queries.insertContact(user.name, user.phoneNumber)
         return true
     }
 
-    override suspend fun getContactAll(): List<ContactModel> {
+    override suspend fun getContactAll(): List<ContactShared> {
         return queries.selectAllContact().executeAsList().toListContact()
     }
 
@@ -24,8 +24,8 @@ class ContactDataBase(private val queries:ContactSureQueries = databaseDriverFac
     }
 }
 
-fun List<ContactEntity>.toListContact(): List<ContactModel> {
+fun List<ContactEntity>.toListContact(): List<ContactShared> {
     return this.map {
-        ContactModel(it.id,it.name,it.number)
+        ContactShared(it.id,it.name,it.number)
     }
 }
