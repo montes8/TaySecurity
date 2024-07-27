@@ -1,11 +1,13 @@
 package com.tay.taysecurity.manager
 
 import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 
 
-actual typealias TaySPreferenceManager = Activity
+actual typealias TaySPreferenceManager = Application
 
 actual fun TaySPreferenceManager.getInt(key: String ) : Int{
     val prefs: SharedPreferences = this.getSharedPreferences("shareTaySure", MODE_PRIVATE)

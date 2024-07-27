@@ -16,6 +16,4 @@ class TaySureUseCase (private val context: TaySPreferenceManager) {
     fun saveDataSecurity(value: SecurityShared){
         iTaySPreferences.saveDataSecurity(value)
     }
-
-
 }

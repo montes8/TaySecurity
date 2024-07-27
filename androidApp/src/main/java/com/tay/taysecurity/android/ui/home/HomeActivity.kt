@@ -41,7 +41,6 @@ class HomeActivity : ComponentActivity() {
         try {
             TaySureCall.listContact = application.loadContactUser()
             viewModel.insertContactAll(TaySureCall.listContact)
-            viewModel.testSure(this)
         }catch (e:Exception){
             e.printStackTrace()
         }

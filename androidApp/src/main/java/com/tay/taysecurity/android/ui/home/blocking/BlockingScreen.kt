@@ -23,16 +23,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tay.taysecurity.android.R
+import com.tay.taysecurity.android.ui.blocking.BlockingViewModel
 
 @Composable
 fun BlockingScreen(
 ) {
-
-    val checkedCall = remember { mutableStateOf(false) }
-    val checkedCallTotal = remember { mutableStateOf(false) }
-    val checkedMessage = remember { mutableStateOf(false) }
-    val checkedMessageTotal = remember { mutableStateOf(false) }
+    val viewModel : BlockingViewModel = hiltViewModel()
+  //  val checkedCall = remember { mutableStateOf(false) }
+   // val checkedCallTotal = remember { mutableStateOf(false) }
+  //  val checkedMessage = remember { mutableStateOf(false) }
+   // val checkedMessageTotal = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -70,11 +72,11 @@ fun BlockingScreen(
                 }
                 Switch(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = checkedCallTotal.value,
+                    checked = viewModel.uiState.securty.blockingCallFull,
                     onCheckedChange = {
-                        checkedCallTotal.value = it
-                        if(checkedCallTotal.value){
-                            checkedCall.value = true
+                        viewModel.uiState.securty.blockingCallFull = it
+                        if(viewModel.uiState.securty.blockingCallFull){
+                            //checkedCall.value = true
                         }
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
@@ -110,9 +112,9 @@ fun BlockingScreen(
                 }
                 Switch(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = checkedCall.value,
+                    checked = viewModel.uiState.securty.blockingCall,
                     onCheckedChange = {
-                        checkedCall.value = it
+                        viewModel.uiState.securty.blockingCall = it
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
                         checkedTrackColor = Color.White,
@@ -147,12 +149,12 @@ fun BlockingScreen(
                 }
                 Switch(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = checkedMessage.value,
+                    checked = viewModel.uiState.securty.blockingSmsFull,
                     onCheckedChange = {
-                        checkedMessageTotal.value = it
-                        if(checkedMessageTotal.value){
-                            checkedMessage.value = true
-                        }
+                        viewModel.uiState.securty.blockingSmsFull = it
+                       // if(checkedMessageTotal.value){
+                      //      checkedMessage.value = true
+                      //  }
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
                         checkedTrackColor = Color.White,
@@ -187,9 +189,9 @@ fun BlockingScreen(
                 }
                 Switch(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = checkedMessage.value,
+                    checked = viewModel.uiState.securty.blockingSms,
                     onCheckedChange = {
-                        checkedMessage.value = it
+                        viewModel.uiState.securty.blockingSms = it
                     },colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.Magenta,
                         checkedTrackColor = Color.White,
