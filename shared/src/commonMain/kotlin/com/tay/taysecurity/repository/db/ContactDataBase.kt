@@ -2,7 +2,7 @@ package com.tay.taysecurity.repository.db
 
 import com.tay.taysecurity.manager.databaseDriverFactory
 import com.tay.taysecurity.model.ContactShared
-import com.tay.taysecurity.usecases.repository.IContactDataBase
+import com.tay.taysecurity.usecases.repository.db.IContactDataBase
 import database.ContactEntity
 import database.ContactSureQueries
 

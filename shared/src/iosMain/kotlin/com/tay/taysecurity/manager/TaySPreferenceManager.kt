@@ -3,6 +3,7 @@ package com.tay.taysecurity.manager
 import platform.Foundation.NSUserDefaults
 import platform.darwin.NSObject
 
+
 actual typealias TaySPreferenceManager = NSObject
 
 actual fun TaySPreferenceManager.getInt(key: String) : Int {

@@ -2,7 +2,7 @@ package com.tay.taysecurity.usecases
 
 import com.tay.taysecurity.model.ContactShared
 import com.tay.taysecurity.repository.db.ContactDataBase
-import com.tay.taysecurity.usecases.repository.IContactDataBase
+import com.tay.taysecurity.usecases.repository.db.IContactDataBase
 
 class BlockingUseCase {
 

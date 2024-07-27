@@ -1,4 +1,4 @@
-package com.tay.taysecurity.usecases.repository
+package com.tay.taysecurity.usecases.repository.db
 
 import com.tay.taysecurity.model.ContactShared
 

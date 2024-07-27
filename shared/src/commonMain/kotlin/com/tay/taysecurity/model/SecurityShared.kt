@@ -4,5 +4,5 @@ data class SecurityShared  (
     var blockingCallFull :Boolean = false,
     var blockingCall :Boolean = false,
     var blockingSmsFull :Boolean = false,
-    var blockingSms :Boolean = false,
+    var blockingSms :Boolean = false
 )
