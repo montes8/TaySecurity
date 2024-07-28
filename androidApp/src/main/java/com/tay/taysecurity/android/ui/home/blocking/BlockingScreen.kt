@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TayCardItem
 import com.tay.taysecurity.android.ui.blocking.BlockingViewModel
+import com.tay.taysecurity.model.SecurityShared
 
 @Composable
 fun BlockingScreen(
@@ -54,6 +55,7 @@ fun BlockingScreen(
         TayCardItem(state =viewModel.uiState.securty.blockingCallFull,
             text = "Bloqueo de Todas  las llamadas.",
             subText = "Esta opción bloqueara las llamadas entrantes a tu telefono movil."){
+            viewModel.updateDataSecurity(it)
         }
 
         Spacer(modifier = Modifier.height(16.dp))

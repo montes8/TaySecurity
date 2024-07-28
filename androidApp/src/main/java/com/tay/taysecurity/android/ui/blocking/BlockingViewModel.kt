@@ -29,8 +29,12 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
     fun loadSegurity() {
         execute {
             val data = taySureUseCase.getDataSecurity()?: SecurityShared()
-            uiState = uiState.copy(securty = data)
+            uiState = uiState.copy(securty = SecurityShared())
 
         }
+    }
+
+    fun updateDataSecurity(value: Boolean){
+        uiState = uiState.copy(securty = SecurityShared(blockingCallFull = value, blockingCall = value))
     }
 }
