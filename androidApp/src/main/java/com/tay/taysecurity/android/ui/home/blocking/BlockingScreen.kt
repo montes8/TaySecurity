@@ -69,41 +69,9 @@ fun BlockingScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Card(shape = RoundedCornerShape(8.dp),
-            backgroundColor = Color.Black,elevation = 4.dp) {
-            Row{
-                Column(modifier = Modifier
-                    .weight(4.0f)
-                    .padding(16.dp)) {
-                    Text(
-                        text = "Bloqueo de mensajes desconocidos",
-                        fontSize = 18.sp,
-                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
-                        color = Color.White
-                    )
-                    Text(
-                        modifier = Modifier.padding( top = 2.dp),
-                        text = "Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada.",
-                        fontSize = 12.sp,
-                        fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
-                        color = Color.White
-                    )
-                }
-                Switch(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    checked = viewModel.uiState.securty.blockingSms,
-                    onCheckedChange = {
-                        viewModel.uiState.securty.blockingSms = it
-                    },colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color.Magenta,
-                        checkedTrackColor = Color.White,
-                        uncheckedThumbColor =  Color.Magenta,
-                        uncheckedTrackColor = Color.White,
-                    )
-
-                )
-            }
+        TayCardItem(state =viewModel.uiState.securty.blockingSms,
+            text = "Bloqueo de mensajes desconocidos",
+            subText ="Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada."){
         }
-
     }
 }
