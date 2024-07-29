@@ -17,6 +17,7 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
 
     private var taySureUseCase: TaySureUseCase = TaySureUseCase(context)
     var uiState by mutableStateOf(SegurityUiState())
+    var update = SecurityShared()
     init {
         execute {
             delay(500)
@@ -36,23 +37,27 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
     }
 
     fun updateDataSecurity(value: Boolean,type:Int = 0){
-        val updateState = uiState.securty
         when(type){
             0->{
-                updateState.blockingCallFull = value
-                updateState.blockingCall = value
+                update.blockingCallFull = value
+                update.blockingCall = value
             }
             1->{
-                updateState.blockingCall = value
+                update.blockingCall = value
             }
             2->{
-                updateState.blockingSmsFull = value
-                updateState.blockingSms = value
+                update.blockingSmsFull = value
+                update.blockingSms = value
             }
             else->{
-                updateState.blockingSms = value
+                update.blockingSms = value
             }
         }
-        uiState = uiState.copy(securty = updateState)
+        val updateBLocking = SecurityShared(blockingCallFull = update.blockingCallFull,
+            blockingCall = update.blockingCall,
+            blockingSmsFull = update.blockingSmsFull,
+            blockingSms = update.blockingSms)
+        uiState = uiState.copy(securty = updateBLocking)
+
     }
 }
