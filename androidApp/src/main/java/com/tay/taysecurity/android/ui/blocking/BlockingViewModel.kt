@@ -17,21 +17,24 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
 
     private var taySureUseCase: TaySureUseCase = TaySureUseCase(context)
     var uiState by mutableStateOf(SegurityUiState())
-    var update = SecurityShared()
+    var update : SecurityShared? = null
     init {
         execute {
             delay(500)
-            loadSegurity()
-
+            loadSecurity()
         }
     }
 
 
 
-    fun loadSegurity() {
+    private fun loadSecurity() {
         execute {
             val data = taySureUseCase.getDataSecurity()?: SecurityShared()
-            uiState = uiState.copy(securty = SecurityShared())
+            update = SecurityShared(blockingCallFull = data.blockingCallFull,
+                blockingCall = data.blockingCall,
+                blockingSmsFull = data.blockingSmsFull,
+                blockingSms = data.blockingSms)
+            uiState = uiState.copy(securty = data)
 
         }
     }
@@ -39,25 +42,24 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
     fun updateDataSecurity(value: Boolean,type:Int = 0){
         when(type){
             0->{
-                update.blockingCallFull = value
-                update.blockingCall = value
+                update?.blockingCallFull = value
+                update?.blockingCall = value
             }
             1->{
-                update.blockingCall = value
+                update?.blockingCall = value
             }
             2->{
-                update.blockingSmsFull = value
-                update.blockingSms = value
+                update?.blockingSmsFull = value
+                update?.blockingSms = value
             }
             else->{
-                update.blockingSms = value
+                update?.blockingSms = value
             }
         }
-        val updateBLocking = SecurityShared(blockingCallFull = update.blockingCallFull,
-            blockingCall = update.blockingCall,
-            blockingSmsFull = update.blockingSmsFull,
-            blockingSms = update.blockingSms)
+        val updateBLocking = SecurityShared(blockingCallFull = update?.blockingCallFull?:false,
+            blockingCall = update?.blockingCall?:false,
+            blockingSmsFull = update?.blockingSmsFull?:false,
+            blockingSms = update?.blockingSms?:false)
         uiState = uiState.copy(securty = updateBLocking)
-
     }
 }
