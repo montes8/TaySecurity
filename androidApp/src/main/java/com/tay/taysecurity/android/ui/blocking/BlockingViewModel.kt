@@ -16,6 +16,7 @@ import javax.inject.Inject
 class BlockingViewModel @Inject constructor(private val context: Application): BaseViewModel()  {
 
     private var taySureUseCase: TaySureUseCase = TaySureUseCase(context)
+    var uiState by mutableStateOf(SegurityUiState())
     init {
         execute {
             delay(500)
@@ -24,7 +25,7 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
         }
     }
 
-    var uiState by mutableStateOf(SegurityUiState())
+
 
     fun loadSegurity() {
         execute {
@@ -34,7 +35,24 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
         }
     }
 
-    fun updateDataSecurity(value: Boolean){
-        uiState = uiState.copy(securty = SecurityShared(blockingCallFull = value, blockingCall = value))
+    fun updateDataSecurity(value: Boolean,type:Int = 0){
+        val updateState = uiState.securty
+        when(type){
+            0->{
+                updateState.blockingCallFull = value
+                updateState.blockingCall = value
+            }
+            1->{
+                updateState.blockingCall = value
+            }
+            2->{
+                updateState.blockingSmsFull = value
+                updateState.blockingSms = value
+            }
+            else->{
+                updateState.blockingSms = value
+            }
+        }
+        uiState = uiState.copy(securty = updateState)
     }
 }

@@ -55,25 +55,28 @@ fun BlockingScreen(
         TayCardItem(state =viewModel.uiState.securty.blockingCallFull,
             text = "Bloqueo de Todas  las llamadas.",
             subText = "Esta opción bloqueara las llamadas entrantes a tu telefono movil."){
-            viewModel.updateDataSecurity(it)
+            viewModel.updateDataSecurity(it,0)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItem(state =viewModel.uiState.securty.blockingCall,
             text = "Bloqueo de llamadas desconocidas",
             subText = "Esta opción bloqueara total las llamadas entrantes que no esten registrados en tus contactos."){
+            viewModel.updateDataSecurity(it,1)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItem(state =viewModel.uiState.securty.blockingSmsFull,
             text = "Bloqueo de todos los mensajes entrantes",
             subText = "Esta opción bloqueara y eliminara todos los mensaje entrantes en tu bandeja de entrada."){
+            viewModel.updateDataSecurity(it,2)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItem(state =viewModel.uiState.securty.blockingSms,
             text = "Bloqueo de mensajes desconocidos",
             subText ="Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada."){
+            viewModel.updateDataSecurity(it,3)
         }
     }
 }
