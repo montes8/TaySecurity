@@ -8,6 +8,7 @@ import com.tay.taysecurity.android.utils.manager.TaySureCall
 import com.tay.taysecurity.android.utils.uiTayViewCall
 import com.tay.taysecurity.android.utils.validNumberBlocking
 import com.tay.taysecurity.usecases.BlockingUseCase
+import com.tay.taysecurity.usecases.TaySureUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -15,21 +16,30 @@ import kotlinx.coroutines.launch
 
 class TaySureCallService : InCallService() {
     private val blockingUseCase: BlockingUseCase = BlockingUseCase()
+    private var taySureUseCase: TaySureUseCase? = null
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
+    override fun onCreate() {
+        super.onCreate()
+        taySureUseCase = TaySureUseCase(application)
+    }
     override fun onCallAdded(call: Call?) {
         super.onCallAdded(call)
         TaySureCall.taySureCall =  call
         Log.d("TAGTay", "disconnect")
          Handler().postDelayed({
              scope.launch {
-                 TaySureCall.listContact = blockingUseCase.getContactAll()
-                 if (validNumberBlocking(TaySureCall.listContact,TaySureCall.taySureNumber)){
+                 val dataShared = taySureUseCase?.getDataSecurity()
+                 val listContact = blockingUseCase.getContactAll()
+                 if (dataShared?.blockingCallFull==true || dataShared?.blockingCall==true
+                     && validNumberBlocking(listContact,TaySureCall.taySureNumber)){
                      call?.disconnect()
-                     Log.d("TAGTay", "disconnect")
+                     Log.d("TAGTay", "disconnectCallFull")
                  }else{
-                     this@TaySureCallService.uiTayViewCall()
-                 }
+                         this@TaySureCallService.uiTayViewCall()
+                         Log.d("TAGTay", "uiTayViewCallFull")
+                  }
+                 Log.d("TAGTay", "$dataShared")
              }
 
           },1000)

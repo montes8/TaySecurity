@@ -1,11 +1,11 @@
-package com.tay.taysecurity.android.ui.blocking
+package com.tay.taysecurity.android.ui.home.blocking
 
 
 import android.app.Application
-import android.util.Log
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.tay.taysecurity.android.ui.BaseViewModel
-import com.tay.taysecurity.android.ui.home.blocking.SegurityUiState
 import com.tay.taysecurity.model.SecurityShared
 import com.tay.taysecurity.usecases.TaySureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +17,7 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
 
     private var taySureUseCase: TaySureUseCase = TaySureUseCase(context)
     var uiState by mutableStateOf(SegurityUiState())
-    var update : SecurityShared? = null
+    private var update : SecurityShared? = null
     init {
         execute {
             delay(500)
@@ -61,5 +61,6 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
             blockingSmsFull = update?.blockingSmsFull?:false,
             blockingSms = update?.blockingSms?:false)
         uiState = uiState.copy(securty = updateBLocking)
+        taySureUseCase.saveDataSecurity(updateBLocking)
     }
 }
