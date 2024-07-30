@@ -10,14 +10,14 @@ import dagger.hilt.android.HiltAndroidApp
 class TaySecurityApplication : Application(){
 
     companion object {
-        lateinit  var appContextTaySure: Context
+        lateinit  var appContextTaySure: Application
     }
 
 
     override fun onCreate() {
         super.onCreate()
         appContext = this
-        appContextTaySure = applicationContext
+        appContextTaySure = this
     }
 
 
