@@ -9,6 +9,7 @@ import android.telecom.Call
 import android.util.Log
 import android.widget.Toast
 import com.tay.taysecurity.model.ContactShared
+import com.tay.taysecurity.utils.SECURITY_EMPTY
 
 fun Context.tayToast(message : String){
     Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
@@ -84,3 +85,32 @@ fun validNumberBlocking(list :List<ContactShared>, numberCall:String):Boolean{
     }
     return true
 }
+
+fun Application.uiTayDeleteSMS(all: Boolean = false, utNumber: String = SECURITY_EMPTY) {
+    this.contentResolver.query(
+        Uri.parse("content://sms/"),
+        arrayOf("_id", "thread_id", "address", "person", "date", "body"),
+        null,
+        null,
+        null
+    )?.let { c ->
+        try {
+            while (c.moveToNext()) {
+                val id = c.getInt(0)
+                val address = c.getString(2)
+                if (all) {
+                    this.contentResolver.delete(
+                        Uri.parse("content://sms/$id"), null, null
+                    )
+                } else {
+                    if (address == utNumber) {
+                        this.contentResolver.delete(
+                            Uri.parse("content://sms/$id"), null, null
+                        )
+                    } } }
+            c.close()
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+    }
