@@ -100,9 +100,7 @@ fun TayCardItem(
             ) {
                 Image(
                     modifier = Modifier.height(28.dp)
-                        .width(28.dp).padding(2.dp).clickable {
-                           // tayClickItem.invoke(!state)
-                        },
+                        .width(28.dp).padding(2.dp),
                     imageVector = ImageVector.vectorResource(R.drawable.tay_circle_white),
                     contentDescription = "",
                     alignment = Alignment.Center
