@@ -1,5 +1,6 @@
 package com.tay.taysecurity.android.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -39,13 +40,13 @@ fun TayCardItem(
             contentColor = Color.Black  //Card content color,e.g.text
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 8.dp
+            defaultElevation = 16.dp
         )
     ) {
-        Row{
+        Row(modifier = Modifier
+            .padding(16.dp)){
             Column(modifier = Modifier
-                .weight(4.0f)
-                .padding(16.dp)) {
+                .weight(4.0f).padding(end = 16.dp)) {
                 Text(
                     text = text,
                     fontSize = 18.sp,
@@ -60,6 +61,7 @@ fun TayCardItem(
                     color = Color.White
                 )
             }
+
             Switch(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 checked = checked.value,
@@ -67,18 +69,18 @@ fun TayCardItem(
                     checked.value = it
                     tayClickItem.invoke(it)
                 },colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color.Green,
+                    checkedThumbColor = Color.Magenta,
                     checkedTrackColor = Color.LightGray,
-                    checkedBorderColor = Color.Green,
-                    uncheckedThumbColor = Color.Red,
+                    checkedBorderColor = Color.Magenta,
+                    uncheckedThumbColor = Color.Magenta,
                     uncheckedTrackColor = Color.LightGray,
-                    uncheckedBorderColor = Color.Red,
-                    disabledCheckedThumbColor = Color.Green.copy(alpha = ContentAlpha.disabled),
+                    uncheckedBorderColor = Color.Magenta,
+                    disabledCheckedThumbColor = Color.Magenta.copy(alpha = ContentAlpha.disabled),
                     disabledCheckedTrackColor = Color.LightGray.copy(alpha = ContentAlpha.disabled),
                     disabledCheckedBorderColor = Color.Green.copy(alpha = ContentAlpha.disabled),
-                    disabledUncheckedThumbColor = Color.Red.copy(alpha = ContentAlpha.disabled),
+                    disabledUncheckedThumbColor = Color.Magenta.copy(alpha = ContentAlpha.disabled),
                     disabledUncheckedTrackColor = Color.LightGray.copy(alpha = ContentAlpha.disabled),
-                    disabledUncheckedBorderColor = Color.Red.copy(alpha = ContentAlpha.disabled),
+                    disabledUncheckedBorderColor = Color.Magenta.copy(alpha = ContentAlpha.disabled),
                 )
             )
         }
