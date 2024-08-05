@@ -1,6 +1,11 @@
 package com.tay.taysecurity.android.ui.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButton
@@ -14,8 +19,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.dev.leonardom.introuduccionajetpackcompose.navigation.NavigationHost
 import com.tay.taysecurity.android.component.BottomNavigationBar
@@ -49,8 +58,16 @@ fun ScreenHome(){
         bottomBar = { BottomNavigationBar(navController = navController, items = navigationItems) },
         floatingActionButton = { FloatingActionButton(onClick = {
             context.uiTayViewCallButton()
-        }, backgroundColor = Color.Black, contentColor = Color.Black) {
-            Icon(imageVector = Icons.Default.Call, contentDescription = "Fab Icon", tint = Color.White)
+        },
+            modifier = Modifier.border( width = 2.dp,
+                color = Color.Magenta,
+                shape = RoundedCornerShape(30.dp))
+
+            , backgroundColor = Color.Black, contentColor = Color.Black) {
+            Image(imageVector = Icons.Default.Call, contentDescription = "Fab Icon",
+                contentScale = ContentScale.FillBounds,    modifier = Modifier.background(Color.White),
+                colorFilter =
+                ColorFilter.tint(color = Color.Magenta))
         } },
         isFloatingActionButtonDocked = false,
         floatingActionButtonPosition = FabPosition.End,
