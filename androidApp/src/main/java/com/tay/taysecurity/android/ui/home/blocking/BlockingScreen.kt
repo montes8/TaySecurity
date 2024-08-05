@@ -29,7 +29,7 @@ fun BlockingScreen(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .padding(top= 8.dp, start = 8.dp, end = 8.dp, bottom = 24.dp),
+            .padding(top= 8.dp, start = 8.dp, end = 8.dp, bottom = 78.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
