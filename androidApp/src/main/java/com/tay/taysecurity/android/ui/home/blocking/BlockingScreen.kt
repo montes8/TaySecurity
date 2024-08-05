@@ -3,8 +3,11 @@ package com.tay.taysecurity.android.ui.home.blocking
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,15 +25,11 @@ import com.tay.taysecurity.android.component.TayCardItem
 fun BlockingScreen(
 ) {
     val viewModel : BlockingViewModel = hiltViewModel()
-  //  val checkedCall = remember { mutableStateOf(false) }
-   // val checkedCallTotal = remember { mutableStateOf(false) }
-  //  val checkedMessage = remember { mutableStateOf(false) }
-   // val checkedMessageTotal = remember { mutableStateOf(false) }
-
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp),
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(top= 8.dp, start = 8.dp, end = 8.dp, bottom = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -65,6 +64,19 @@ fun BlockingScreen(
         TayCardItem(state =viewModel.uiState.securty.blockingSms,
             text = "Bloqueo de mensajes desconocidos",
             subText ="Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada."){
+            viewModel.updateDataSecurity(it,3)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        TayCardItem(state =true,
+            text = "Bloqueo de capturas y grabacion de pantalla",
+            subText ="Esta opción no permite tomar capturas ni grabar la pantalla en este dispositivo."){
+            viewModel.updateDataSecurity(it,3)
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        TayCardItem(state =true,
+            text = "Bloqueo de grabacion de audio",
+            subText ="Esta opción no permite grabar audios."){
             viewModel.updateDataSecurity(it,3)
         }
     }
