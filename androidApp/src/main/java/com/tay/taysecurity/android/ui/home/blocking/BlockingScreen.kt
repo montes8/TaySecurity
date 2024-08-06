@@ -2,7 +2,6 @@ package com.tay.taysecurity.android.ui.home.blocking
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tay.taysecurity.android.R
-import com.tay.taysecurity.android.component.TayCardItem
+import com.tay.taysecurity.android.component.TayCardItemSwitch
 
 @Composable
 fun BlockingScreen(
@@ -40,35 +39,35 @@ fun BlockingScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItem(state =viewModel.uiState.securty.blockingCallFull,
+        TayCardItemSwitch(state =viewModel.uiState.securty.blockingCallFull,
             text = "Bloqueo de Todas  las llamadas.",
             subText = "Esta opción bloqueara las llamadas entrantes a tu telefono movil."){
             viewModel.updateDataSecurity(it,0)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItem(state =viewModel.uiState.securty.blockingCall,
+        TayCardItemSwitch(state =viewModel.uiState.securty.blockingCall,
             text = "Bloqueo de llamadas desconocidas",
             subText = "Esta opción bloqueara total las llamadas entrantes que no esten registrados en tus contactos."){
             viewModel.updateDataSecurity(it,1)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItem(state =viewModel.uiState.securty.blockingSmsFull,
+        TayCardItemSwitch(state =viewModel.uiState.securty.blockingSmsFull,
             text = "Bloqueo de todos los mensajes entrantes",
             subText = "Esta opción bloqueara y eliminara todos los mensaje entrantes en tu bandeja de entrada."){
             viewModel.updateDataSecurity(it,2)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItem(state =viewModel.uiState.securty.blockingSms,
+        TayCardItemSwitch(state =viewModel.uiState.securty.blockingSms,
             text = "Bloqueo de mensajes desconocidos",
             subText ="Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada."){
             viewModel.updateDataSecurity(it,3)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItem(state =true,
+        TayCardItemSwitch(state =true,
             text = "Bloqueo de grabacion de audio",
             subText ="Esta opción no permite grabar audios."){
         }

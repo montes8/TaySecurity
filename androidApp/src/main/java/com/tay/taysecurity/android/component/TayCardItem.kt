@@ -23,11 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
@@ -36,7 +35,7 @@ import com.tay.taysecurity.android.R
 
 
 @Composable
-fun TayCardItem(
+fun TayCardItemSwitch(
      state : Boolean,
     text: String,
     subText: String,
@@ -53,7 +52,7 @@ fun TayCardItem(
                 .padding(16.dp)) {
                 Text(
                     text = text,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                     color = Color.White
                 )
@@ -92,6 +91,45 @@ fun TayCardItem(
                     alignment = Alignment.Center
                 )
             }
+        }
+    }
+
+}
+
+@Composable
+fun TayCardItemNext(
+    text: String,
+    subText: String,
+    tayClickItem: (Boolean) -> Unit
+) {
+    Card(shape = RoundedCornerShape(12.dp),
+        backgroundColor = Color.Black,elevation = 4.dp) {
+        Row(verticalAlignment = Alignment.CenterVertically){
+            Column(modifier = Modifier
+                .weight(4.0f)
+                .padding(16.dp)) {
+                Text(
+                    text = text,
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
+                    color = Color.White
+                )
+                Text(
+                    modifier = Modifier.padding( top = 2.dp),
+                    text = subText,
+                    fontSize = 12.sp,
+                    fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
+                    color = Color.White
+                )
+            }
+
+            Image(modifier = Modifier
+                     .rotate(180f),
+                    painter = painterResource(R.drawable.ic_tay_arrow_back),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = ""
+                )
+
         }
     }
 
