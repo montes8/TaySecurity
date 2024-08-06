@@ -100,9 +100,10 @@ fun TayCardItemSwitch(
 fun TayCardItemNext(
     text: String,
     subText: String,
-    tayClickItem: (Boolean) -> Unit
+    tayClickItem: () -> Unit
 ) {
-    Card(shape = RoundedCornerShape(12.dp),
+    Card(modifier = Modifier
+        .clickable { tayClickItem.invoke() },shape = RoundedCornerShape(12.dp),
         backgroundColor = Color.Black,elevation = 4.dp) {
         Row(verticalAlignment = Alignment.CenterVertically){
             Column(modifier = Modifier
@@ -123,7 +124,7 @@ fun TayCardItemNext(
                 )
             }
 
-            Image(modifier = Modifier
+            Image(modifier = Modifier.padding(end = 16.dp)
                      .rotate(180f),
                     painter = painterResource(R.drawable.ic_tay_arrow_back),
                     contentScale = ContentScale.Crop,

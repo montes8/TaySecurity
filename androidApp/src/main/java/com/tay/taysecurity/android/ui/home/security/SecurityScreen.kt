@@ -42,7 +42,6 @@ fun SecurityScreen(
         TayCardItemSwitch(state =true,
             text = "Bloqueo de capturas y grabacion de pantalla",
             subText ="Esta opción no permite tomar capturas ni grabar la pantalla en este dispositivo."){
-
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -57,7 +56,8 @@ fun SecurityScreen(
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
             text = "Crear ubicación aleatoria",
-            subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, habilita como app de localización en la opcion de desarrollador"){
+            subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo," +
+                    "habilita como app de localización en la opcion de desarrollador"){
         }
     }
 }
