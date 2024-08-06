@@ -69,15 +69,8 @@ fun BlockingScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItem(state =true,
-            text = "Bloqueo de capturas y grabacion de pantalla",
-            subText ="Esta opción no permite tomar capturas ni grabar la pantalla en este dispositivo."){
-            viewModel.updateDataSecurity(it,3)
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        TayCardItem(state =true,
             text = "Bloqueo de grabacion de audio",
             subText ="Esta opción no permite grabar audios."){
-            viewModel.updateDataSecurity(it,3)
         }
     }
 }
