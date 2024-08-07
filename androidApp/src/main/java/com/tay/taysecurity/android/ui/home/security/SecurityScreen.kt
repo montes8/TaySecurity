@@ -55,7 +55,7 @@ fun SecurityScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "Crear ubicación aleatoria",
+            text = "Crea una ubicación aleatoria",
             subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo," +
                     "habilita como app de localización en la opcion de desarrollador"){
         }
