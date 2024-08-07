@@ -53,11 +53,19 @@ fun SecurityScreen(
             fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
         )
 
+
+        Spacer(modifier = Modifier.height(16.dp))
+        TayCardItemSwitch(state =true,
+            text = "Crea una ubicación aleatoria",
+            subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, " +
+                    "debes habilitar como app de localización en la opcion de desarrollador para esta opcion"){
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "Crea una ubicación aleatoria",
-            subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo," +
-                    "habilita como app de localización en la opcion de desarrollador"){
+            text = "Crea una ubicación perzonalizada",
+            subText ="Esta opción desabilitara la ubicación aleatoria, " +
+                    "te pertime elegir la ubicacion que deseas mostrar como tu ubicación actual"){
         }
     }
 }
