@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -26,18 +29,16 @@ import androidx.compose.ui.unit.dp
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun ExtraScreen() {
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
-        contentAlignment = Alignment.Center
-    ) {
-        AndroidLogo(
-            backgroundColor = MaterialTheme.colors.background,
-            contentColor =  Color(0xFF46E68D),
-            padding = 30.dp
-        )
+    Column(modifier = Modifier
+        .fillMaxSize().background(Color.Red)) {
+
+            AndroidLogo(
+                backgroundColor = MaterialTheme.colors.background,
+                contentColor =  Color.Black,
+                padding = 30.dp
+            )
     }
+
 }
 
 @Composable
@@ -45,13 +46,13 @@ fun AndroidLogo(
     modifier: Modifier = Modifier,
     backgroundColor: Color,
     contentColor: Color,
-    padding: Dp = 30.dp
+    padding: Dp = 0.dp
 ) {
     val eyesOffset = remember { mutableStateOf(0.0f) }
 
     Canvas(
         modifier = modifier
-            .fillMaxSize()
+            .fillMaxWidth().height(150.dp)
             .padding(padding)
             .background(backgroundColor)
             .pointerInput(Unit){
@@ -59,7 +60,7 @@ fun AndroidLogo(
                     onDrag = { change, dragAmount ->
                         change.consumeAllChanges()
 
-                        eyesOffset.value += dragAmount.x * 0.12f
+                        eyesOffset.value += dragAmount.x * 0.50f
                     },
                     onDragEnd = {
                         eyesOffset.value = 0f
