@@ -31,10 +31,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ExtraScreen() {
     Column(modifier = Modifier
-        .fillMaxSize().background(Color.Red)) {
+        .fillMaxSize()) {
 
-
-        Box(modifier = Modifier.background(Color.Magenta).fillMaxWidth(), contentAlignment = Alignment.Center){
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
             AndroidLogo(
                 backgroundColor = MaterialTheme.colors.background,
                 contentColor =  Color.Black,
@@ -57,7 +56,7 @@ fun AndroidLogo(
 
     Canvas(
         modifier = modifier
-            .width(175.dp).height(150.dp)
+            .width(150.dp).height(150.dp)
             .padding(padding)
             .background(backgroundColor)
             .pointerInput(Unit){
