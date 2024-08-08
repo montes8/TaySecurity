@@ -65,7 +65,7 @@ fun ScreenHome(){
 
             , backgroundColor = Color.Black, contentColor = Color.Black) {
             Image(imageVector = Icons.Default.Call, contentDescription = "Fab Icon",
-                contentScale = ContentScale.FillBounds,    modifier = Modifier.background(Color.White),
+                contentScale = ContentScale.FillBounds,
                 colorFilter =
                 ColorFilter.tint(color = Color.Magenta))
         } },
