@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,11 +33,15 @@ fun ExtraScreen() {
     Column(modifier = Modifier
         .fillMaxSize().background(Color.Red)) {
 
+
+        Box(modifier = Modifier.background(Color.Magenta).fillMaxWidth(), contentAlignment = Alignment.Center){
             AndroidLogo(
                 backgroundColor = MaterialTheme.colors.background,
                 contentColor =  Color.Black,
                 padding = 30.dp
             )
+        }
+
     }
 
 }
@@ -52,7 +57,7 @@ fun AndroidLogo(
 
     Canvas(
         modifier = modifier
-            .fillMaxWidth().height(150.dp)
+            .width(175.dp).height(150.dp)
             .padding(padding)
             .background(backgroundColor)
             .pointerInput(Unit){
@@ -68,10 +73,13 @@ fun AndroidLogo(
                 )
             }
     ){
+
+        val canvasWidth = size.width
+        val canvasHeight = size.height
         drawArc(
             startAngle = -180f,
             sweepAngle = 180f,
-            useCenter = true,
+            useCenter = false,
             color = contentColor,
             size = Size(size.minDimension, size.minDimension),
             topLeft = Offset(0f, size.minDimension * 0.5f)
