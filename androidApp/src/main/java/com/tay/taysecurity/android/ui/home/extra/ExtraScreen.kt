@@ -43,10 +43,15 @@ fun ExtraScreen() {
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
             text = "Imformación de Imagen",
             subText ="Esta funcinalidad te permite obtener información de la imagen a detalle"){
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        TayCardItemNext(
+            text = "Imformación de Audio",
+            subText ="Esta funcinalidad te permite obtener información de la Audio a detalle"){
         }
 
     }
