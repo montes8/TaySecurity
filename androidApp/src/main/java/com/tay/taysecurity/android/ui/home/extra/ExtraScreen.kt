@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +27,7 @@ import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.tay.taysecurity.android.component.TayCardItemNext
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
@@ -39,6 +41,12 @@ fun ExtraScreen() {
                 contentColor =  Color.Black,
                 padding = 30.dp
             )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        TayCardItemNext(
+            text = "Imformación de Imagen",
+            subText ="Esta funcinalidad te permite obtener información de la imagen a detalle"){
         }
 
     }
@@ -72,9 +80,6 @@ fun AndroidLogo(
                 )
             }
     ){
-
-        val canvasWidth = size.width
-        val canvasHeight = size.height
         drawArc(
             startAngle = -180f,
             sweepAngle = 180f,
