@@ -33,7 +33,7 @@ import com.tay.taysecurity.android.component.TayCardItemNext
 @Composable
 fun ExtraScreen() {
     Column(modifier = Modifier
-        .fillMaxSize()) {
+        .fillMaxSize().padding(16.dp)) {
 
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
             AndroidLogo(
