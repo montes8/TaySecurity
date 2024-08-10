@@ -60,6 +60,12 @@ fun ExtraScreen() {
             subText ="Esta funcinalidad te permite obtener información de la Video a detalle"){
         }
 
+        Spacer(modifier = Modifier.height(16.dp))
+        TayCardItemNext(
+            text = "Imformación de Archivo",
+            subText ="Esta funcinalidad te permite obtener información de la Archivo a detalle"){
+        }
+
     }
 
 }
