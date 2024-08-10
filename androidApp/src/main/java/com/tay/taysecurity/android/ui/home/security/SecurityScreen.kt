@@ -9,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,11 +26,15 @@ import com.tay.taysecurity.android.component.TayCardItemSwitch
 @Composable
 fun SecurityScreen(
 ) {
+
+    val checkedGps = remember { mutableStateOf(false) }
+    val checkedCapture = remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .padding(top= 8.dp, start = 8.dp, end = 8.dp, bottom = 78.dp),
+            .padding(top= 8.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -39,9 +45,10 @@ fun SecurityScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =true,
+        TayCardItemSwitch(state =checkedCapture.value,
             text = "Bloqueo de capturas y grabacion de pantalla",
             subText ="Esta opción no permite tomar capturas ni grabar la pantalla en este dispositivo."){
+            checkedCapture.value = it
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -55,10 +62,11 @@ fun SecurityScreen(
 
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =true,
+        TayCardItemSwitch(state =checkedGps.value,
             text = "Crea una ubicación aleatoria",
             subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, " +
                     "debes habilitar como app de localización en la opcion de desarrollador para esta opcion"){
+            checkedGps.value = it
         }
 
         Spacer(modifier = Modifier.height(16.dp))
