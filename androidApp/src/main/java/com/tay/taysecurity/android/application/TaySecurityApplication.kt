@@ -30,23 +30,28 @@ class TaySecurityApplication : Application(){
                     WindowManager.LayoutParams.FLAG_SECURE
                 )
             }
-
             override fun onActivityStarted(activity: Activity) {
+                //not implementation
             }
 
             override fun onActivityResumed(activity: Activity) {
+                //not implementation
             }
 
             override fun onActivityPaused(activity: Activity) {
+                //not implementation
             }
 
             override fun onActivityStopped(activity: Activity) {
+                //not implementation
             }
 
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+                //not implementation
             }
 
             override fun onActivityDestroyed(activity: Activity) {
+                //not implementation
             }
         })
     }
