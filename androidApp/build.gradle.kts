@@ -66,7 +66,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.2.0")
 
 
-
+    implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("androidx.activity:activity-compose:1.9.0")
 
     //implementation("com.google.android.material:material:1.12.0")
