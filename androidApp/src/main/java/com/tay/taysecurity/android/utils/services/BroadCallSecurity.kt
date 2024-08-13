@@ -6,9 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.telephony.TelephonyManager
 import android.util.Log
-import com.tay.taysecurity.android.ui.home.HomeActivity
 import com.tay.taysecurity.android.utils.manager.TaySureCall
-import com.tay.taysecurity.android.utils.tayToast
+import com.tay.taysecurity.utils.SECURITY_EMPTY
+import com.tay.taysecurity.utils.SECURITY_TAG
 
 
 class BroadCallSecurity : BroadcastReceiver() {
@@ -18,17 +18,15 @@ class BroadCallSecurity : BroadcastReceiver() {
         val state = intent!!.getStringExtra(TelephonyManager.EXTRA_STATE)
         when (state) {
             TelephonyManager.EXTRA_STATE_IDLE -> {
-                Log.d("TAGTay","not llamada")
+                Log.e(SECURITY_TAG,"not call")
             }
             TelephonyManager.EXTRA_STATE_RINGING -> {
                 val bundle = intent.extras
-                val phoneNr = bundle?.getString("incoming_number")?:""
+                val phoneNr = bundle?.getString("incoming_number")?: SECURITY_EMPTY
                 TaySureCall.taySureNumber = phoneNr
-                Log.e("TAGTay", "incoming number : $phoneNr")
-                Log.d("TAGTay", "entrada")
             }
             TelephonyManager.EXTRA_STATE_OFFHOOK -> {
-                Log.d("TAGTay","en llamada")
+                Log.e(SECURITY_TAG,"en call")
             }
         }
     }

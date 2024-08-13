@@ -3,7 +3,6 @@ package com.tay.taysecurity.android.utils.services
 import android.os.Handler
 import android.telecom.Call
 import android.telecom.InCallService
-import android.util.Log
 import com.tay.taysecurity.android.utils.manager.TaySureCall
 import com.tay.taysecurity.android.utils.uiTayViewCall
 import com.tay.taysecurity.android.utils.validNumberBlocking
@@ -19,6 +18,7 @@ class TaySureCallService : InCallService() {
     private var taySureUseCase: TaySureUseCase? = null
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
+
     override fun onCreate() {
         super.onCreate()
         taySureUseCase = TaySureUseCase(application)
@@ -33,14 +33,8 @@ class TaySureCallService : InCallService() {
                  if (dataShared?.blockingCallFull==true || dataShared?.blockingCall==true
                      && validNumberBlocking(listContact,TaySureCall.taySureNumber)){
                      call?.disconnect()
-
-                 }else{
-                         this@TaySureCallService.uiTayViewCall()
-                         Log.d("TAGTay", "uiTayViewCallFull")
-                  }
-                 Log.d("TAGTay", "$dataShared")
+                 }else{ this@TaySureCallService.uiTayViewCall()}
              }
-
-          },1000)
+          },500)
     }
 }

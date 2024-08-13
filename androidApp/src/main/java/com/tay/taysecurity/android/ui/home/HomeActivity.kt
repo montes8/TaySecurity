@@ -44,8 +44,6 @@ class HomeActivity : ComponentActivity() {
         }catch (e:Exception){
             e.printStackTrace()
         }
-
-        TaySureCall.tayAppView = true
     }
 
 
