@@ -26,7 +26,6 @@ class TaySureCallService : InCallService() {
     override fun onCallAdded(call: Call?) {
         super.onCallAdded(call)
         TaySureCall.taySureCall =  call
-        Log.d("TAGTay", "disconnect")
          Handler().postDelayed({
              scope.launch {
                  val dataShared = taySureUseCase?.getDataSecurity()
@@ -34,7 +33,7 @@ class TaySureCallService : InCallService() {
                  if (dataShared?.blockingCallFull==true || dataShared?.blockingCall==true
                      && validNumberBlocking(listContact,TaySureCall.taySureNumber)){
                      call?.disconnect()
-                     Log.d("TAGTay", "disconnectCallFull")
+
                  }else{
                          this@TaySureCallService.uiTayViewCall()
                          Log.d("TAGTay", "uiTayViewCallFull")
