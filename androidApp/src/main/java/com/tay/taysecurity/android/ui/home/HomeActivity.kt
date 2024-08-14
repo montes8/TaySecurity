@@ -16,10 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
-    private val viewModel: HomeViewModel by viewModels()
-
     private val REQUEST_CODE_SET_DEFAULT_DIALER = 123
-
 
     companion object {
         fun newInstance(context: Context){
@@ -38,12 +35,6 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { MyApplicationTheme{ ScreenHome()}}
-        try {
-            TaySureCall.listContact = application.loadContactUser()
-            viewModel.insertContactAll(TaySureCall.listContact)
-        }catch (e:Exception){
-            e.printStackTrace()
-        }
     }
 
 

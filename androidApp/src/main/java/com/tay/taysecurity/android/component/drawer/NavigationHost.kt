@@ -1,5 +1,6 @@
 package com.tay.taysecurity.android.component.drawer
 
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,7 +13,10 @@ import com.tay.taysecurity.android.ui.home.security.SecurityScreen
 fun NavigationHost(
     navController: NavHostController
 ) {
-    NavHost(navController = navController, startDestination = Destinations.BlockingScreen.route) {
+    NavHost(navController = navController, startDestination = Destinations.BlockingScreen.route,
+       exitTransition = {
+        ExitTransition.None
+    }) {
         composable(Destinations.BlockingScreen.route) { BlockingScreen()}
         composable(Destinations.SecurityScreen.route) { SecurityScreen()}
         composable(Destinations.ExtraScreen.route) {ExtraScreen() }

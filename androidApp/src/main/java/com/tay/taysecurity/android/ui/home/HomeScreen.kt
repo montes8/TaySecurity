@@ -2,14 +2,11 @@ package com.tay.taysecurity.android.ui.home
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.FabPosition
 import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
@@ -26,12 +23,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.dev.leonardom.introuduccionajetpackcompose.navigation.NavigationHost
 import com.tay.taysecurity.android.component.BottomNavigationBar
 import com.tay.taysecurity.android.component.Dialog
 import com.tay.taysecurity.android.component.TopBar
 import com.tay.taysecurity.android.component.drawer.Destinations
 import com.tay.taysecurity.android.component.drawer.Drawer
+import com.tay.taysecurity.android.component.drawer.NavigationHost
 import com.tay.taysecurity.android.utils.uiTayViewCallButton
 
 
@@ -55,7 +52,7 @@ fun ScreenHome(){
 
     Scaffold(
         scaffoldState = scaffoldState,
-        bottomBar = { BottomNavigationBar(navController = navController, items = navigationItems) },
+        bottomBar = { BottomNavigationBar(navController = navController, items = navigationItems)},
         floatingActionButton = { FloatingActionButton(onClick = {
             context.uiTayViewCallButton()
         },
