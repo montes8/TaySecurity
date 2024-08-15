@@ -1,21 +1,32 @@
 package com.tay.taysecurity.android.ui.detail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.tay.taysecurity.android.R
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import com.tay.taysecurity.android.utils.MyApplicationTheme
 
 class DetailActivity : ComponentActivity() {
+    companion object{
+        fun newIntance(context: Context) = context.startActivity(Intent(context,DetailActivity::class.java))
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_detail)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setContent { MyApplicationTheme{
+            ScreemTest()
         }
+        }
+
+    }
+}
+
+@Composable
+fun ScreemTest(){
+    Column {
+        Text (text = "TAYSEGUIDAD")
     }
 }
