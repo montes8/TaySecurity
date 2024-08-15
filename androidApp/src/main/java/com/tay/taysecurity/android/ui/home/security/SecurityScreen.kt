@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TayCardItemNext
 import com.tay.taysecurity.android.component.TayCardItemSwitch
+import com.tay.taysecurity.android.ui.detail.DetailActivity
 
 @Composable
 fun SecurityScreen(
@@ -29,7 +31,7 @@ fun SecurityScreen(
 
     val checkedGps = remember { mutableStateOf(false) }
     val checkedCapture = remember { mutableStateOf(false) }
-
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,6 +76,7 @@ fun SecurityScreen(
             text = "Crea una ubicación perzonalizada",
             subText ="Esta opción desabilitara la ubicación aleatoria, " +
                     "te pertime elegir la ubicacion que deseas mostrar como tu ubicación actual"){
+            DetailActivity.newInstance(context)
         }
     }
 }
