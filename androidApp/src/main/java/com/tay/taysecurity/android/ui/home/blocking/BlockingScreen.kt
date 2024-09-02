@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -44,8 +45,8 @@ fun BlockingScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemSwitch(state =viewModel.uiState.securty.blockingCallFull,
-            text = "Bloqueo de Todas  las llamadas.",
-            subText = "Esta opción bloqueara las llamadas entrantes a tu telefono movil."){
+            text = stringResource(R.string.title_all_call),
+            subText = stringResource(R.string.sub_title_all_call)){
             viewModel.updateDataSecurity(it,0)
         }
 
