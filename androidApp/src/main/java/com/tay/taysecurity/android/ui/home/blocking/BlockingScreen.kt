@@ -59,8 +59,8 @@ fun BlockingScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemSwitch(state =viewModel.uiState.securty.blockingSmsFull,
-            text = "Bloqueo de todos los mensajes entrantes",
-            subText = "Esta opción bloqueara y eliminara todos los mensaje entrantes en tu bandeja de entrada."){
+            text = stringResource(R.string.title_all_sms),
+            subText = stringResource(R.string.sub_title_all_sms)){
             viewModel.updateDataSecurity(it,2)
         }
 

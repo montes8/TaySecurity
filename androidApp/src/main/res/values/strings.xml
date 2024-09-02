@@ -14,4 +14,8 @@
 
 
 
+    <string name="title_all_sms">Bloqueo de todos los mensajes entrantes.</string>
+    <string name="sub_title_all_sms">Esta opción bloqueara y eliminara todos los mensaje entrantes en tu bandeja de entrada.</string>
+
+
 </resources>
