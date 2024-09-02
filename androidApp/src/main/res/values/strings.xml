@@ -9,5 +9,9 @@
     <string name="title_all_call">Bloqueo de Todas  las llamadas.</string>
     <string name="sub_title_all_call">Esta opción bloqueara las llamadas entrantes a tu telefono movil.</string>
 
+    <string name="title_stranger_call">Bloqueo de llamadas desconocidas.</string>
+    <string name="sub_title_stranger_call">Esta opción bloqueara total las llamadas entrantes que no esten registrados en tus contactos.</string>
+
+
 
 </resources>

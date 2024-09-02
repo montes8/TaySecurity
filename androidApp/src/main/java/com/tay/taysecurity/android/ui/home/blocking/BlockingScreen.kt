@@ -52,8 +52,8 @@ fun BlockingScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemSwitch(state =viewModel.uiState.securty.blockingCall,
-            text = "Bloqueo de llamadas desconocidas",
-            subText = "Esta opción bloqueara total las llamadas entrantes que no esten registrados en tus contactos."){
+            text = stringResource(R.string.title_stranger_call),
+            subText = stringResource(R.string.sub_title_stranger_call)){
             viewModel.updateDataSecurity(it,1)
         }
 
