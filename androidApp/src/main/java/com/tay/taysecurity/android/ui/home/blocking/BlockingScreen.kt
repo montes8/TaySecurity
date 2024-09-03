@@ -73,8 +73,8 @@ fun BlockingScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemSwitch(state =checkedAudio.value,
-            text = "Bloqueo de grabacion de audio",
-            subText ="Esta opción no permite grabar audios."){
+            text = stringResource(R.string.title_all_audio),
+            subText =stringResource(R.string.sub_title_all_audio)){
             checkedAudio.value = it
         }
     }

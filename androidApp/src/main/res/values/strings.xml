@@ -21,4 +21,8 @@
     <string name="sub_title_stranger_sms">Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada.</string>
 
 
+    <string name="title_all_audio">Bloqueo de grabacion de audio.</string>
+    <string name="sub_title_all_audio">Esta opción no permite grabar audios.</string>
+
+
 </resources>
