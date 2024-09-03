@@ -37,7 +37,7 @@ fun BlockingScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Configuración de \nbloqueos",
+            text = stringResource(R.string.title_blocking_view),
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
