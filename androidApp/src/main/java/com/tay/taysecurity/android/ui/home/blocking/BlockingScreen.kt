@@ -66,8 +66,8 @@ fun BlockingScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemSwitch(state =viewModel.uiState.securty.blockingSms,
-            text = "Bloqueo de mensajes desconocidos",
-            subText ="Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada."){
+            text = stringResource(R.string.title_stranger_sms),
+            subText = stringResource(R.string.sub_title_stranger_sms)){
             viewModel.updateDataSecurity(it,3)
         }
 

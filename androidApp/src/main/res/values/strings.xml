@@ -17,5 +17,8 @@
     <string name="title_all_sms">Bloqueo de todos los mensajes entrantes.</string>
     <string name="sub_title_all_sms">Esta opción bloqueara y eliminara todos los mensaje entrantes en tu bandeja de entrada.</string>
 
+    <string name="title_stranger_sms">Bloqueo de mensajes desconocidos.</string>
+    <string name="sub_title_stranger_sms">Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada.</string>
+
 
 </resources>
