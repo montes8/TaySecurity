@@ -3,8 +3,6 @@
     <string name="app_title">Tayler Security</string>
 
 
-
-
     <string name="title_blocking_view">Configuración de bloqueos</string>
     <string name="title_all_call">Bloqueo de Todas  las llamadas.</string>
     <string name="sub_title_all_call">Esta opción bloqueara las llamadas entrantes a tu telefono movil.</string>

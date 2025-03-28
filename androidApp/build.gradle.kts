@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.play.services.maps)
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation(projects.shared)
@@ -78,6 +79,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
     //implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation("com.google.maps.android:maps-compose:2.0.0")
+    implementation("com.google.android.gms:play-services-maps:2.0.0")
 }
 
 kapt {

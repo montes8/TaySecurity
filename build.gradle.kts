@@ -1,11 +1,13 @@
 plugins {
-    //trick: for the same plugin versions in all sub-modules
+    //trick: for the same plugin versions in all sub-modulesç
+    alias(libs.plugins.kotlinAndroid).apply(false)
     alias(libs.plugins.androidApplication).apply(false)
     alias(libs.plugins.androidLibrary).apply(false)
-    alias(libs.plugins.kotlinAndroid).apply(false)
+
     alias(libs.plugins.kotlinMultiplatform).apply(false)
     alias(libs.plugins.compose.compiler).apply(false)
     id("com.google.dagger.hilt.android") version "2.44" apply false
+    //alias(libs.plugins.kotlinAndroid) apply false
 }
 
 tasks.register("clean", Delete::class) {
