@@ -18,16 +18,19 @@ kotlin {
         google()
         mavenCentral()
     }
-    val ktorVersion = "2.3.2"
+    val ktorVersion = "3.1.1"
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.1.0")
-
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+
+
                 implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 implementation("com.google.code.gson:gson:2.9.0")
@@ -43,12 +46,14 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 implementation("app.cash.sqldelight:android-driver:2.0.2")
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
             }
         }
 
         val iosMain by creating {
             dependencies {
                 implementation("app.cash.sqldelight:native-driver:2.0.2")
+                implementation("io.ktor:ktor-client-darwin:$ktorVersion")
             }
         }
 

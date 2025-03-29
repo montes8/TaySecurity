@@ -5,27 +5,25 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import com.tay.taysecurity.android.utils.MyApplicationTheme
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MapActivity : ComponentActivity() {
+
+    var viewModel : MapViewModel? = null
     companion object{
         fun newInstance(context: Context) = context.startActivity(Intent(context,MapActivity::class.java))
     }
 
-    private val viewModel: MapViewModel by viewModels()
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = MapViewModel()
         setContent {
             MyApplicationTheme {
-                MapScreen(viewModel)
+                viewModel?.let {
+                    MapScreen(it)
+                }
             }
         }
-
     }
 }
 

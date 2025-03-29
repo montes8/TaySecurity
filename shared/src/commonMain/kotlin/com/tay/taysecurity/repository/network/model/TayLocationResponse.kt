@@ -9,9 +9,9 @@ import com.tay.taysecurity.model.TayLocationModel
 data class TayLocationResponse(
     @SerialName("id")
     var id : String?,
-    @SerialName("title")
+    @SerialName("latitude")
     var latitude : String?,
-    @SerialName("description")
+    @SerialName("longitude")
     var longitude : String?
 ){
     companion object{

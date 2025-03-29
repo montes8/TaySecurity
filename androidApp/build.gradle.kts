@@ -81,6 +81,9 @@ dependencies {
     //implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("com.google.maps.android:maps-compose:2.0.0")
     implementation("com.google.android.gms:play-services-maps:2.0.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+
 }
 
 kapt {
