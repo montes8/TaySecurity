@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -55,9 +56,9 @@ fun MapScreen(viewModel: MapViewModel) {
 
     var isMapLoaded by remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(-11.99405732, -77.06241231), 12f)
+        position = CameraPosition.fromLatLngZoom(LatLng(-11.99405732, -77.06241231), 15f)
     }
-
+    viewModel.loadDetailRecipe()
     if (viewModel.uiStateMap.loadMap){
         val observerMap = TayLocationModelObserver()
         viewModel.uiStateMap.locationModel.forEach {
@@ -66,7 +67,7 @@ fun MapScreen(viewModel: MapViewModel) {
             observerMap.recipes.add(it)
         }
 
-        Box(Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize().background(Color.White)) {
             GoogleMapView(
                 observerMap,
                 modifier = Modifier.matchParentSize(),
@@ -126,11 +127,15 @@ fun GoogleMapView(
             }
 
             observerMap.listMarker.forEachIndexed { index, it ->
+                if (index == observerMap.recipes.size -1){
+                    cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(observerMap.recipes[index].latitude.toDouble(),
+                        observerMap.recipes[index].longitude.toDouble()), 13f)
+                }
                 MarkerInfoWindowContent(
                     state = it,
                     onClick = markerClick,
                     draggable = true,
-                    icon = getBitmapDescriptorFromVector(context)
+                    icon = getBitmapDescriptorFromVector(context,index == observerMap.recipes.size -1 || observerMap.recipes.size == 1)
                 ) {
                     Column (modifier = Modifier.padding(12.dp),
                         horizontalAlignment = Alignment.CenterHorizontally){
@@ -163,10 +168,10 @@ fun GoogleMapView(
 }
 
 @SuppressLint("UseCompatLoadingForDrawables")
-private fun getBitmapDescriptorFromVector(context: Context): BitmapDescriptor {
-    val vectorDrawable: Drawable = context.getDrawable(R.drawable.ic_map_car)!!
-    val h = (60 * context.resources.displayMetrics.density).toInt()
-    val w = (60 * context.resources.displayMetrics.density).toInt()
+private fun getBitmapDescriptorFromVector(context: Context,iconPrincipal : Boolean): BitmapDescriptor {
+    val vectorDrawable: Drawable = context.getDrawable(if (iconPrincipal)R.drawable.ic_map_car else R.drawable.ic_location_range)!!
+    val h = ((if (iconPrincipal)60 else 25) * context.resources.displayMetrics.density).toInt()
+    val w = ((if (iconPrincipal)60 else 25) * context.resources.displayMetrics.density).toInt()
     vectorDrawable.setBounds(0, 0, w, h)
     val bm = createBitmap(w, h)
     val canvas = Canvas(bm)

@@ -14,14 +14,8 @@ class MapViewModel (
     val tayDataUseCase: TayDataUseCase = TayDataUseCase()
     var uiStateMap by mutableStateOf(MapUiState())
 
-    init {
-        execute {
-            delay(500)
-            loadDetailRecipe()
-        }
-    }
 
-    private fun loadDetailRecipe() {
+     fun loadDetailRecipe() {
         execute {
               val response = tayDataUseCase.loadLocations()
             uiStateMap = uiStateMap.copy(locationModel = response,loadMap = true)

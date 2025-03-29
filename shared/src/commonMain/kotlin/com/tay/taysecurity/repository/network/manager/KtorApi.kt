@@ -9,7 +9,8 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
-const val BASE_URL = "669e-38-25-16-168.ngrok-free.app/service"
+const val BASE_URL = "w7b1f7dp-8080.brs.devtunnels.ms/service"
+//https://w7b1f7dp-8080.brs.devtunnels.ms/service/
 
 abstract class KtorApi {
     val client = HttpClient()
