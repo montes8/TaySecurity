@@ -1,4 +1,4 @@
-package com.tay.taysecurity.android.model
+package com.tay.taysecurity.model
 
 data class TayLocationModel(
     var id : String = "",

@@ -3,23 +3,17 @@ package com.tay.taysecurity.android.ui.map
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.tay.taysecurity.android.model.TayLocationModel
 import com.tay.taysecurity.android.ui.BaseViewModel
+import com.tay.taysecurity.usecases.repository.TayDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    //private val dataDBUseCase: DataDBUseCase, @IoDispatcher
-   // private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : BaseViewModel() {
 
+    val tayDataUseCase: TayDataUseCase = TayDataUseCase()
     var uiStateMap by mutableStateOf(MapUiState())
 
     init {
@@ -31,10 +25,8 @@ class MapViewModel @Inject constructor(
 
     private fun loadDetailRecipe() {
         execute {
-            //  val response = dataDBUseCase.loadRecipes()
-            uiStateMap = uiStateMap.copy(locationModel =
-                arrayListOf(TayLocationModel(id = "eewewe", latitude = "-11.99405732", longitude = "-77.06241231")),loadMap = true)
-
+              val response = tayDataUseCase.loadLocations()
+            uiStateMap = uiStateMap.copy(locationModel = response,loadMap = true)
         }
     }
 }

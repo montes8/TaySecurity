@@ -18,12 +18,16 @@ kotlin {
         google()
         mavenCentral()
     }
-
+    val ktorVersion = "2.3.2"
     sourceSets {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.1.0")
+
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
                 implementation("com.google.code.gson:gson:2.9.0")

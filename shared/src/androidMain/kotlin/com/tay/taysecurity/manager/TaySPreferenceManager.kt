@@ -1,5 +1,6 @@
 package com.tay.taysecurity.manager
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
@@ -39,6 +40,7 @@ actual fun TaySPreferenceManager.getBoolean(key: String ) : Boolean{
 }
 
 
+@SuppressLint("UseKtx")
 actual fun TaySPreferenceManager.setBoolean(key: String, value: Boolean) {
     val prefs: SharedPreferences = this.getSharedPreferences("shareTaySure", MODE_PRIVATE)
     val editor = prefs.edit()
