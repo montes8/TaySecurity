@@ -115,7 +115,7 @@ fun GoogleMapView(
                     Column (modifier = Modifier.padding(12.dp),
                         horizontalAlignment = Alignment.CenterHorizontally){
                         Text(
-                            text = "Auto",
+                            text = "Mi Auto",
                             style = MaterialTheme.typography.body1,
                             fontWeight = FontWeight.Bold,
                             maxLines = 2,
@@ -125,7 +125,7 @@ fun GoogleMapView(
                         )
 
                         Text(
-                            text = "seguimiento",
+                            text = "Localización",
                             style = MaterialTheme.typography.subtitle1,
                             fontWeight = FontWeight.Normal,
                             maxLines = 2,
@@ -144,7 +144,7 @@ fun GoogleMapView(
 
 @SuppressLint("UseCompatLoadingForDrawables")
 private fun getBitmapDescriptorFromVector(context: Context): BitmapDescriptor {
-    val vectorDrawable: Drawable = context.getDrawable(R.drawable.ic_map_custom)!!
+    val vectorDrawable: Drawable = context.getDrawable(R.drawable.ic_map_car)!!
     val h = (60 * context.resources.displayMetrics.density).toInt()
     val w = (60 * context.resources.displayMetrics.density).toInt()
     vectorDrawable.setBounds(0, 0, w, h)

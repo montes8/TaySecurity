@@ -29,6 +29,7 @@ import com.tay.taysecurity.android.component.TopBar
 import com.tay.taysecurity.android.component.drawer.Destinations
 import com.tay.taysecurity.android.component.drawer.Drawer
 import com.tay.taysecurity.android.component.drawer.NavigationHost
+import com.tay.taysecurity.android.ui.map.MapActivity
 import com.tay.taysecurity.android.utils.uiTayViewCallButton
 
 
@@ -81,6 +82,11 @@ fun ScreenHome(){
         NavigationHost(navController)
     }
 
-    Dialog(showDialog = openDialog.value, dismissDialog = { openDialog.value = false })
+    if(openDialog.value){
+        MapActivity.newInstance(context)
+        openDialog.value = false
+    }
+
+  //  Dialog(showDialog = openDialog.value, dismissDialog = { openDialog.value = false })
 
 }
