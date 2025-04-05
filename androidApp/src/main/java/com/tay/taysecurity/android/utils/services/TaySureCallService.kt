@@ -35,6 +35,6 @@ class TaySureCallService : InCallService() {
                      call?.disconnect()
                  }else{ this@TaySureCallService.uiTayViewCall()}
              }
-          },500)
+          },800)
     }
 }
