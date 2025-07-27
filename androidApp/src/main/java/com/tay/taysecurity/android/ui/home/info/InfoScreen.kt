@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -25,13 +24,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TopBarBack
+import com.tay.taysecurity.android.model.InfoModel
 import com.tay.taysecurity.android.ui.home.extra.AndroidLogo
+import com.tay.taysecurity.android.utils.parseFromObjet
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun InfoScreen(navController: NavHostController,title: String,message : String) {
-
+fun InfoScreen(navController: NavHostController,dataInfo: String) {
+    val data : InfoModel =parseFromObjet(dataInfo)
     Scaffold(
         topBar = {
             TopBarBack {
@@ -53,7 +54,7 @@ fun InfoScreen(navController: NavHostController,title: String,message : String) 
 
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "BLOQUEO DE LLAMADAS",
+                text = data.title,
                 color = Color.Magenta,
                 fontSize = 25.sp,
                 textAlign = TextAlign.Center,
@@ -62,7 +63,7 @@ fun InfoScreen(navController: NavHostController,title: String,message : String) 
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = stringResource(R.string.info_call),
+                text = data.message,
                 color = Color.White,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Start,

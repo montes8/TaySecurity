@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.compose.compiler)
     id("dagger.hilt.android.plugin")
+    id ("kotlin-parcelize")
     kotlin("kapt")
 }
 
@@ -60,6 +61,8 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
+    implementation ("com.google.code.gson:gson:2.8.9")
+    //implementation("io.coil-kt.coil3:coil-compose:3.3.0")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation(projects.shared)

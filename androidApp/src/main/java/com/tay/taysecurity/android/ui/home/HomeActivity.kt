@@ -1,17 +1,13 @@
 package com.tay.taysecurity.android.ui.home
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.telecom.TelecomManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import com.tay.taysecurity.android.component.drawer.NavigationHostMain
+import com.tay.taysecurity.android.component.navigation.NavigationHostMain
 import com.tay.taysecurity.android.utils.MyApplicationTheme
-import com.tay.taysecurity.android.utils.loadContactUser
-import com.tay.taysecurity.android.utils.manager.TaySureCall
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

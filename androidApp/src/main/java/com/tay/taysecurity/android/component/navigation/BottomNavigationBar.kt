@@ -1,4 +1,4 @@
-package com.tay.taysecurity.android.component
+package com.tay.taysecurity.android.component.navigation
 
 
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.tay.taysecurity.android.component.drawer.Destinations
 import com.tay.taysecurity.android.component.drawer.currentRoute
 
 @Composable

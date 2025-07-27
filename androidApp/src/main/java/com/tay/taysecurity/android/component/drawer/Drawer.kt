@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tay.taysecurity.android.R
+import com.tay.taysecurity.android.component.navigation.Destinations
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

@@ -21,13 +21,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TayCardItemNext
 import com.tay.taysecurity.android.component.TayCardItemSwitch
+import com.tay.taysecurity.android.component.navigation.DestinationsMain
 import com.tay.taysecurity.android.utils.tayToast
 
 @Composable
-fun SecurityScreen(
+fun SecurityScreen(navController: NavHostController
 ) {
     val checkedGps = remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -48,9 +50,9 @@ fun SecurityScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "Optener infromacion de Image",
+            text = "Optener informacion de Image",
             subText ="Esta opción te permitira acceder a la metadata de una imagen y ver toda suu información."){
-
+            navController.navigate(DestinationsMain.ImageScreen.route)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -67,7 +69,7 @@ fun SecurityScreen(
         TayCardItemSwitch(state =checkedGps.value,
             text = "Crea una ubicación aleatoria",
             subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, " +
-                    "debes habilitar como app de localización en la opcion de desarrollador para esta opcion"){
+                    "debes habilitar como app de localización en la opcion de desarrollador para esta opción."){
             checkedGps.value = it
             context.tayToast("Funcionalidad aun no disponible")
         }

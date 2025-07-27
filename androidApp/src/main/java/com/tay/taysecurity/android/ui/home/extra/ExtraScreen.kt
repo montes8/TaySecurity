@@ -7,7 +7,6 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,7 +37,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TayCardItemNext
-import com.tay.taysecurity.android.component.drawer.DestinationsMain
+import com.tay.taysecurity.android.component.navigation.DestinationsMain
+import com.tay.taysecurity.android.model.InfoModel
+import com.tay.taysecurity.android.utils.infoBlockingCall
+import com.tay.taysecurity.android.utils.messageBlockingCall
+import com.tay.taysecurity.android.utils.messageBlockingGps
+import com.tay.taysecurity.android.utils.messageBlockingImage
+import com.tay.taysecurity.android.utils.messageBlockingSms
+import com.tay.taysecurity.android.utils.parseFromString
+import com.tay.taysecurity.android.utils.titleBlockingCall
+import com.tay.taysecurity.android.utils.titleBlockingGps
+import com.tay.taysecurity.android.utils.titleBlockingImage
+import com.tay.taysecurity.android.utils.titleBlockingSms
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
@@ -67,29 +77,35 @@ fun ExtraScreen( navController: NavHostController) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "BLOQUEOS DE LLAMADA",
-            subText ="Aqui te explicamos como se usa esta funcionalidad a detalle, y las configuraciones a usar."){
-            navController.navigate(DestinationsMain.InfoScreen.route)
+            text = titleBlockingCall,
+            subText = infoBlockingCall){
+            navController.navigate(DestinationsMain.InfoScreen.withArgs(
+                parseFromString(InfoModel(title = titleBlockingCall, message = messageBlockingCall))))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "BLOQUEOS DE MESAJES DE TEXTO",
-            subText ="Aqui te explicamos como se usa esta funcionalidad a detalle, y las configuraciones a usar."){
+            text = titleBlockingSms,
+            subText = infoBlockingCall){
+            navController.navigate(DestinationsMain.InfoScreen.withArgs(
+                parseFromString(InfoModel(title = titleBlockingSms, message = messageBlockingSms))))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "UBICACION ALEATORIA",
-            subText ="Aqui te explicamos como se usa esta funcionalidad a detalle, y las configuraciones a usar."){
+            text = titleBlockingGps,
+            subText =infoBlockingCall){
+            navController.navigate(DestinationsMain.InfoScreen.withArgs(
+                parseFromString(InfoModel(title = titleBlockingGps, message = messageBlockingGps))))
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "INFORMACION DE IMAGEN",
-            subText ="Aqui te explicamos como se usa esta funcionalidad a detalle, y las configuraciones a usar."){
+            text = titleBlockingImage,
+            subText =infoBlockingCall){
+            navController.navigate(DestinationsMain.InfoScreen.withArgs(
+                parseFromString(InfoModel(title = titleBlockingImage, message = messageBlockingImage))))
         }
-
     }
 
 }

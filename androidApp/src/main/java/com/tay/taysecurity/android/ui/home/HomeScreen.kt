@@ -24,12 +24,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.tay.taysecurity.android.component.BottomNavigationBar
-import com.tay.taysecurity.android.component.Dialog
+import com.tay.taysecurity.android.component.navigation.BottomNavigationBar
 import com.tay.taysecurity.android.component.TopBar
-import com.tay.taysecurity.android.component.drawer.Destinations
+import com.tay.taysecurity.android.component.navigation.Destinations
 import com.tay.taysecurity.android.component.drawer.Drawer
-import com.tay.taysecurity.android.component.drawer.NavigationHost
+import com.tay.taysecurity.android.component.navigation.NavigationHost
 import com.tay.taysecurity.android.ui.map.MapActivity
 import com.tay.taysecurity.android.utils.uiTayViewCallButton
 

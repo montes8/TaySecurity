@@ -8,6 +8,9 @@ import android.provider.ContactsContract
 import android.telecom.Call
 import android.util.Log
 import android.widget.Toast
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.tay.taysecurity.android.model.InfoModel
 import com.tay.taysecurity.model.ContactShared
 import com.tay.taysecurity.utils.SECURITY_EMPTY
 
@@ -114,3 +117,18 @@ fun Application.uiTayDeleteSMS(all: Boolean = false, utNumber: String = SECURITY
         }
     }
     }
+
+fun parseStringGsonList(jsonString: String): List<InfoModel> {
+    val jsonData = Gson()
+    return jsonData.fromJson(jsonString, object : TypeToken<List<InfoModel>>() {}.type)
+}
+
+inline fun <reified T> parseFromObjet( value: String): T {
+    val jsonData = Gson()
+    return jsonData.fromJson(Uri.decode(value), object : TypeToken<T>() {}.type)
+}
+
+inline fun <reified T> parseFromString( value: T): String {
+    val jsonData = Gson()
+    return Uri.encode(jsonData.toJson(value))
+}
