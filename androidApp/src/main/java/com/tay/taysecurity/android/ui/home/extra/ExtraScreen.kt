@@ -30,6 +30,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -45,7 +46,7 @@ fun ExtraScreen( navController: NavHostController) {
     Column( modifier = Modifier
         .fillMaxWidth()
         .verticalScroll(rememberScrollState())
-        .padding(top= 8.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
+        .padding(start = 8.dp, end = 8.dp, bottom = 140.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
 
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
@@ -61,7 +62,8 @@ fun ExtraScreen( navController: NavHostController) {
             color = Color.Black,
             fontSize = 25.sp,
             textAlign = TextAlign.Center,
-            fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
+            fontFamily = FontFamily(Font(R.font.gabi_regular)),
+            fontWeight= FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(

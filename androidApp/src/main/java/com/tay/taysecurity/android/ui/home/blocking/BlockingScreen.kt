@@ -18,6 +18,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,14 +36,15 @@ fun BlockingScreen(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .padding(top= 8.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
+            .padding(top= 12.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(R.string.title_blocking_view),
-            fontSize = 25.sp,
+            fontSize = 24.sp,
             textAlign = TextAlign.Center,
-            fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
+            fontFamily = FontFamily(Font(R.font.gabi_regular)),
+            fontWeight= FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -50,7 +53,7 @@ fun BlockingScreen(
             color = Color.Magenta,
             fontSize = 13.sp,
             textAlign = TextAlign.Center,
-            fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
+            fontFamily = FontFamily(Font(R.font.gabi_regular))
         )
 
         Spacer(modifier = Modifier.height(16.dp))

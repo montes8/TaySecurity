@@ -3,9 +3,11 @@ package com.tay.taysecurity.android.component.drawer
 import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.tay.taysecurity.android.ui.home.ScreenHome
 import com.tay.taysecurity.android.ui.home.blocking.BlockingScreen
 import com.tay.taysecurity.android.ui.home.extra.ExtraScreen
@@ -37,6 +39,13 @@ fun NavigationHostMain(
             ExitTransition.None
         }) {
         composable(DestinationsMain.HomeScreen.route) { ScreenHome(navController)}
-        composable(DestinationsMain.InfoScreen.route) {InfoScreen(navController) }
+        composable(route = DestinationsMain.InfoScreen.route +"/{title},{message}",
+            arguments = listOf(
+                navArgument("title") { type = NavType.StringType },
+                navArgument("message") { type = NavType.StringType }
+            )) {
+            InfoScreen(navController, it.arguments?.getString("title")?:"",
+                it.arguments?.getString("message")?:"")
+        }
     }
 }

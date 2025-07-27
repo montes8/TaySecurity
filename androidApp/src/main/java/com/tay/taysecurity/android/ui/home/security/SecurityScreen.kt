@@ -15,53 +15,52 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TayCardItemNext
 import com.tay.taysecurity.android.component.TayCardItemSwitch
-import com.tay.taysecurity.android.ui.detail.DetailActivity
+import com.tay.taysecurity.android.utils.tayToast
 
 @Composable
 fun SecurityScreen(
 ) {
-
     val checkedGps = remember { mutableStateOf(false) }
-    val checkedCapture = remember { mutableStateOf(false) }
     val context = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
-            .padding(top= 8.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
+            .padding(top= 12.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Configuración de \nseguridad",
-            fontSize = 20.sp,
+            text = "Configuración de\nseguridad",
+            fontSize = 24.sp,
             textAlign = TextAlign.Center,
-            fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
+            fontFamily = FontFamily(Font(R.font.gabi_regular)),
+            fontWeight= FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
             text = "Optener infromacion de Image",
             subText ="Esta opción te permitira acceder a la metadata de una imagen y ver toda suu información."){
-            DetailActivity.newInstance(context)
+
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Habilitar modo desarrolador para estas opciones",
+            text = "Para usar esta funcionalidad debes habilitar modo desarrolador obten mas infomacion en la seccion de ayuda para saber como usarlo",
             fontSize = 16.sp,
             color = Color.Black,
             textAlign = TextAlign.Start,
-            fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
+            fontFamily = FontFamily(Font(R.font.gabi_regular)),
+            fontWeight= FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -70,6 +69,7 @@ fun SecurityScreen(
             subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, " +
                     "debes habilitar como app de localización en la opcion de desarrollador para esta opcion"){
             checkedGps.value = it
+            context.tayToast("Funcionalidad aun no disponible")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

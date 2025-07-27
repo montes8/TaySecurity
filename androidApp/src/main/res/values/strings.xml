@@ -18,6 +18,8 @@
     <string name="title_helps_view">Como usar las funcionalidades</string>
     <string name="title_sub_sure_view">Para utilizar estas funcionalidades debes activar el modo desarrollador y poner esta app se ubicación como predeterminada</string>
 
+    <string name="info_call">Para utilizar esta funcionalidad, lo primero que se debe hacer el poner esta aplicacion como predeterminada para llamadas:\n-Configuración.\n-Aplicaciones.\n-Opciones avanzadas.\n-Apps predeterminadas.\n
+    Luego debes activar los permisos relacionados a llamadas:\n-Configutación.\n-Aplicaciones.\n-Seleciona ValuSure.\n-Permisos.\n-Activa los permisos de llamada.</string>
 
 
 </resources>

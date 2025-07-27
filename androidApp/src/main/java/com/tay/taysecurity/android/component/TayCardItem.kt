@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tay.taysecurity.android.R
@@ -53,14 +54,15 @@ fun TayCardItemSwitch(
                 Text(
                     text = text,
                     fontSize = 18.sp,
-                    fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
+                    fontFamily = FontFamily(Font(R.font.gabi_regular)),
+                    fontWeight= FontWeight.Bold,
                     color = Color.White
                 )
                 Text(
                     modifier = Modifier.padding( top = 2.dp),
                     text = subText,
                     fontSize = 13.sp,
-                    fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
+                    fontFamily = FontFamily(Font(R.font.gabi_regular)),
                     color = Color.White
                 )
             }
@@ -112,14 +114,15 @@ fun TayCardItemNext(
                 Text(
                     text = text,
                     fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
+                    fontFamily = FontFamily(Font(R.font.gabi_regular)),
+                    fontWeight= FontWeight.Bold,
                     color = Color.White
                 )
                 Text(
                     modifier = Modifier.padding( top = 2.dp),
                     text = subText,
-                    fontSize = 12.sp,
-                    fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
+                    fontSize = 13.sp,
+                    fontFamily = FontFamily(Font(R.font.gabi_regular)),
                     color = Color.White
                 )
             }
