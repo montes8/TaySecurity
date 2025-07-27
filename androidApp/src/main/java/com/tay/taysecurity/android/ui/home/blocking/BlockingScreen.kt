@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -38,7 +39,7 @@ fun BlockingScreen(
     ) {
         Text(
             text = stringResource(R.string.title_blocking_view),
-            fontSize = 24.sp,
+            fontSize = 25.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
         )
@@ -46,7 +47,7 @@ fun BlockingScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(R.string.title_sub_blocking_view),
-            color = colorResource(R.color.red),
+            color = Color.Magenta,
             fontSize = 13.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))

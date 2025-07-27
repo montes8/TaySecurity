@@ -58,8 +58,8 @@ fun ExtraScreen( navController: NavHostController) {
 
         Text(
             text = stringResource(R.string.title_helps_view),
-            color = Color.Magenta,
-            fontSize = 20.sp,
+            color = Color.Black,
+            fontSize = 25.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
         )
