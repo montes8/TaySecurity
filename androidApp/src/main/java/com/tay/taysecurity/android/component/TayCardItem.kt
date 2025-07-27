@@ -52,14 +52,14 @@ fun TayCardItemSwitch(
                 .padding(16.dp)) {
                 Text(
                     text = text,
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_semi_bold)),
                     color = Color.White
                 )
                 Text(
                     modifier = Modifier.padding( top = 2.dp),
                     text = subText,
-                    fontSize = 12.sp,
+                    fontSize = 13.sp,
                     fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_medium)),
                     color = Color.White
                 )

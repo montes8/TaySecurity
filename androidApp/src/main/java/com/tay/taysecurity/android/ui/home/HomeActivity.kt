@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import com.tay.taysecurity.android.component.drawer.NavigationHostMain
 import com.tay.taysecurity.android.utils.MyApplicationTheme
 import com.tay.taysecurity.android.utils.loadContactUser
 import com.tay.taysecurity.android.utils.manager.TaySureCall
@@ -18,15 +19,6 @@ class HomeActivity : ComponentActivity() {
 
     private val REQUEST_CODE_SET_DEFAULT_DIALER = 123
 
-    companion object {
-        fun newInstance(context: Context){
-            val i = Intent(context, HomeActivity::class.java)
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(i)
-        }
-    }
-
-
     override fun onStart() {
         super.onStart()
         checkDefaultDialer()
@@ -34,7 +26,11 @@ class HomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MyApplicationTheme{ ScreenHome()}}
+        setContent { MyApplicationTheme{
+           // ScreenHome()
+            NavigationHostMain()
+
+        }}
     }
 
 
@@ -52,15 +48,18 @@ class HomeActivity : ComponentActivity() {
         if (!isAlreadyDefaultDialer) {
             val intent = Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
                 .putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, this.packageName)
+
+
+            
             this.startActivityForResult(intent, REQUEST_CODE_SET_DEFAULT_DIALER)
         }
     }
 
     private fun checkSetDefaultDialerResult(resultCode: Int) {
         val message = when (resultCode) {
-            RESULT_OK -> "User accepted request to become default dialer"
-            RESULT_CANCELED -> "User declined request to become default dialer"
-            else -> "Unexpected result code: $resultCode"
+            RESULT_OK -> "El usuario aceptó la solicitud para convertirse en el marcador predeterminado"
+            RESULT_CANCELED -> "El usuario rechazó la solicitud para convertirse en el marcador predeterminado"
+            else -> "Código de resultado inesperado: $resultCode"
         }
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }

@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,45 +27,65 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TayCardItemNext
+import com.tay.taysecurity.android.component.drawer.DestinationsMain
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
-fun ExtraScreen() {
-    Column(modifier = Modifier
-        .fillMaxSize().padding(16.dp)) {
+fun ExtraScreen( navController: NavHostController) {
+    Column( modifier = Modifier
+        .fillMaxWidth()
+        .verticalScroll(rememberScrollState())
+        .padding(top= 8.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
 
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
             AndroidLogo(
-                backgroundColor = MaterialTheme.colors.background,
+                backgroundColor = Color.White,
                 contentColor =  Color.Black,
                 padding = 30.dp
             )
         }
 
+        Text(
+            text = stringResource(R.string.title_helps_view),
+            color = Color.Magenta,
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+            fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "Imformación de Imagen",
-            subText ="Esta funcinalidad te permite obtener información de la imagen a detalle"){
+            text = "BLOQUEOS DE LLAMADA",
+            subText ="Aqui te explicamos como se usa esta funcionalidad a detalle, y las configuraciones a usar."){
+            navController.navigate(DestinationsMain.InfoScreen.route)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "Imformación de Audio",
-            subText ="Esta funcinalidad te permite obtener información de la Audio a detalle"){
+            text = "BLOQUEOS DE MESAJES DE TEXTO",
+            subText ="Aqui te explicamos como se usa esta funcionalidad a detalle, y las configuraciones a usar."){
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "Imformación de Video",
-            subText ="Esta funcinalidad te permite obtener información de la Video a detalle"){
+            text = "UBICACION ALEATORIA",
+            subText ="Aqui te explicamos como se usa esta funcionalidad a detalle, y las configuraciones a usar."){
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemNext(
-            text = "Imformación de Archivo",
-            subText ="Esta funcinalidad te permite obtener información de la Archivo a detalle"){
+            text = "INFORMACION DE IMAGEN",
+            subText ="Aqui te explicamos como se usa esta funcionalidad a detalle, y las configuraciones a usar."){
         }
 
     }
@@ -107,13 +129,13 @@ fun AndroidLogo(
         )
 
         drawCircle(
-            color = backgroundColor,
+            color = Color.Magenta,
             center = Offset(size.minDimension * 0.3f + eyesOffset.value, size.minDimension * 0.8f),
             radius = size.minDimension * 0.04f
         )
 
         drawCircle(
-            color = backgroundColor,
+            color = Color.Magenta,
             center = Offset(size.minDimension * 0.7f + eyesOffset.value, size.minDimension * 0.8f),
             radius = size.minDimension * 0.04f
         )

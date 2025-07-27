@@ -4,6 +4,7 @@
 
 
     <string name="title_blocking_view">Configuración de bloqueos</string>
+    <string name="title_sub_blocking_view">Para utilizar estas funcionalidades deben estar como predeterminadas en la configuración del celular</string>
     <string name="title_all_call">Bloqueo de Todas  las llamadas.</string>
     <string name="sub_title_all_call">Esta opción bloqueara las llamadas entrantes a tu telefono movil.</string>
     <string name="title_stranger_call">Bloqueo de llamadas desconocidas.</string>
@@ -14,6 +15,9 @@
     <string name="sub_title_stranger_sms">Esta opción bloqueara y borrara los mensajes desconocidos entrantes en tu bandeja de entrada.</string>
     <string name="title_all_audio">Bloqueo de grabacion de audio.</string>
     <string name="sub_title_all_audio">Esta opción no permite grabar audios.</string>
+    <string name="title_helps_view">Como usar las funcionalidades</string>
+    <string name="title_sub_sure_view">Para utilizar estas funcionalidades debes activar el modo desarrollador y poner esta app se ubicación como predeterminada</string>
+
 
 
 </resources>

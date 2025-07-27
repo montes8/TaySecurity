@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -27,7 +28,6 @@ import com.tay.taysecurity.android.component.TayCardItemSwitch
 fun BlockingScreen(
 ) {
 
-    val checkedAudio = remember { mutableStateOf(false) }
     val viewModel : BlockingViewModel = hiltViewModel()
     Column(
         modifier = Modifier
@@ -38,7 +38,16 @@ fun BlockingScreen(
     ) {
         Text(
             text = stringResource(R.string.title_blocking_view),
-            fontSize = 20.sp,
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(R.string.title_sub_blocking_view),
+            color = colorResource(R.color.red),
+            fontSize = 13.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
         )
@@ -72,10 +81,5 @@ fun BlockingScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =checkedAudio.value,
-            text = stringResource(R.string.title_all_audio),
-            subText =stringResource(R.string.sub_title_all_audio)){
-            checkedAudio.value = it
-        }
     }
 }

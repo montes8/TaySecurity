@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tay.taysecurity.android.component.BottomNavigationBar
 import com.tay.taysecurity.android.component.Dialog
@@ -35,16 +36,14 @@ import com.tay.taysecurity.android.utils.uiTayViewCallButton
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ScreenHome(){
+fun ScreenHome(navControllerMain: NavHostController){
     val context = LocalContext.current
-
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState(
         drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     )
     val scope = rememberCoroutineScope()
     val openDialog = remember { mutableStateOf(false) }
-
     val navigationItems = listOf(
         Destinations.BlockingScreen,
         Destinations.SecurityScreen,
@@ -79,7 +78,7 @@ fun ScreenHome(){
         drawerContent = { Drawer(scope, scaffoldState, navController, items = navigationItems) },
         drawerGesturesEnabled = true
     ){
-        NavigationHost(navController)
+        NavigationHost(navController,navControllerMain)
     }
 
     if(openDialog.value){

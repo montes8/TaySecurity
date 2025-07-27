@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -47,10 +49,10 @@ fun SecurityScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =checkedCapture.value,
-            text = "Bloqueo de capturas y grabacion de pantalla",
-            subText ="Esta opción no permite tomar capturas ni grabar la pantalla en este dispositivo."){
-            checkedCapture.value = it
+        TayCardItemNext(
+            text = "Optener infromacion de Image",
+            subText ="Esta opción te permitira acceder a la metadata de una imagen y ver toda suu información."){
+            DetailActivity.newInstance(context)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -62,7 +64,6 @@ fun SecurityScreen(
             fontFamily = FontFamily(Font(R.font.ui_tay_montserrat_bold))
         )
 
-
         Spacer(modifier = Modifier.height(16.dp))
         TayCardItemSwitch(state =checkedGps.value,
             text = "Crea una ubicación aleatoria",
@@ -72,11 +73,5 @@ fun SecurityScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemNext(
-            text = "Crea una ubicación perzonalizada",
-            subText ="Esta opción desabilitara la ubicación aleatoria, " +
-                    "te pertime elegir la ubicacion que deseas mostrar como tu ubicación actual"){
-            DetailActivity.newInstance(context)
-        }
     }
 }
