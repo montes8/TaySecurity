@@ -29,21 +29,19 @@ class HomeActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //Verifica permisos para Android 6.0+
-            val permissionCheck = ContextCompat.checkSelfPermission(
-                this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+        //Verifica permisos para Android 6.0+
+        val permissionCheck = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            Log.i("Mensaje", "No se tiene permiso para leer.")
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf<String?>(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                225
             )
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                Log.i("Mensaje", "No se tiene permiso para leer.")
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf<String?>(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    225
-                )
-            } else {
-                Log.i("Mensaje", "Se tiene permiso para leer!")
-            }
+        } else {
+            Log.i("Mensaje", "Se tiene permiso para leer!")
         }
         setContent { MyApplicationTheme{
            // ScreenHome()
