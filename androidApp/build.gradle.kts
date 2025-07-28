@@ -19,10 +19,10 @@ android {
     }
      signingConfigs {
         create("release") {
-            storeFile = file("../keystore/taysecurity.jks")
-            storePassword = "taySecurity@2024"
-            keyAlias = "taySecurity2024"
-            keyPassword = "taySecurity@2024"
+            storeFile = file("../keystore/valusure.jks")
+            storePassword = "taySecurity@2025"
+            keyAlias = "taySecurity2025"
+            keyPassword = "taySecurity@2025"
         }
     }
 
