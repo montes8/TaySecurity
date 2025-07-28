@@ -62,7 +62,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
     implementation ("com.google.code.gson:gson:2.8.9")
-    //implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    implementation("androidx.exifinterface:exifinterface:1.3.3")
+
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation(projects.shared)

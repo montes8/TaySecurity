@@ -3,16 +3,25 @@ package com.tay.taysecurity.android.utils
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
+import android.os.Build
+import android.os.Environment
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.telecom.Call
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.exifinterface.media.ExifInterface
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.tay.taysecurity.android.model.InfoModel
+import com.tay.taysecurity.android.model.UITayMetaDataImage
 import com.tay.taysecurity.model.ContactShared
 import com.tay.taysecurity.utils.SECURITY_EMPTY
+import java.io.File
+import java.io.IOException
+
 
 fun Context.tayToast(message : String){
     Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
@@ -118,11 +127,6 @@ fun Application.uiTayDeleteSMS(all: Boolean = false, utNumber: String = SECURITY
     }
     }
 
-fun parseStringGsonList(jsonString: String): List<InfoModel> {
-    val jsonData = Gson()
-    return jsonData.fromJson(jsonString, object : TypeToken<List<InfoModel>>() {}.type)
-}
-
 inline fun <reified T> parseFromObjet( value: String): T {
     val jsonData = Gson()
     return jsonData.fromJson(Uri.decode(value), object : TypeToken<T>() {}.type)
@@ -131,4 +135,84 @@ inline fun <reified T> parseFromObjet( value: String): T {
 inline fun <reified T> parseFromString( value: T): String {
     val jsonData = Gson()
     return Uri.encode(jsonData.toJson(value))
+}
+
+
+fun Uri.uiTayMetaDataImage(context : Context): UITayMetaDataImage {
+    var uiTayData = UITayMetaDataImage()
+    var nameImage = this.getRealPathFromURI(context)
+    Log.d("metadata",nameImage.toString())
+    try {
+        var exifInterface : ExifInterface? = null
+        val imgFile = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+            nameImage.toString()
+        )
+        val imgFileTwo = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+            nameImage.toString()
+        )
+        val imgFileFour = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM),
+            "Camera/$nameImage"
+        )
+        try {
+            exifInterface  = ExifInterface(imgFile.path)
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
+
+        if(exifInterface == null){
+            try {
+                exifInterface  = ExifInterface(imgFileTwo.path)
+            }catch (e: Exception){
+           e.printStackTrace()
+            }
+        }
+
+        if(exifInterface == null){
+            try {
+                exifInterface  = ExifInterface(imgFileFour.path)
+            }catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+
+        exifInterface?.let {
+            uiTayData =  UITayMetaDataImage(
+                length  = it.getAttribute(ExifInterface.TAG_IMAGE_LENGTH)?: UI_TAY_EMPTY,
+                width = it.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)?: UI_TAY_EMPTY,
+                dateTime  = it.getAttribute(ExifInterface.TAG_DATETIME_ORIGINAL)?: UI_TAY_EMPTY,
+                take  = it.getAttribute(ExifInterface.TAG_MAKE)?: UI_TAY_EMPTY,
+                model  = it.getAttribute(ExifInterface.TAG_MODEL)?: UI_TAY_EMPTY,
+                orientation  = it.getAttribute(ExifInterface.TAG_ORIENTATION)?: UI_TAY_EMPTY,
+                whiteBalance  = it.getAttribute(ExifInterface.TAG_WHITE_BALANCE)?: UI_TAY_EMPTY,
+                focalLength  = it.getAttribute(ExifInterface.TAG_FOCAL_LENGTH)?: UI_TAY_EMPTY,
+                flash  = it.getAttribute(ExifInterface.TAG_FLASH)?: UI_TAY_EMPTY,
+                gpsDatesTamp  = it.getAttribute(ExifInterface.TAG_GPS_DATESTAMP)?: UI_TAY_EMPTY,
+                gpsTimesTamp  = it.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP)?: UI_TAY_EMPTY,
+                gpsLatitude  = it.getAttribute(ExifInterface.TAG_GPS_LATITUDE)?: UI_TAY_EMPTY,
+                gpsLatitudeReferential  = it.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF)?: UI_TAY_EMPTY,
+                gpsLongitude  = it.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)?: UI_TAY_EMPTY,
+                gpsLongitudeReferential  = it.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)?: UI_TAY_EMPTY,
+                gpsProcessingMethod  = it.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD)?: UI_TAY_EMPTY
+            )
+        }
+      Log.d("metadata",uiTayData.toString())
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return uiTayData
+}
+
+fun Uri.getRealPathFromURI(context: Context): String? {
+    var thePath: String? = "no-path-found"
+    val filePathColumn = arrayOf<String?>(MediaStore.Images.Media.DISPLAY_NAME)
+    val cursor: Cursor? = context.contentResolver.query(this, filePathColumn, null, null, null)
+    if (cursor?.moveToFirst() == true) {
+        val columnIndex = cursor.getColumnIndex(filePathColumn[0])
+        thePath = cursor.getString(columnIndex)
+    }
+    cursor?.close()
+    return thePath
 }

@@ -1,5 +1,6 @@
 package com.tay.taysecurity.android.utils
 
+const val UI_TAY_EMPTY = ""
 const  val titleBlockingCall = "BLOQUEOS DE LLAMADA"
 const  val infoBlockingCall = "Aqui te explicamos como se usa esta funcionalidad a detalle, y las configuraciones a usar."
 const  val messageBlockingCall = "Para utilizar esta funcionalidad, lo primero que se debe hacer el poner esta aplicacion como predeterminada para llamadas:\n-Configuración.\n-Aplicaciones.\n-Opciones avanzadas.\n-Apps predeterminadas.\n" +
