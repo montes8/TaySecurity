@@ -45,7 +45,7 @@ fun NavigationHostMain(
             ExitTransition.None
         }) {
         composable(DestinationsMain.HomeScreen.route) { ScreenHome(navController)}
-        composable(route = DestinationsMain.InfoScreen.route +"/{dataInf}",
+        composable(route = DestinationsMain.InfoScreen.route +"/{dataInfo}",
             arguments = listOf(
                 navArgument("dataInfo") { type = NavType.StringType }
             )) {

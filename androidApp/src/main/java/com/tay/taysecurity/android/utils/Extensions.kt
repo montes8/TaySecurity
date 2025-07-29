@@ -5,14 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.telecom.Call
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.exifinterface.media.ExifInterface
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -27,15 +25,6 @@ fun Context.tayToast(message : String){
     Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
 }
 
-fun Context.uiTayDialedNumber(number : String = "935815994", key : String = "tel:"){
-    try {
-        val intent = Intent(Intent.ACTION_CALL)
-        intent.setData(Uri.parse("$key$number"))
-        this.startActivity(intent)
-    } catch (e: SecurityException) {
-        Log.e("UI_TAY_TAG_ERROR",e.message.toString())
-    }
-}
 fun Context.uiTayViewCallButton(){
     val intent = Intent(Intent.ACTION_CALL_BUTTON)
     this.startActivity(intent)

@@ -54,7 +54,7 @@ import com.tay.taysecurity.android.utils.titleBlockingSms
 @Composable
 fun ExtraScreen( navController: NavHostController) {
     Column( modifier = Modifier
-        .fillMaxWidth()
+        .fillMaxWidth().background(Color.White)
         .verticalScroll(rememberScrollState())
         .padding(start = 8.dp, end = 8.dp, bottom = 140.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {

@@ -1,5 +1,6 @@
 package com.tay.taysecurity.android.ui.home.security
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,13 +36,14 @@ fun SecurityScreen(navController: NavHostController
     val context = LocalContext.current
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().background(Color.White)
             .verticalScroll(rememberScrollState())
             .padding(top= 12.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Configuración de\nseguridad",
+            color = Color.Black,
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.gabi_regular)),

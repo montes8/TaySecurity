@@ -1,5 +1,6 @@
 package com.tay.taysecurity.android.ui.home.blocking
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,13 +35,14 @@ fun BlockingScreen(
     val viewModel : BlockingViewModel = hiltViewModel()
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().background(Color.White)
             .verticalScroll(rememberScrollState())
             .padding(top= 12.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(R.string.title_blocking_view),
+            color = Color.Black,
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.gabi_regular)),
