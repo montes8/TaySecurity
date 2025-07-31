@@ -54,8 +54,8 @@ android {
 
 dependencies {
 
-    implementation("com.google.dagger:hilt-android:2.44")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("com.google.dagger:hilt-android:2.57")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
@@ -65,29 +65,22 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-compose:3.3.0")
     implementation("androidx.exifinterface:exifinterface:1.3.3")
 
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.57")
 
     implementation(projects.shared)
-    implementation("androidx.compose.ui:ui:1.6.8")
-    implementation("androidx.compose.ui:ui-tooling:1.6.8")
-   // implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
-   // implementation("androidx.compose.foundation:foundation:1.6.8")
-    implementation("androidx.compose.material:material:1.6.8")
-    implementation("androidx.compose.material:material-icons-extended:1.2.0")
+    implementation("androidx.compose.ui:ui:1.8.3")
+    implementation("androidx.compose.ui:ui-tooling:1.8.3")
+    implementation("androidx.compose.material:material:1.8.3")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
 
-    implementation("androidx.core:core-splashscreen:1.0.0")
-    implementation("androidx.activity:activity-compose:1.9.0")
+    implementation(libs.androidx.core.splashscreen)
+    implementation("androidx.activity:activity-compose:1.10.1")
+    implementation("androidx.navigation:navigation-compose:2.9.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.2")
+    implementation("androidx.compose.runtime:runtime-livedata:1.8.3")
 
-    //implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.3")
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
-    //implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation("com.google.maps.android:maps-compose:2.0.0")
-    implementation("com.google.android.gms:play-services-maps:2.0.0")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
 }
 

@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.telecom.TelecomManager
 import android.util.Log
@@ -16,13 +15,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tay.taysecurity.android.component.navigation.NavigationHostMain
 import com.tay.taysecurity.android.utils.MyApplicationTheme
+import com.tay.taysecurity.android.utils.REQUEST_CODE_SET_DEFAULT_DIALER
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
-    private val REQUEST_CODE_SET_DEFAULT_DIALER = 123
+
 
     override fun onStart() {
         super.onStart()
@@ -33,7 +33,6 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        //Verifica permisos para Android 6.0+
         val permissionCheck = ContextCompat.checkSelfPermission(
             this, Manifest.permission.WRITE_EXTERNAL_STORAGE
         )

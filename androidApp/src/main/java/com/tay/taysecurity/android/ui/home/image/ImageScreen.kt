@@ -54,7 +54,7 @@ fun ImageScreen(navController: NavHostController){
             ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUri = uri
-        textData.value = imageUri?.uiTayMetaDataImage(context).toString()
+        imageUri?.uiTayMetaDataImage(context)?.let { textData.value = it.mapperDataImage() }
     }
 
     Scaffold(

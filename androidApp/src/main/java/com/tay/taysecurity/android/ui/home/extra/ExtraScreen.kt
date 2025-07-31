@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -117,7 +118,7 @@ fun AndroidLogo(
     contentColor: Color,
     padding: Dp = 0.dp
 ) {
-    val eyesOffset = remember { mutableStateOf(0.0f) }
+    val eyesOffset = remember { mutableFloatStateOf(0.0f) }
 
     Canvas(
         modifier = modifier

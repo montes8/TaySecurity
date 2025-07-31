@@ -6,6 +6,7 @@ import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Handler
+import android.os.Looper
 import android.provider.Telephony
 import android.util.Log
 import com.tay.taysecurity.android.application.TaySecurityApplication.Companion.appContextTaySure
@@ -29,7 +30,7 @@ class TaySureSmsBroadcast: BroadcastReceiver() {
                 val dataShared = taySureUseCase?.getDataSecurity()
                 Log.d("TAGTay","$messageBody")
                 Log.d("TAGTay","${smsMessage.originatingAddress}")
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                if (dataShared?.blockingSmsFull== true || dataShared?.blockingSms== true ){
                    appContextTaySure.uiTayDeleteSMS(
                        dataShared.blockingSmsFull,

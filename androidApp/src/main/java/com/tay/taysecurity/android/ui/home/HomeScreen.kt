@@ -29,7 +29,6 @@ import com.tay.taysecurity.android.component.TopBar
 import com.tay.taysecurity.android.component.navigation.Destinations
 import com.tay.taysecurity.android.component.drawer.Drawer
 import com.tay.taysecurity.android.component.navigation.NavigationHost
-import com.tay.taysecurity.android.ui.map.MapActivity
 import com.tay.taysecurity.android.utils.uiTayViewCallButton
 
 
@@ -71,7 +70,6 @@ fun ScreenHome(navControllerMain: NavHostController){
             TopBar(
                 scope,
                 scaffoldState,
-                openDialog = { openDialog.value = true},
             )
         },
         drawerContent = { Drawer(scope, scaffoldState, navController, items = navigationItems) },
@@ -79,12 +77,4 @@ fun ScreenHome(navControllerMain: NavHostController){
     ){
         NavigationHost(navController,navControllerMain)
     }
-
-    if(openDialog.value){
-        MapActivity.newInstance(context)
-        openDialog.value = false
-    }
-
-  //  Dialog(showDialog = openDialog.value, dismissDialog = { openDialog.value = false })
-
 }

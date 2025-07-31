@@ -8,6 +8,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
@@ -23,8 +24,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TopBar(
     scope: CoroutineScope,
-    scaffoldState: ScaffoldState,
-    openDialog: () -> Unit
+    scaffoldState: ScaffoldState
 ) {
     TopAppBar(
         contentColor = Color.Black,
@@ -42,7 +42,7 @@ fun TopBar(
         },
          actions = {
              IconButton(onClick = {
-                 //openDialog()
+                 //not implement
              }) {
                  Image(
                      painter = painterResource(com.tay.taysecurity.android.R.drawable.ic_gps),
@@ -66,7 +66,7 @@ fun TopBarBack(
             IconButton(onClick = {
                 openClick.invoke()
             }) {
-                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Menu Icon", tint = Color.White)
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Menu Icon", tint = Color.White)
             }
         },
         actions = {

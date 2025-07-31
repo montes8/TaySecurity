@@ -6,10 +6,6 @@
         android:name="android.hardware.telephony"
         android:required="true"
         tools:ignore="UnnecessaryRequiredFeature" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"
-        tools:ignore="MockLocation" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -25,9 +21,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-feature android:name="android.hardware.location.gps" />
-    <uses-feature android:name="android.hardware.location.network" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
@@ -72,9 +65,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCVxsvtX_TtDbPin-XsYoWSd2pwfwBFH50" />
-        <activity
-            android:name=".ui.map.MapActivity"
-            android:exported="false" />
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="true"
@@ -150,7 +140,7 @@
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
-        </receiver> <!-- Service that delivers messages from the phone "quick response" -->
+        </receiver>
         <service
             android:name=".utils.services.HeadlessSmsSendService"
             android:exported="true"
@@ -162,14 +152,6 @@
                 <data android:scheme="smsto" />
             </intent-filter>
         </service>
-
-
-        <service
-            android:foregroundServiceType="location"
-            android:name=".utils.services.SureGpsService"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedService,ForegroundServicePermission" />
     </application>
 
 </manifest>

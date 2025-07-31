@@ -27,8 +27,7 @@ import com.tay.taysecurity.android.component.TayCardItemNext
 import com.tay.taysecurity.android.component.TayCardItemSwitch
 import com.tay.taysecurity.android.component.navigation.DestinationsMain
 import com.tay.taysecurity.android.ui.home.blocking.BlockingViewModel
-import com.tay.taysecurity.android.utils.disableServiceGps
-import com.tay.taysecurity.android.utils.initServiceGps
+import com.tay.taysecurity.android.utils.tayToast
 
 @Composable
 fun SecurityScreen(navController: NavHostController
@@ -74,12 +73,7 @@ fun SecurityScreen(navController: NavHostController
             text = "Crea una ubicación aleatoria",
             subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, " +
                     "debes habilitar como app de localización en la opcion de desarrollador para esta opción."){
-            viewModel.updateDataSecurity(it,4)
-            if (it){
-                initServiceGps(context)
-            }else{
-                disableServiceGps(context)
-            }
+            context.tayToast("Funcion disponible proximamente")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

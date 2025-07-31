@@ -16,7 +16,6 @@ import androidx.exifinterface.media.ExifInterface
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.tay.taysecurity.android.model.UITayMetaDataImage
-import com.tay.taysecurity.android.utils.services.SureGpsService
 import com.tay.taysecurity.model.ContactShared
 import com.tay.taysecurity.utils.SECURITY_EMPTY
 import java.io.File
@@ -206,22 +205,6 @@ fun Uri.getRealPathFromURI(context: Context): String? {
     }
     cursor?.close()
     return thePath
-}
-
-@SuppressLint("ImplicitSamInstance")
-fun initServiceGps(context: Context){
-    disableServiceGps(context)
-    context.startService(Intent(context, SureGpsService::class.java))
-
-}
-
-@SuppressLint("ImplicitSamInstance")
-fun disableServiceGps(context: Context){
-    try {
-        context.stopService(Intent(context, SureGpsService::class.java))
-    }catch (e: Exception){
-        e.printStackTrace()
-    }
 }
 
 

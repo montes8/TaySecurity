@@ -1,6 +1,7 @@
 package com.tay.taysecurity.android.utils.services
 
 import android.os.Handler
+import android.os.Looper
 import android.telecom.Call
 import android.telecom.InCallService
 import com.tay.taysecurity.android.utils.manager.TaySureCall
@@ -26,7 +27,7 @@ class TaySureCallService : InCallService() {
     override fun onCallAdded(call: Call?) {
         super.onCallAdded(call)
         TaySureCall.taySureCall =  call
-         Handler().postDelayed({
+         Handler(Looper.getMainLooper()).postDelayed({
              scope.launch {
                  val dataShared = taySureUseCase?.getDataSecurity()
                  val listContact = blockingUseCase.getContactAll()
