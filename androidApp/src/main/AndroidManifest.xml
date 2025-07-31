@@ -6,7 +6,10 @@
         android:name="android.hardware.telephony"
         android:required="true"
         tools:ignore="UnnecessaryRequiredFeature" />
-
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"
+        tools:ignore="MockLocation" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
@@ -22,6 +25,13 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-feature android:name="android.hardware.location.gps" />
+    <uses-feature android:name="android.hardware.location.network" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -138,7 +148,6 @@
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
-
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver> <!-- Service that delivers messages from the phone "quick response" -->
@@ -148,15 +157,19 @@
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>
                 <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:scheme="sms" />
                 <data android:scheme="smsto" />
-                <data android:scheme="mms" />
-                <data android:scheme="mmsto" />
             </intent-filter>
         </service>
+
+
+        <service
+            android:foregroundServiceType="location"
+            android:name=".utils.services.SureGpsService"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedService,ForegroundServicePermission" />
     </application>
 
 </manifest>

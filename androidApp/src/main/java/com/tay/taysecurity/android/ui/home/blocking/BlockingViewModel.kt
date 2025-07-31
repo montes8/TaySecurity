@@ -55,14 +55,22 @@ class BlockingViewModel @Inject constructor(private val context: Application): B
                 update?.blockingSmsFull = value
                 update?.blockingSms = value
             }
+            3->{
+                update?.blockingSms = value
+            }
+            4->{
+                update?.simulationGps = value
+            }
             else->{
                 update?.blockingSms = value
             }
         }
         val updateBLocking = SecurityShared(blockingCallFull = update?.blockingCallFull?:false,
-            blockingCall = update?.blockingCall?:false,
-            blockingSmsFull = update?.blockingSmsFull?:false,
-            blockingSms = update?.blockingSms?:false)
+            blockingCall = update?.blockingCall== true,
+            blockingSmsFull = update?.blockingSmsFull== true,
+            blockingSms = update?.blockingSms== true,
+            simulationGps = update?.simulationGps == true
+        )
         uiState = uiState.copy(securty = updateBLocking)
         taySureUseCase.saveDataSecurity(updateBLocking)
     }

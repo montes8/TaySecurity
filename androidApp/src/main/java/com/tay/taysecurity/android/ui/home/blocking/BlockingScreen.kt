@@ -1,5 +1,8 @@
 package com.tay.taysecurity.android.ui.home.blocking
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -27,12 +31,17 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TayCardItemSwitch
+import com.tay.taysecurity.android.utils.initServiceGps
+import com.tay.taysecurity.android.utils.services.SureGpsService
 
 @Composable
 fun BlockingScreen(
 ) {
-
+    val context = LocalContext.current
     val viewModel : BlockingViewModel = hiltViewModel()
+    if (viewModel.uiState.securty.simulationGps){
+        initServiceGps(context)
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth().background(Color.White)

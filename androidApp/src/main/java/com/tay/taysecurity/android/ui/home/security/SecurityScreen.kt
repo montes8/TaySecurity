@@ -10,8 +10,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,18 +20,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TayCardItemNext
 import com.tay.taysecurity.android.component.TayCardItemSwitch
 import com.tay.taysecurity.android.component.navigation.DestinationsMain
-import com.tay.taysecurity.android.utils.tayToast
+import com.tay.taysecurity.android.ui.home.blocking.BlockingViewModel
+import com.tay.taysecurity.android.utils.disableServiceGps
+import com.tay.taysecurity.android.utils.initServiceGps
 
 @Composable
 fun SecurityScreen(navController: NavHostController
 ) {
-    val checkedGps = remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    val viewModel : BlockingViewModel = hiltViewModel()
     Column(
         modifier = Modifier
             .fillMaxWidth().background(Color.White)
@@ -68,12 +70,16 @@ fun SecurityScreen(navController: NavHostController
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =checkedGps.value,
+        TayCardItemSwitch(state =viewModel.uiState.securty.simulationGps,
             text = "Crea una ubicación aleatoria",
             subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, " +
                     "debes habilitar como app de localización en la opcion de desarrollador para esta opción."){
-            checkedGps.value = it
-            context.tayToast("Funcionalidad aun no disponible")
+            viewModel.updateDataSecurity(it,4)
+            if (it){
+                initServiceGps(context)
+            }else{
+                disableServiceGps(context)
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

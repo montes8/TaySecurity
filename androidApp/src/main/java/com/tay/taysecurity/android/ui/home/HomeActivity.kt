@@ -1,7 +1,9 @@
 package com.tay.taysecurity.android.ui.home
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -27,8 +29,10 @@ class HomeActivity : ComponentActivity() {
         checkDefaultDialer()
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         //Verifica permisos para Android 6.0+
         val permissionCheck = ContextCompat.checkSelfPermission(
             this, Manifest.permission.WRITE_EXTERNAL_STORAGE
