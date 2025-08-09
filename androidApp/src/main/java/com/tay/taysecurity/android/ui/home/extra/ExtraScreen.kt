@@ -54,6 +54,7 @@ import com.tay.taysecurity.android.utils.titleBlockingSms
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun ExtraScreen( navController: NavHostController) {
+
     Column( modifier = Modifier
         .fillMaxWidth().background(Color.White)
         .verticalScroll(rememberScrollState())

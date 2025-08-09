@@ -1,14 +1,15 @@
 package com.tay.taysecurity.android.utils
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.provider.ContactsContract
 import android.provider.MediaStore
+import android.provider.Settings
 import android.telecom.Call
 import android.util.Log
 import android.widget.Toast
@@ -207,4 +208,8 @@ fun Uri.getRealPathFromURI(context: Context): String? {
     return thePath
 }
 
+fun Context.modeDeveloper(): Boolean{
+    return Settings.Secure.getInt(this.contentResolver,
+                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
 
+}

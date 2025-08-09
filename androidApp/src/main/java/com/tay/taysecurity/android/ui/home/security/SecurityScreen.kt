@@ -14,6 +14,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,13 +34,14 @@ import com.tay.taysecurity.android.component.TayCardItemSwitch
 import com.tay.taysecurity.android.component.navigation.DestinationsMain
 import com.tay.taysecurity.android.ui.home.blocking.BlockingViewModel
 import com.tay.taysecurity.android.ui.home.service.LocationServiceTay
+import com.tay.taysecurity.android.utils.modeDeveloper
 
 @Composable
 fun SecurityScreen(navController: NavHostController
 ) {
     val context = LocalContext.current
-
     val viewModel : BlockingViewModel = hiltViewModel()
+    val modeDev = remember { mutableStateOf(context.modeDeveloper()) }
     Column(
         modifier = Modifier
             .fillMaxWidth().background(Color.White)
@@ -85,6 +88,17 @@ fun SecurityScreen(navController: NavHostController
 
             viewModel.updateDataSecurity(it,4)
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = if(modeDev.value)"Configuracion Correcta" else "Configuracion incorrecta",
+            fontSize = 14.sp,
+            color = if(modeDev.value) Color.Green else Color.Red,
+            textAlign = TextAlign.Start,
+            fontFamily = FontFamily(Font(R.font.gabi_regular)),
+            fontWeight= FontWeight.Bold
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
     }

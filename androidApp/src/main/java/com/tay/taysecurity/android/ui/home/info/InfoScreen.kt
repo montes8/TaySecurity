@@ -32,7 +32,7 @@ import com.tay.taysecurity.android.utils.parseFromObjet
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun InfoScreen(navController: NavHostController,dataInfo: String) {
-    val data : InfoModel =parseFromObjet(dataInfo)
+    val data : InfoModel = parseFromObjet(dataInfo)
     Scaffold(
         topBar = {
             TopBarBack {

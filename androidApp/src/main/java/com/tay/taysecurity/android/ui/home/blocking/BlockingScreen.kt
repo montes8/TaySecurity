@@ -28,7 +28,6 @@ import com.tay.taysecurity.android.component.TayCardItemSwitch
 @Composable
 fun BlockingScreen(
 ) {
-    val context = LocalContext.current
     val viewModel : BlockingViewModel = hiltViewModel()
 
     Column(
