@@ -23,12 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
 
-
-    override fun onStart() {
-        super.onStart()
-        checkDefaultDialer()
-    }
-
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +41,10 @@ class HomeActivity : ComponentActivity() {
             Log.i("Mensaje", "Se tiene permiso para leer!")
         }
         setContent { MyApplicationTheme{
-           // ScreenHome()
             NavigationHostMain()
 
         }}
+        checkDefaultDialer()
     }
 
 

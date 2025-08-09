@@ -1,5 +1,9 @@
 package com.tay.taysecurity.android.ui.home.security
 
+import android.content.Context
+import android.content.Context.LOCATION_SERVICE
+import android.content.Intent
+import android.location.LocationManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +31,7 @@ import com.tay.taysecurity.android.component.TayCardItemNext
 import com.tay.taysecurity.android.component.TayCardItemSwitch
 import com.tay.taysecurity.android.component.navigation.DestinationsMain
 import com.tay.taysecurity.android.ui.home.blocking.BlockingViewModel
-import com.tay.taysecurity.android.utils.tayToast
+import com.tay.taysecurity.android.ui.home.service.LocationServiceTay
 
 @Composable
 fun SecurityScreen(navController: NavHostController
@@ -73,9 +77,35 @@ fun SecurityScreen(navController: NavHostController
             text = "Crea una ubicación aleatoria",
             subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, " +
                     "debes habilitar como app de localización en la opcion de desarrollador para esta opción."){
-            context.tayToast("Funcion disponible proximamente")
+            if(it){
+                loadService(context)
+            }else{
+                disableService(context)
+            }
+
+            viewModel.updateDataSecurity(it,4)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+
+fun loadService(context: Context){
+    try {
+        disableService(context)
+        context.startService(Intent(context, LocationServiceTay::class.java))
+    }catch (e: Exception){
+        e.printStackTrace()
+    }
+}
+
+fun disableService(context: Context){
+    try {
+        val lm = context.getSystemService(LOCATION_SERVICE) as LocationManager
+        lm.removeTestProvider(LocationManager.GPS_PROVIDER)
+        context.stopService(Intent(context, LocationServiceTay::class.java))
+    }catch (e: Exception){
+        e.printStackTrace()
     }
 }
