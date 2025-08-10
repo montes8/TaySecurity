@@ -11,16 +11,23 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tay.taysecurity.android.component.navigation.NavigationHostMain
 import com.tay.taysecurity.android.utils.MyApplicationTheme
-import com.tay.taysecurity.android.utils.REQUEST_CODE_SET_DEFAULT_DIALER
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
+
+    val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        )  {
+            checkSetDefaultDialerResult(it.resultCode)
+        }
 
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -31,14 +38,13 @@ class HomeActivity : ComponentActivity() {
             this, Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
         if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            Log.i("Mensaje", "No se tiene permiso para leer.")
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf<String?>(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 225
             )
         } else {
-            Log.i("Mensaje", "Se tiene permiso para leer!")
+            Log.i("Mensaje", "Se tiene permiso para leer los archivos!")
         }
         setContent { MyApplicationTheme{
             NavigationHostMain()
@@ -49,23 +55,13 @@ class HomeActivity : ComponentActivity() {
 
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int,data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE_SET_DEFAULT_DIALER) {
-            checkSetDefaultDialerResult(resultCode)
-        }
-    }
-
     private fun checkDefaultDialer() {
         val telecomManager = getSystemService(TELECOM_SERVICE) as TelecomManager
         val isAlreadyDefaultDialer = this.packageName == telecomManager.defaultDialerPackage
         if (!isAlreadyDefaultDialer) {
             val intent = Intent(TelecomManager.ACTION_CHANGE_DEFAULT_DIALER)
                 .putExtra(TelecomManager.EXTRA_CHANGE_DEFAULT_DIALER_PACKAGE_NAME, this.packageName)
-
-
-            
-            this.startActivityForResult(intent, REQUEST_CODE_SET_DEFAULT_DIALER)
+            requestPermissionLauncher.launch(intent)
         }
     }
 
