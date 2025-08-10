@@ -6,14 +6,12 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
-import android.location.Criteria
 import android.location.Location
 import android.location.LocationManager
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.SystemClock
-import android.util.Log
 
 class LocationServiceTay : Service(){
 
@@ -34,7 +32,6 @@ class LocationServiceTay : Service(){
                 .setContentText("Se creo una ubicacion aleatoria").build()
             startForeground(1, notification)
         workerGpsTayFace()
-        Log.d("faceGpstAy","servicio iniciado")
 
     }
 
@@ -42,18 +39,14 @@ class LocationServiceTay : Service(){
         handler.postDelayed({
             loadGps()
             workerGpsTayFace()
-            Log.d("faceGpstAy","workerGpsTayFace")
         },1000)
     }
 
     @SuppressLint("WrongConstant")
     private fun loadGps(){
         val lm = getSystemService(LOCATION_SERVICE) as LocationManager
-        val criteria = Criteria()
-        criteria.accuracy = Criteria.ACCURACY_FINE
-
         val mocLocationProvider =
-            LocationManager.GPS_PROVIDER //lm.getBestProvider( criteria, true );
+            LocationManager.GPS_PROVIDER
 
         lm.addTestProvider(
             mocLocationProvider,
@@ -69,8 +62,8 @@ class LocationServiceTay : Service(){
         )
         lm.setTestProviderEnabled(mocLocationProvider, true)
         val newLocation = Location(mocLocationProvider)
-        newLocation.latitude = -26.902038
-        newLocation.longitude = -48.671337
+        newLocation.latitude = -34.799839
+        newLocation.longitude = -58.2878579
         newLocation.altitude = 3.0
         newLocation.time = System.currentTimeMillis()
         newLocation.speed = 0.01f
@@ -87,8 +80,7 @@ class LocationServiceTay : Service(){
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacksAndMessages(null);
-        Log.d("faceGpstAy","servicio onDestroy")
+        handler.removeCallbacksAndMessages(null)
     }
 
 
