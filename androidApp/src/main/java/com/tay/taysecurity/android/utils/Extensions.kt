@@ -1,16 +1,22 @@
 package com.tay.taysecurity.android.utils
 
 import android.app.Application
+import android.app.role.RoleManager
 import android.content.Context
+import android.content.Context.TELECOM_SERVICE
 import android.content.Intent
 import android.database.Cursor
+import android.location.Location
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.os.Environment
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import android.provider.Settings
+import android.provider.Telephony
 import android.telecom.Call
+import android.telecom.TelecomManager
 import android.util.Log
 import android.widget.Toast
 import androidx.exifinterface.media.ExifInterface
@@ -208,8 +214,26 @@ fun Uri.getRealPathFromURI(context: Context): String? {
     return thePath
 }
 
-fun Context.modeDeveloper(): Boolean{
+fun Context.modeDeveloperAndMockLocation(): Boolean{
     return Settings.Secure.getInt(this.contentResolver,
-                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
+                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0 && validateLocationMock()
 
+}
+
+fun Context.validateLocationMock(): Boolean {
+    return !Settings.Secure.getString(this.contentResolver, Settings.Secure.ALLOW_MOCK_LOCATION).equals("0");
+}
+
+fun Context.validateCallPredeterminate(): Boolean{
+        val telecomManager = getSystemService(TELECOM_SERVICE) as TelecomManager
+        return this.packageName == telecomManager.defaultDialerPackage
+}
+
+fun  Context.validateSmsPredeterminate(): Boolean{
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        val roleManager = getSystemService(RoleManager::class.java)
+        roleManager.isRoleHeld(RoleManager.ROLE_SMS)
+    } else {
+        Telephony.Sms.getDefaultSmsPackage(this) == this.packageName
+    }
 }
