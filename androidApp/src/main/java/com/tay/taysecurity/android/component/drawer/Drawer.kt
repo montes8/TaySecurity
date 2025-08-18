@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,7 +39,7 @@ fun Drawer(
     navController: NavHostController,
     items: List<Destinations>
 ) {
-    Column {
+    Column(modifier = Modifier.fillMaxSize().background(Color.White)) {
         Image(
             painter = painterResource(id = R.drawable.ic_bg_header),
             contentDescription = "Bg Image",
@@ -79,7 +80,7 @@ fun DrawerItem(
             .height(56.dp)
             .padding(6.dp)
             .clip(RoundedCornerShape(12))
-            .background(if (selected) Color.Black else Color.Transparent)
+            .background(if (selected) Color.Black else Color.White)
             .padding(8.dp)
             .clickable { onItemClick(item) },
         verticalAlignment = Alignment.CenterVertically

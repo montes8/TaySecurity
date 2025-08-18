@@ -10,6 +10,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import com.tay.taysecurity.android.component.navigation.NavigationHostMain
 import com.tay.taysecurity.android.utils.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,10 +22,23 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
+    private val updateOptions = AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
+
+    companion object {
+        private const val UPDATE_CODE = 10001
+    }
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        setContent { MyApplicationTheme{
+            NavigationHostMain()
+        }}
+        validateVersionUpdate()
+    }
+
+    private fun initPermission(){
         val permissionCheck = ContextCompat.checkSelfPermission(
             this, Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
@@ -34,10 +51,29 @@ class HomeActivity : ComponentActivity() {
         } else {
             Log.i("Mensaje", "Se tiene permiso para leer los archivos!")
         }
-        setContent { MyApplicationTheme{
-            NavigationHostMain()
-
-        }}
     }
 
+    private fun validateVersionUpdate() {
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && appUpdateInfo.isUpdateTypeAllowed(
+                    AppUpdateType.IMMEDIATE
+                )
+            ) {
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    this,
+                    updateOptions,
+                    UPDATE_CODE
+                )
+                finish()
+            } else {
+                initPermission()
+            }
+        }
+        appUpdateInfoTask.addOnFailureListener {
+            initPermission()
+        }
+    }
 }

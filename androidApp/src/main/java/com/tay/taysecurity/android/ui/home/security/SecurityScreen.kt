@@ -7,7 +7,7 @@ import android.location.LocationManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -46,14 +46,13 @@ fun SecurityScreen(navController: NavHostController
     val viewModel : BlockingViewModel = hiltViewModel()
     var modeDevDialog by remember { mutableStateOf(false) }
 
-    DialogSure(  modeDevDialog,"Activa modo desarrollador",
-        "Primero debes activar el modo desarrollador y establecer como app de ubicación,sigue los pasos de la seccion de ayuda.", dismissDialog = {
+    DialogSure(  modeDevDialog,true, dismissDialog = {
         modeDevDialog = false
     })
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(Color.White)
             .verticalScroll(rememberScrollState())
             .padding(top = 12.dp, start = 8.dp, end = 8.dp, bottom = 140.dp).background(Color.White),
@@ -93,11 +92,14 @@ fun SecurityScreen(navController: NavHostController
             try {
                 if (it){
                     if(context.modeDeveloperAndMockLocation()){
+                        viewModel.updateDataSecurity(true,4)
                         loadService(context)
+
                     }else{
                         modeDevDialog = true
                     }
                 }else{
+                    viewModel.updateDataSecurity(false,4)
                     disableService(context)
                 }
 
@@ -106,9 +108,6 @@ fun SecurityScreen(navController: NavHostController
                 modeDevDialog = true
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

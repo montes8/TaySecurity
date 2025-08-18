@@ -216,7 +216,7 @@ fun Uri.getRealPathFromURI(context: Context): String? {
 
 fun Context.modeDeveloperAndMockLocation(): Boolean{
     return Settings.Secure.getInt(this.contentResolver,
-                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0 && validateLocationMock()
+                Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
 
 }
 

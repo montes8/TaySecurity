@@ -14,8 +14,8 @@ android {
         applicationId = "com.tay.taysecurity.android"
         minSdk = 28
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.0.3"
     }
      signingConfigs {
         create("release") {
@@ -66,6 +66,7 @@ dependencies {
     implementation("androidx.exifinterface:exifinterface:1.3.3")
     implementation("com.google.accompanist:accompanist-permissions:0.29.0-alpha")
     kapt("com.google.dagger:hilt-android-compiler:2.57")
+    implementation("com.google.android.play:app-update-ktx:2.1.0")
 
     implementation(projects.shared)
     implementation("androidx.compose.ui:ui:1.8.3")

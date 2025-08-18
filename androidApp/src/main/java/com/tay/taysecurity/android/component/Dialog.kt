@@ -25,48 +25,57 @@ import com.tay.taysecurity.android.R
 @Composable
 fun DialogSure(
     showDialog: Boolean,
-    title : String = "Estable como predeterminada",
-    message : String = "Estable la App de llamada o SMS como predeterminada para poder usar las funcionalidades de bloqueo.",
+    typeDeveloper : Boolean = false,
     dismissDialog: (Boolean) -> Unit
 ) {
     if(showDialog){
         AlertDialog(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp)).background(Color.White),
+                .clip(RoundedCornerShape(16.dp),
+                    ),
+            backgroundColor = Color.White,
             onDismissRequest = { },
-            title = { Text(title, style = TextStyle(
+            title = { Text(if(typeDeveloper)"Activa modo desarrollador" else "Estable como predeterminada",
                 fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
-            )
+                textAlign = TextAlign.Center,
+                color = Color.Black,
+                fontFamily = FontFamily(Font(R.font.gabi_regular)),
+                fontWeight= FontWeight.Bold
             ) },
             text = {
                 Column {
-                    Text(message)
+                    Text(if(typeDeveloper)"Primero debes activar el modo desarrollador y establecer como app de ubicación,sigue los pasos de la seccion de ayuda." else
+                        "Estable la App de llamada o SMS como predeterminada para poder usar las funcionalidades de bloqueo.",
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center,
+                        color = Color.Black,
+                        fontFamily = FontFamily(Font(R.font.gabi_regular)),
+                        fontWeight= FontWeight.Normal)
                 }
             },
             confirmButton = {
                 Button(shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta)
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
                     ,onClick = { dismissDialog(true) }) {
                     Text("Redirigir",
-                        fontSize = 20.sp,
+                        fontSize = 14.sp,
                         textAlign = TextAlign.Center,
-                        color = Color.Magenta,
+                        color = Color.White,
                         fontFamily = FontFamily(Font(R.font.gabi_regular)),
                         fontWeight= FontWeight.Bold)
                 }
             },
             dismissButton = {
                 Button( shape = RoundedCornerShape(16.dp),
-                    border = BorderStroke(2.dp, Color.Magenta),
+                    border = BorderStroke(2.dp, Color.Black),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                     onClick = { dismissDialog(false) }) {
                     Text("Cancelar",
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
-                        color = Color.Gray,
+                        color = Color.Black,
                         fontFamily = FontFamily(Font(R.font.gabi_regular)),
-                        fontWeight= FontWeight.Normal)
+                        fontWeight= FontWeight.Bold)
                 }
             }
         )
