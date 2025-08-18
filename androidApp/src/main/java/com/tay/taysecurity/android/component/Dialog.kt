@@ -57,7 +57,7 @@ fun DialogSure(
                 Button(shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
                     ,onClick = { dismissDialog(true) }) {
-                    Text("Redirigir",
+                    Text(if(typeDeveloper)"Aceptar" else "Redirigir",
                         fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         color = Color.White,

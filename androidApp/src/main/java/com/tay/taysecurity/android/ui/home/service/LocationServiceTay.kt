@@ -12,6 +12,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.SystemClock
+import kotlin.printStackTrace
 
 class LocationServiceTay : Service(){
 
@@ -32,18 +33,20 @@ class LocationServiceTay : Service(){
                 .setContentText("Se creo una ubicacion aleatoria").build()
             startForeground(1, notification)
         workerGpsTayFace()
-
     }
 
     private  fun workerGpsTayFace(){
-        handler.postDelayed({
-            loadGps()
-            workerGpsTayFace()
-        },1000)
+            handler.postDelayed({
+                loadGps()
+                workerGpsTayFace()
+            },1000)
+
+
     }
 
     @SuppressLint("WrongConstant")
     private fun loadGps(){
+        try {
         val lm = getSystemService(LOCATION_SERVICE) as LocationManager
         val mocLocationProvider =
             LocationManager.GPS_PROVIDER
@@ -75,6 +78,10 @@ class LocationServiceTay : Service(){
         newLocation.speedAccuracyMetersPerSecond = 0.01f
         lm.setTestProviderEnabled(mocLocationProvider, true)
         lm.setTestProviderLocation(mocLocationProvider, newLocation)
+        }catch (e: Exception){
+            e.printStackTrace()
+            handler.removeCallbacksAndMessages(null)
+        }
     }
 
 

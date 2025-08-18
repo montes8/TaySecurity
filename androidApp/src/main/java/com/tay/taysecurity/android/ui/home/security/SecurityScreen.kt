@@ -55,7 +55,8 @@ fun SecurityScreen(navController: NavHostController
             .fillMaxSize()
             .background(Color.White)
             .verticalScroll(rememberScrollState())
-            .padding(top = 12.dp, start = 8.dp, end = 8.dp, bottom = 140.dp).background(Color.White),
+            .padding(top = 12.dp, start = 8.dp, end = 8.dp, bottom = 140.dp)
+            .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -88,12 +89,16 @@ fun SecurityScreen(navController: NavHostController
         TayCardItemSwitch(state =viewModel.uiState.securty.simulationGps,
             text = "Crea una ubicación aleatoria",
             subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, " +
-                    "debes habilitar como app de localización en la opcion de desarrollador para esta opción."){
-            try {
+                    "debes habilitar como app de localización en la opcion de desarrollador para esta opción.") {
                 if (it){
                     if(context.modeDeveloperAndMockLocation()){
+                        try {
                         viewModel.updateDataSecurity(true,4)
                         loadService(context)
+                        }catch (e: Exception){
+                            e.printStackTrace()
+                            modeDevDialog = true
+                        }
 
                     }else{
                         modeDevDialog = true
@@ -102,12 +107,20 @@ fun SecurityScreen(navController: NavHostController
                     viewModel.updateDataSecurity(false,4)
                     disableService(context)
                 }
+          }
 
-            }catch (e: Exception){
-                e.printStackTrace()
-                modeDevDialog = true
-            }
-        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Si no funciona, asegurese de haber definido esta app como ubicación de prueba como indica en la sección de ayuda.",
+            fontSize = 14.sp,
+            color = Color.Cyan,
+            textAlign = TextAlign.Center,
+            fontFamily = FontFamily(Font(R.font.gabi_regular)),
+            fontWeight= FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
