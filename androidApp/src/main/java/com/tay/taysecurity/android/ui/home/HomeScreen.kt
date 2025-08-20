@@ -16,6 +16,7 @@ import com.tay.taysecurity.android.component.TopBar
 import com.tay.taysecurity.android.component.drawer.Drawer
 import com.tay.taysecurity.android.component.navigation.BottomNavigationBar
 import com.tay.taysecurity.android.component.navigation.Destinations
+import com.tay.taysecurity.android.component.navigation.DestinationsMain
 import com.tay.taysecurity.android.component.navigation.NavigationHost
 import com.tay.taysecurity.android.utils.uiTayViewCallButton
 
@@ -41,6 +42,8 @@ fun ScreenHome(navControllerMain: NavHostController){
         floatingActionButton = {
             FloatingActionButtonsSure{
                 if (it){
+                    navControllerMain.navigate(DestinationsMain.CallSureScreen.route)
+                }else{
                     context.uiTayViewCallButton()
                 }
             }

@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.tay.taysecurity.android.ui.home.ScreenHome
 import com.tay.taysecurity.android.ui.home.blocking.BlockingScreen
+import com.tay.taysecurity.android.ui.home.call.CallSureScreen
 import com.tay.taysecurity.android.ui.home.extra.ExtraScreen
 import com.tay.taysecurity.android.ui.home.image.ImageScreen
 import com.tay.taysecurity.android.ui.home.info.InfoScreen
@@ -52,6 +53,8 @@ fun NavigationHostMain(
             InfoScreen(navController, it.arguments?.getString("dataInfo")?:"")
         }
         composable(DestinationsMain.ImageScreen.route) { ImageScreen(navController)}
+        composable(DestinationsMain.CallSureScreen.route) { CallSureScreen(navController)}
+
     }
 }
 
@@ -73,6 +76,9 @@ sealed class DestinationsMain(
     data object HomeScreen: DestinationsMain("home_screen")
     data object InfoScreen: DestinationsMain("info_screen")
     data object ImageScreen: DestinationsMain("image_screen")
+    data object CallSureScreen: DestinationsMain("call_sure_screen")
+
+
 
     fun withArgs(vararg args: String = emptyArray(), optional: Map<String, String?> = emptyMap()): String {
         return buildString {
