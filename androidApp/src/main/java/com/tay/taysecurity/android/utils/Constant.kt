@@ -15,8 +15,3 @@ const  val titleBlockingImage = "INFORMACIÓN DE IMAGEN"
 const  val messageBlockingImage = "Para utilizar esta funcionalidad, lo primero que se debe hacer es activar el permiso de escritura y lectura para poder acceder a alguna imagen:\n-Configuración.\n-Aplicaciones.\n-Selecciona la aplicación\n-Permisos.\nActivar permiso de almacenamiento.(similares)" +
         "Luego debes activar los permisos relacionados a llamadas:\n-Configutación.\n-Aplicaciones.\n-Seleciona ValuSure.\n-Permisos.\n-Activa los permisos de mensaje de texto.\nDe preferencia la imagen debe estar en las carpetas principales como, descargas, fotos," +
         " o camara "
-
-const val tag_log = "TAG_LOG"
-const val tagServiceInit = "servicio iniciado"
-const val tagServiceStop = "servicio detenido"
-const val REQUEST_CODE_SET_DEFAULT_DIALER = 123

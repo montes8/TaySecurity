@@ -17,7 +17,6 @@ import android.telecom.Call
 import android.telecom.TelecomManager
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
 import com.google.gson.Gson
@@ -103,7 +102,7 @@ fun validNumberBlocking(list :List<ContactShared>, numberCall:String):Boolean{
 
 fun Application.uiTayDeleteSMS(all: Boolean = false, utNumber: String = SECURITY_EMPTY) {
     this.contentResolver.query(
-        Uri.parse("content://sms/"),
+        "content://sms/".toUri(),
         arrayOf("_id", "thread_id", "address", "person", "date", "body"),
         null,
         null,
@@ -115,12 +114,12 @@ fun Application.uiTayDeleteSMS(all: Boolean = false, utNumber: String = SECURITY
                 val address = c.getString(2)
                 if (all) {
                     this.contentResolver.delete(
-                        Uri.parse("content://sms/$id"), null, null
+                        "content://sms/$id".toUri(), null, null
                     )
                 } else {
                     if (address == utNumber) {
                         this.contentResolver.delete(
-                            Uri.parse("content://sms/$id"), null, null
+                            "content://sms/$id".toUri(), null, null
                         )
                     } } }
             c.close()
@@ -143,7 +142,7 @@ inline fun <reified T> parseFromString( value: T): String {
 
 fun Uri.uiTayMetaDataImage(context : Context): UITayMetaDataImage {
     var uiTayData = UITayMetaDataImage()
-    var nameImage = this.getRealPathFromURI(context)
+    val nameImage = this.getRealPathFromURI(context)
     Log.d("metadata",nameImage.toString())
     try {
         var exifInterface : ExifInterface? = null
@@ -224,10 +223,6 @@ fun Context.modeDeveloperAndMockLocation(): Boolean{
     return Settings.Secure.getInt(this.contentResolver,
                 Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
 
-}
-
-fun Context.validateLocationMock(): Boolean {
-    return !Settings.Secure.getString(this.contentResolver, Settings.Secure.ALLOW_MOCK_LOCATION).equals("0");
 }
 
 fun Context.validateCallPredeterminate(): Boolean{

@@ -16,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +24,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
-import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -129,12 +127,12 @@ fun AndroidLogo(
             .pointerInput(Unit){
                 detectDragGestures(
                     onDrag = { change, dragAmount ->
-                        change.consumeAllChanges()
+                        change.consume()
 
-                        eyesOffset.value += dragAmount.x * 0.50f
+                        eyesOffset.floatValue += dragAmount.x * 0.50f
                     },
                     onDragEnd = {
-                        eyesOffset.value = 0f
+                        eyesOffset.floatValue = 0f
                     }
                 )
             }
@@ -150,13 +148,13 @@ fun AndroidLogo(
 
         drawCircle(
             color = Color.Magenta,
-            center = Offset(size.minDimension * 0.3f + eyesOffset.value, size.minDimension * 0.8f),
+            center = Offset(size.minDimension * 0.3f + eyesOffset.floatValue, size.minDimension * 0.8f),
             radius = size.minDimension * 0.04f
         )
 
         drawCircle(
             color = Color.Magenta,
-            center = Offset(size.minDimension * 0.7f + eyesOffset.value, size.minDimension * 0.8f),
+            center = Offset(size.minDimension * 0.7f + eyesOffset.floatValue, size.minDimension * 0.8f),
             radius = size.minDimension * 0.04f
         )
 
@@ -168,7 +166,7 @@ fun AndroidLogo(
                 color = contentColor,
                 size = Size(size.minDimension * 0.035f, size.minDimension * 0.22f),
                 cornerRadius = CornerRadius(size.minDimension * 0.02f),
-                topLeft = Offset(size.minDimension * 0.2f + (eyesOffset.value * 0.3f), size.minDimension * 0.4f)
+                topLeft = Offset(size.minDimension * 0.2f + (eyesOffset.floatValue * 0.3f), size.minDimension * 0.4f)
             )
         }
 
@@ -180,7 +178,7 @@ fun AndroidLogo(
                 color = contentColor,
                 size = Size(size.minDimension * 0.035f, size.minDimension * 0.22f),
                 cornerRadius = CornerRadius(size.minDimension * 0.02f),
-                topLeft = Offset(size.minDimension * 0.8f + (eyesOffset.value * 0.3f), size.minDimension * 0.4f)
+                topLeft = Offset(size.minDimension * 0.8f + (eyesOffset.floatValue * 0.3f), size.minDimension * 0.4f)
             )
         }
     }

@@ -35,11 +35,11 @@ data class UITayMetaDataImage(
         }
 
         if (gpsLatitude.isNotEmpty()){
-            text = "Latitude: ${gpsLatitude}  ${gpsLatitudeReferential} \n"
+            text = "Latitude: $gpsLatitude  $gpsLatitudeReferential \n"
         }
 
         if (gpsLongitude.isNotEmpty()){
-            text = "Longitude: ${gpsLongitude}  ${gpsLongitudeReferential} \n"
+            text = "Longitude: $gpsLongitude  $gpsLongitudeReferential \n"
         }
 
         if (gpsProcessingMethod.isNotEmpty()){

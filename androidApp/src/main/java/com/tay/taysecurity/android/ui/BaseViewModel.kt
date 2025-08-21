@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 open class BaseViewModel : ViewModel() {
 
 
-    fun execute(loading: Boolean = true,func:suspend ()->Unit){
+    fun execute(func:suspend ()->Unit){
         viewModelScope.launch(Dispatchers.IO){
             try {
                 func()

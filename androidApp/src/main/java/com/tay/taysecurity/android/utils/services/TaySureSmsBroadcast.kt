@@ -3,8 +3,6 @@ package com.tay.taysecurity.android.utils.services
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.Telephony
@@ -12,10 +10,6 @@ import android.util.Log
 import com.tay.taysecurity.android.application.TaySecurityApplication.Companion.appContextTaySure
 import com.tay.taysecurity.android.utils.uiTayDeleteSMS
 import com.tay.taysecurity.usecases.TaySureUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 
 class TaySureSmsBroadcast: BroadcastReceiver() {
