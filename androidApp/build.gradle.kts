@@ -9,13 +9,13 @@ plugins {
 
 android {
     namespace = "com.tay.taysecurity.android"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.tay.taysecurity.android"
         minSdk = 28
-        targetSdk = 35
-        versionCode = 5
-        versionName = "1.0.4"
+        targetSdk = 36
+        versionCode = 6
+        versionName = "1.0.5"
     }
      signingConfigs {
         create("release") {
