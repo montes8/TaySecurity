@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,7 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.tay.taysecurity.android.R
 
 
 @Composable
@@ -37,7 +38,7 @@ fun FloatingActionButtonsSure(clickBottom: (Boolean) -> Unit) {
                     shape = RoundedCornerShape(20.dp)).size(40.dp).align(Alignment.Bottom)
 
                 , backgroundColor = Color.Black, contentColor = Color.Black) {
-                Image(imageVector = Icons.Default.Apps, contentDescription = "FabIconCall",
+                Image(imageVector = Icons.Default.Call, contentDescription = "FabIconCall",
                     contentScale = ContentScale.FillBounds,
                     colorFilter = ColorFilter.tint(color = Color.Magenta))
             }
@@ -47,7 +48,8 @@ fun FloatingActionButtonsSure(clickBottom: (Boolean) -> Unit) {
                     shape = RoundedCornerShape(30.dp))
 
                 , backgroundColor = Color.Black, contentColor = Color.Black) {
-                Image(imageVector = Icons.Default.Call, contentDescription = "FabIconCall",
+                Image( painter = painterResource(R.drawable.tay_contact),
+                    contentDescription = "FabIconCall",
                     contentScale = ContentScale.FillBounds,
                     colorFilter = ColorFilter.tint(color = Color.Magenta))
             }

@@ -12,7 +12,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.SystemClock
-import kotlin.printStackTrace
 
 class LocationServiceTay : Service(){
 

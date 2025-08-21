@@ -6,10 +6,8 @@ import android.content.Context
 import android.content.Context.TELECOM_SERVICE
 import android.content.Intent
 import android.database.Cursor
-import android.location.Location
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.os.Environment
 import android.provider.ContactsContract
 import android.provider.MediaStore
@@ -19,6 +17,8 @@ import android.telecom.Call
 import android.telecom.TelecomManager
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -42,11 +42,17 @@ fun Context.uiTayViewCall(){
     try {
         val intent = Intent()
         intent.setClass(this, Call::class.java)
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         this.startActivity(intent)
     } catch (e: SecurityException) {
         Log.e("ERROR_CALL",e.message.toString())
     }
+}
+
+fun String.goCallNumber(context: Context){
+    val callIntent = Intent(Intent.ACTION_CALL)
+    callIntent.data = ("tel:$this").toUri()
+    context.startActivity(callIntent)
 }
 
 fun Application.loadContactUser(): List<ContactShared>{

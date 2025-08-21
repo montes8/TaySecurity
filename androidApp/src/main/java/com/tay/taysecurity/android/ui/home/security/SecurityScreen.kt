@@ -114,7 +114,7 @@ fun SecurityScreen(navController: NavHostController
         Text(
             text = "Si no funciona, asegurese de haber definido esta app como ubicación de prueba como indica en la sección de ayuda.",
             fontSize = 14.sp,
-            color = Color.Cyan,
+            color = Color.Red,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.gabi_regular)),
             fontWeight= FontWeight.Bold
