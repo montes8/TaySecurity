@@ -29,7 +29,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -117,6 +119,7 @@
 
             <intent-filter>
                 <action android:name="android.telecom.InCallService" />
+                <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </service>
 

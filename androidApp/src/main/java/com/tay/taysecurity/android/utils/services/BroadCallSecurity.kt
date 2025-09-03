@@ -24,6 +24,7 @@ class BroadCallSecurity : BroadcastReceiver() {
                 val bundle = intent.extras
                 val phoneNr = bundle?.getString("incoming_number")?: SECURITY_EMPTY
                 TaySureCall.taySureNumber = phoneNr
+                Log.d(SECURITY_TAG,TaySureCall.taySureNumber+"init")
             }
             TelephonyManager.EXTRA_STATE_OFFHOOK -> {
                 Log.e(SECURITY_TAG,"en call")

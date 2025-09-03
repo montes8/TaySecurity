@@ -4,11 +4,13 @@ import android.os.Handler
 import android.os.Looper
 import android.telecom.Call
 import android.telecom.InCallService
+import android.util.Log
 import com.tay.taysecurity.android.utils.manager.TaySureCall
 import com.tay.taysecurity.android.utils.uiTayViewCall
 import com.tay.taysecurity.android.utils.validNumberBlocking
 import com.tay.taysecurity.usecases.BlockingUseCase
 import com.tay.taysecurity.usecases.TaySureUseCase
+import com.tay.taysecurity.utils.SECURITY_TAG
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,11 +33,14 @@ class TaySureCallService : InCallService() {
              scope.launch {
                  val dataShared = taySureUseCase?.getDataSecurity()
                  val listContact = blockingUseCase.getContactAll()
+                 Log.d(SECURITY_TAG,TaySureCall.taySureNumber)
+                 val validNumber = validNumberBlocking(listContact,TaySureCall.taySureNumber)
+                 Log.d(SECURITY_TAG,validNumber.toString())
                  if (dataShared?.blockingCallFull==true || dataShared?.blockingCall==true
-                     && validNumberBlocking(listContact,TaySureCall.taySureNumber)){
+                     && validNumber){
                      call?.disconnect()
                  }else{ this@TaySureCallService.uiTayViewCall()}
              }
-          },800)
+          },1000)
     }
 }

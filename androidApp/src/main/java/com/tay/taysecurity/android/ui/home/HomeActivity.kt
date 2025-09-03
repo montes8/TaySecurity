@@ -1,6 +1,8 @@
 package com.tay.taysecurity.android.ui.home
 
 import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
@@ -40,12 +42,15 @@ class HomeActivity : ComponentActivity() {
 
     private fun initPermission(){
         val permissionCheck = ContextCompat.checkSelfPermission(
-            this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+            this, WRITE_EXTERNAL_STORAGE
         )
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+        val permissionCheckTwo = ContextCompat.checkSelfPermission(
+            this, WRITE_EXTERNAL_STORAGE
+        )
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED || permissionCheckTwo != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf<String?>(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                arrayOf<String?>(WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE),
                 225
             )
         } else {
