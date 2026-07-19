@@ -5,6 +5,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id ("kotlin-parcelize")
     kotlin("kapt")
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -81,6 +82,8 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.8.3")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
 }
 

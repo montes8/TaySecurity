@@ -79,7 +79,7 @@ fun ExtraScreen( navController: NavHostController) {
         TayCardItemNext(
             text = titleBlockingCall,
             subText = infoBlockingCall){
-            navController.navigate(DestinationsMain.InfoScreen.withArgs(
+            navController.navigate(DestinationsMain.InfoScreen(
                 parseFromString(InfoModel(title = titleBlockingCall, message = messageBlockingCall))))
         }
 
@@ -87,7 +87,7 @@ fun ExtraScreen( navController: NavHostController) {
         TayCardItemNext(
             text = titleBlockingSms,
             subText = infoBlockingCall){
-            navController.navigate(DestinationsMain.InfoScreen.withArgs(
+            navController.navigate(DestinationsMain.InfoScreen(
                 parseFromString(InfoModel(title = titleBlockingSms, message = messageBlockingSms))))
         }
 
@@ -95,7 +95,7 @@ fun ExtraScreen( navController: NavHostController) {
         TayCardItemNext(
             text = titleBlockingGps,
             subText =infoBlockingCall){
-            navController.navigate(DestinationsMain.InfoScreen.withArgs(
+            navController.navigate(DestinationsMain.InfoScreen(
                 parseFromString(InfoModel(title = titleBlockingGps, message = messageBlockingGps))))
         }
 
@@ -103,7 +103,7 @@ fun ExtraScreen( navController: NavHostController) {
         TayCardItemNext(
             text = titleBlockingImage,
             subText =infoBlockingCall){
-            navController.navigate(DestinationsMain.InfoScreen.withArgs(
+            navController.navigate(DestinationsMain.InfoScreen(
                 parseFromString(InfoModel(title = titleBlockingImage, message = messageBlockingImage))))
         }
     }

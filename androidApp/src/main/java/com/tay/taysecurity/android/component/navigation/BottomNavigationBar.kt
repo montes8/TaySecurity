@@ -8,6 +8,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -15,12 +16,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.tay.taysecurity.android.component.drawer.currentRoute
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun BottomNavigationBar(
     navController: NavHostController,
     items: List<Destinations>
 ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     val currentRoute = currentRoute(navController)
     BottomNavigation(
         backgroundColor = Color.Black,
@@ -29,7 +34,7 @@ fun BottomNavigationBar(
 
     ) {
         items.forEach { screen ->
-            val selected = currentRoute == screen.route
+            val selected = currentDestination?.hasRoute(screen.route::class) == true
             BottomNavigationItem(
                 selectedContentColor = Color.Magenta,
                 unselectedContentColor = Color.White,

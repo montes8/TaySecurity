@@ -45,7 +45,7 @@ fun ScreenHome(navControllerMain: NavHostController){
             FloatingActionButtonsSure{
                 if (it){
                     if(context.validateCallPredeterminate()){
-                        navControllerMain.navigate(DestinationsMain.CallSureScreen.route)
+                        navControllerMain.navigate(DestinationsMain.CallSureScreen)
                     }else{
                         context.tayToast("Debes establecerla como predeterminada primero")
                     }

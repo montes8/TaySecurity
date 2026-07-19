@@ -1,5 +1,6 @@
 package com.tay.taysecurity.android.component.drawer
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,11 +29,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.navigation.Destinations
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import androidx.navigation.NavDestination.Companion.hasRoute
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun Drawer(
     scope: CoroutineScope,
@@ -53,9 +58,12 @@ fun Drawer(
             .fillMaxWidth()
             .height(8.dp))
 
-        val currentRoute = currentRoute(navController)
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
         items.forEach { item ->
-            DrawerItem(item = item, selected = currentRoute == item.route) {
+            val selected = currentDestination?.hasRoute(item.route::class) == true
+
+            DrawerItem(item = item, selected = selected) {
                 navController.navigate(item.route) {
                     launchSingleTop = true
                 }

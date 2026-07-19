@@ -72,7 +72,7 @@ fun SecurityScreen(navController: NavHostController
         TayCardItemNext(
             text = "Optener informacion de Image",
             subText ="Esta opción te permitira acceder a la metadata de una imagen y ver toda suu información."){
-            navController.navigate(DestinationsMain.ImageScreen.route)
+            navController.navigate(DestinationsMain.ImageScreen)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
