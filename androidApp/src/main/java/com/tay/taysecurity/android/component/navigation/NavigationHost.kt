@@ -14,7 +14,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.tay.taysecurity.android.ui.home.ScreenHome
 import com.tay.taysecurity.android.ui.home.blocking.BlockingScreen
-import com.tay.taysecurity.android.ui.home.call.CallSureScreen
 import com.tay.taysecurity.android.ui.home.extra.ExtraScreen
 import com.tay.taysecurity.android.ui.home.image.ImageScreen
 import com.tay.taysecurity.android.ui.home.info.InfoScreen
@@ -72,10 +71,6 @@ fun NavigationHostMain(
             ImageScreen(navController)
         }
 
-        composable<DestinationsMain.CallSureScreen> {
-            CallSureScreen(navController)
-        }
-
     }
 }
 
@@ -101,8 +96,6 @@ sealed interface DestinationRoot {
 sealed interface DestinationsMain {
     @Serializable data object HomeScreen : DestinationsMain
     @Serializable data class InfoScreen(val dataInfo : String) : DestinationsMain
-    @Serializable data object Imports : DestinationsMain
     @Serializable data object ImageScreen : DestinationsMain
 
-    @Serializable data object CallSureScreen : DestinationsMain
 }

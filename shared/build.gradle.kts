@@ -62,9 +62,9 @@ kotlin {
 
 android {
     namespace = "com.tay.taysecurity"
-    compileSdk = 34
+    compileSdk = 37
     defaultConfig {
-        minSdk = 24
+        minSdk = 29
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

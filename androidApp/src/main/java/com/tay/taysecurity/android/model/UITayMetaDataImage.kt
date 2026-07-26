@@ -21,30 +21,37 @@ data class UITayMetaDataImage(
     var gpsLongitudeReferential :String = UI_TAY_EMPTY,
     var gpsProcessingMethod :String = UI_TAY_EMPTY
 ){
-    fun mapperDataImage(): String{
+    fun mapperDataImage(): String {
         var text = UI_TAY_EMPTY
-        if (length.isNotEmpty() && width.isNotEmpty()){
-            text = "Tamanio : $length x $width\n"
+
+        if (length.isNotEmpty() && width.isNotEmpty()) {
+            text += "Tamaño: $length x $width\n"
         }
 
-        if (take.isNotEmpty()){
-            text = "Movil: $take x $model\n"
-        }
-        if (dateTime.isNotEmpty()){
-            text = "Fecha: ${dateTime}\n"
+        if (take.isNotEmpty()) {
+            text += "Móvil: $take $model\n"
         }
 
-        if (gpsLatitude.isNotEmpty()){
-            text = "Latitude: $gpsLatitude  $gpsLatitudeReferential \n"
+        if (dateTime.isNotEmpty()) {
+            text += "Fecha: $dateTime\n"
         }
 
-        if (gpsLongitude.isNotEmpty()){
-            text = "Longitude: $gpsLongitude  $gpsLongitudeReferential \n"
+        if (focalLength.isNotEmpty()) {
+            text += "Focal Length: $focalLength\n"
         }
 
-        if (gpsProcessingMethod.isNotEmpty()){
-            text = "Proceso Medición: ${gpsProcessingMethod}\n"
+        if (gpsLatitude.isNotEmpty()) {
+            text += "Latitud: $gpsLatitude $gpsLatitudeReferential\n"
         }
-        return text
+
+        if (gpsLongitude.isNotEmpty()) {
+            text += "Longitud: $gpsLongitude $gpsLongitudeReferential\n"
+        }
+
+        if (gpsProcessingMethod.isNotEmpty()) {
+            text += "Proceso Medición: $gpsProcessingMethod\n"
+        }
+
+        return text.trim()
     }
 }

@@ -7,7 +7,7 @@ data class SecurityShared  (
     var blockingSms :Boolean = false,
     var simulationGps :Boolean = false
 ){
-    fun uiTayBlockinCall() = blockingCallFull || blockingCall
+    fun uiTayBlockingCall() = blockingCallFull || blockingCall
 
-    fun uiTayBlockinSms() = blockingSmsFull || blockingSms
+    fun uiTayBlockingSms() = blockingSmsFull || blockingSms
 }

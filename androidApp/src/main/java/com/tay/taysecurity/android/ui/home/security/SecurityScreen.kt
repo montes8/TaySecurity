@@ -86,7 +86,7 @@ fun SecurityScreen(navController: NavHostController
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =viewModel.uiState.securty.simulationGps,
+        TayCardItemSwitch(state =viewModel.uiState.security.simulationGps,
             text = "Crea una ubicación aleatoria",
             subText ="Esta opción creara una ubicación aleatoria cada sierto tiempo, " +
                     "debes habilitar como app de localización en la opcion de desarrollador para esta opción.") {

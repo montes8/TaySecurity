@@ -1,10 +1,12 @@
 package com.tay.taysecurity.android.ui.home
 
+import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -27,6 +29,7 @@ class HomeActivity : ComponentActivity() {
 
     companion object {
         private const val UPDATE_CODE = 10001
+        private const val PERMISSION_REQUEST_CODE = 225
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -39,21 +42,25 @@ class HomeActivity : ComponentActivity() {
         validateVersionUpdate()
     }
 
-    private fun initPermission(){
-        val permissionCheck = ContextCompat.checkSelfPermission(
-            this, WRITE_EXTERNAL_STORAGE
-        )
-        val permissionCheckTwo = ContextCompat.checkSelfPermission(
-            this, READ_EXTERNAL_STORAGE
-        )
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED || permissionCheckTwo != PackageManager.PERMISSION_GRANTED) {
+    private fun initPermission() {
+        val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
+        } else {
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
+        val permissionsNotGranted = permissionsToRequest.filter { permission ->
+            ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED
+        }
+
+        if (permissionsNotGranted.isNotEmpty()) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf<String?>(WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE),
-                225
+                permissionsNotGranted.toTypedArray(),
+                PERMISSION_REQUEST_CODE
             )
         } else {
-            Log.i("Mensaje", "Se tiene permiso para leer los archivos!")
+            Log.d("HomeActivity", "¡Permiso para leer imágenes de la galería otorgado!")
         }
     }
 

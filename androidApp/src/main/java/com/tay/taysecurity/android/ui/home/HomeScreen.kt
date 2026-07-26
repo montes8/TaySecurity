@@ -16,11 +16,9 @@ import com.tay.taysecurity.android.component.TopBar
 import com.tay.taysecurity.android.component.drawer.Drawer
 import com.tay.taysecurity.android.component.navigation.BottomNavigationBar
 import com.tay.taysecurity.android.component.navigation.Destinations
-import com.tay.taysecurity.android.component.navigation.DestinationsMain
 import com.tay.taysecurity.android.component.navigation.NavigationHost
-import com.tay.taysecurity.android.utils.tayToast
 import com.tay.taysecurity.android.utils.uiTayViewCallButton
-import com.tay.taysecurity.android.utils.validateCallPredeterminate
+import com.tay.taysecurity.android.utils.uiTayViewCallNumberButton
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -44,11 +42,7 @@ fun ScreenHome(navControllerMain: NavHostController){
         floatingActionButton = {
             FloatingActionButtonsSure{
                 if (it){
-                    if(context.validateCallPredeterminate()){
-                        navControllerMain.navigate(DestinationsMain.CallSureScreen)
-                    }else{
-                        context.tayToast("Debes establecerla como predeterminada primero")
-                    }
+                    context.uiTayViewCallNumberButton()
 
                 }else{
                     context.uiTayViewCallButton()

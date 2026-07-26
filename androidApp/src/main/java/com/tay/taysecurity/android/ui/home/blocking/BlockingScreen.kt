@@ -1,8 +1,11 @@
 package com.tay.taysecurity.android.ui.home.blocking
 
+import android.app.Activity
+import android.app.role.RoleManager
 import android.content.Intent
-import android.provider.Settings
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -31,36 +34,74 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tay.taysecurity.android.R
-import com.tay.taysecurity.android.component.DialogSure
 import com.tay.taysecurity.android.component.TayCardItemSwitch
 import com.tay.taysecurity.android.utils.validateCallPredeterminate
 import com.tay.taysecurity.android.utils.validateSmsPredeterminate
 
 @Composable
-fun BlockingScreen(
-) {
+fun BlockingScreen() {
     val context = LocalContext.current
-    val viewModel : BlockingViewModel = hiltViewModel()
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult(),
-        onResult = { isGranted ->
-        }
-    )
-    var openDialog by remember { mutableStateOf(false) }
+    val viewModel: BlockingViewModel = hiltViewModel()
 
-    DialogSure(showDialog = openDialog, dismissDialog = {
-        openDialog = false
-        if(it){
-            val intent = Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS)
-            launcher.launch(intent)
+    var pendingCallIndex by remember { mutableStateOf<Int?>(null) }
+    var pendingSmsIndex by remember { mutableStateOf<Int?>(null) }
+
+    val callRoleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            pendingCallIndex?.let { index ->
+                viewModel.updateDataSecurity(true, index)
+            }
         }
-    })
+        pendingCallIndex = null
+    }
+
+    val smsRoleLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            pendingSmsIndex?.let { index ->
+                viewModel.updateDataSecurity(true, index)
+            }
+        }
+        pendingSmsIndex = null
+    }
+
+    fun requestCallRole(index: Int) {
+        if (context.validateCallPredeterminate()) {
+            viewModel.updateDataSecurity(true, index)
+        } else {
+            val roleManager = context.getSystemService(RoleManager::class.java)
+            if (roleManager != null && !roleManager.isRoleHeld(RoleManager.ROLE_DIALER)) {
+                pendingCallIndex = index
+                callRoleLauncher.launch(roleManager.createRequestRoleIntent(RoleManager.ROLE_DIALER))
+            } else {
+                viewModel.updateDataSecurity(true, index)
+            }
+        }
+    }
+
+    fun requestSmsRole(index: Int) {
+        if (context.validateSmsPredeterminate()) {
+            viewModel.updateDataSecurity(true, index)
+        } else {
+            val roleManager = context.getSystemService(RoleManager::class.java)
+            if (roleManager != null && !roleManager.isRoleHeld(RoleManager.ROLE_SMS)) {
+                pendingSmsIndex = index
+                smsRoleLauncher.launch(roleManager.createRequestRoleIntent(RoleManager.ROLE_SMS))
+            } else {
+                viewModel.updateDataSecurity(true, index)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
-            .fillMaxWidth().background(Color.White)
+            .fillMaxWidth()
+            .background(Color.White)
             .verticalScroll(rememberScrollState())
-            .padding(top= 12.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
+            .padding(top = 12.dp, start = 8.dp, end = 8.dp, bottom = 140.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -69,7 +110,7 @@ fun BlockingScreen(
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.gabi_regular)),
-            fontWeight= FontWeight.Bold
+            fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -82,63 +123,39 @@ fun BlockingScreen(
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =viewModel.uiState.securty.blockingCallFull,
+        TayCardItemSwitch(
+            state = viewModel.uiState.security.blockingCallFull,
             text = stringResource(R.string.title_all_call),
-            subText = stringResource(R.string.sub_title_all_call)){
-            if (it){
-                if(context.validateCallPredeterminate()){
-                    viewModel.updateDataSecurity(true,0)
-                }else{
-                    openDialog = true
-                }
-            }else{
-                viewModel.updateDataSecurity(false,0)
-            }
+            subText = stringResource(R.string.sub_title_all_call)
+        ) { isChecked ->
+            if (isChecked) requestCallRole(0) else viewModel.updateDataSecurity(false, 0)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =viewModel.uiState.securty.blockingCall,
+        TayCardItemSwitch(
+            state = viewModel.uiState.security.blockingCall,
             text = stringResource(R.string.title_stranger_call),
-            subText = stringResource(R.string.sub_title_stranger_call)){
-            if (it){
-                if(context.validateCallPredeterminate()){
-                    viewModel.updateDataSecurity(true,1)
-                }else{
-                    openDialog = true
-                }
-            }else{
-                viewModel.updateDataSecurity(false,1)
-            }
+            subText = stringResource(R.string.sub_title_stranger_call)
+        ) { isChecked ->
+            if (isChecked) requestCallRole(1) else viewModel.updateDataSecurity(false, 1)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =viewModel.uiState.securty.blockingSmsFull,
+        TayCardItemSwitch(
+            state = viewModel.uiState.security.blockingSmsFull,
             text = stringResource(R.string.title_all_sms),
-            subText = stringResource(R.string.sub_title_all_sms)){
-            if (it){
-                if(context.validateSmsPredeterminate()){
-                    viewModel.updateDataSecurity(true,2)
-                }else{
-                    openDialog = true
-                }
-            }else{
-                viewModel.updateDataSecurity(false,2)
-            }
+            subText = stringResource(R.string.sub_title_all_sms)
+        ) { isChecked ->
+            if (isChecked) requestSmsRole(2) else viewModel.updateDataSecurity(false, 2)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        TayCardItemSwitch(state =viewModel.uiState.securty.blockingSms,
+        TayCardItemSwitch(
+            state = viewModel.uiState.security.blockingSms,
             text = stringResource(R.string.title_stranger_sms),
-            subText = stringResource(R.string.sub_title_stranger_sms)){
-            if (it){
-                if(context.validateSmsPredeterminate()){
-                    viewModel.updateDataSecurity(true,3)
-                }else{
-                    openDialog = true
-                }
-            }else{
-                viewModel.updateDataSecurity(false,3)
-            }
+            subText = stringResource(R.string.sub_title_stranger_sms)
+        ) { isChecked ->
+            if (isChecked) requestSmsRole(3) else viewModel.updateDataSecurity(false, 3)
         }
 
         Spacer(modifier = Modifier.height(16.dp))

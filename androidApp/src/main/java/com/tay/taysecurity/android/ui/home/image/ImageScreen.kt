@@ -1,6 +1,7 @@
 package com.tay.taysecurity.android.ui.home.image
 
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,8 +34,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TopBarBack
 import com.tay.taysecurity.android.utils.UI_TAY_EMPTY
@@ -42,19 +46,24 @@ import com.tay.taysecurity.android.utils.uiTayMetaDataImage
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ImageScreen(navController: NavHostController){
-    var imageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
+fun ImageScreen(navController: NavHostController) {
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
-
     val textData = remember { mutableStateOf(UI_TAY_EMPTY) }
-    val launcher = rememberLauncherForActivityResult(
-        contract =
-            ActivityResultContracts.GetContent()
+
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUri = uri
-        imageUri?.uiTayMetaDataImage(context)?.let { textData.value = it.mapperDataImage() }
+        imageUri?.let {
+            textData.value = it.uiTayMetaDataImage(context).mapperDataImage()
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) {
+        galleryLauncher.launch("image/*")
     }
 
     Scaffold(
@@ -63,34 +72,61 @@ fun ImageScreen(navController: NavHostController){
                 navController.popBackStack()
             }
         }
-    ){
-
-        Column (modifier = Modifier.background(Color.Black)
-            .fillMaxSize().padding(16.dp),
-            horizontalAlignment =Alignment.CenterHorizontally){
-
+    ) {
+        Column(
+            modifier = Modifier
+                .background(Color.Black)
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Spacer(modifier = Modifier.height(16.dp))
+
             Button(
                 modifier = Modifier
-                    .height(56.dp).fillMaxWidth().padding(top = 12.dp, start = 16.dp, end = 16.dp),
+                    .height(56.dp)
+                    .fillMaxWidth()
+                    .padding(top = 12.dp, start = 16.dp, end = 16.dp),
                 shape = RoundedCornerShape(16.dp),
                 border = BorderStroke(2.dp, Color.Magenta),
-                colors = ButtonDefaults.buttonColors(backgroundColor =
-                    Color.Black)
-
-                ,onClick = {
-                    launcher.launch("image/*")
-                }) {
-                Text(text = "seleccione imagen", color = Color.White)
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+                onClick = {
+                    // 3. Lógica para pedir el permiso antes de abrir la galería
+                    val permissionCheck = ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.ACCESS_MEDIA_LOCATION
+                    )
+                    if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                        galleryLauncher.launch("image/*")
+                    } else {
+                        permissionLauncher.launch(android.Manifest.permission.ACCESS_MEDIA_LOCATION)
+                    }
+                }
+            ) {
+                Text(text = "Seleccione imagen", color = Color.White)
             }
-            AsyncImage(
-                    model = imageUri,
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            imageUri?.let { uri ->
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .data(uri)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().height(16.dp).padding(top = 20.dp, start = 24.dp, end = 24.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .padding(horizontal = 16.dp)
                         .clip(RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop,
                 )
-            if (textData.value.isNotEmpty()){
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            if (textData.value.isNotEmpty()) {
                 Text(
                     text = textData.value,
                     color = Color.Magenta,
@@ -99,10 +135,6 @@ fun ImageScreen(navController: NavHostController){
                     fontFamily = FontFamily(Font(R.font.gabi_regular))
                 )
             }
-
         }
-
     }
 }
-
-

@@ -12,76 +12,67 @@ import com.tay.taysecurity.model.SecurityShared
 import com.tay.taysecurity.usecases.BlockingUseCase
 import com.tay.taysecurity.usecases.TaySureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @HiltViewModel
-class BlockingViewModel @Inject constructor(private val context: Application): BaseViewModel()  {
+class BlockingViewModel @Inject constructor(
+    private val context: Application
+) : BaseViewModel() {
 
     private var taySureUseCase: TaySureUseCase = TaySureUseCase(context)
     private val blockingUseCase: BlockingUseCase = BlockingUseCase()
+
     var uiState by mutableStateOf(SecurityUiState())
-    private var update : SecurityShared? = null
+        private set
+
     init {
-        execute {
-            delay(500)
-            loadSecurity()
-            insertContactAll()
-        }
+        loadSecurity()
+        insertContactAll()
     }
 
     private fun loadSecurity() {
         execute {
-            val data = taySureUseCase.getDataSecurity()?: SecurityShared()
-            update = SecurityShared(blockingCallFull = data.blockingCallFull,
-                blockingCall = data.blockingCall,
-                blockingSmsFull = data.blockingSmsFull,
-                blockingSms = data.blockingSms)
-            uiState = uiState.copy(securty = data)
-
+            val data = taySureUseCase.getDataSecurity() ?: SecurityShared()
+            uiState = uiState.copy(security = data)
         }
     }
 
-    fun updateDataSecurity(value: Boolean,type:Int = 0){
-        when(type){
-            0->{
-                update?.blockingCallFull = value
-                update?.blockingCall = value
-            }
-            1->{
-                update?.blockingCall = value
-            }
-            2->{
-                update?.blockingSmsFull = value
-                update?.blockingSms = value
-            }
-            3->{
-                update?.blockingSms = value
-            }
-            4->{
-                update?.simulationGps = value
-            }
-            else->{
-                update?.blockingSms = value
-            }
+    fun updateDataSecurity(value: Boolean, type: Int = 0) {
+        val currentSecurity = uiState.security
+
+        val updatedSecurity = when (type) {
+            0 -> currentSecurity.copy(
+                blockingCallFull = value,
+                blockingCall = value
+            )
+            1 -> currentSecurity.copy(
+                blockingCall = value
+            )
+            2 -> currentSecurity.copy(
+                blockingSmsFull = value,
+                blockingSms = value
+            )
+            3 -> currentSecurity.copy(
+                blockingSms = value
+            )
+            4 -> currentSecurity.copy(
+                simulationGps = value
+            )
+            else -> currentSecurity
         }
-        val updateBLocking = SecurityShared(blockingCallFull = update?.blockingCallFull?:false,
-            blockingCall = update?.blockingCall== true,
-            blockingSmsFull = update?.blockingSmsFull== true,
-            blockingSms = update?.blockingSms== true,
-            simulationGps = update?.simulationGps == true
-        )
-        uiState = uiState.copy(securty = updateBLocking)
-        taySureUseCase.saveDataSecurity(updateBLocking)
+
+        uiState = uiState.copy(security = updatedSecurity)
+        taySureUseCase.saveDataSecurity(updatedSecurity)
     }
 
-
-    private fun insertContactAll(){
+    private fun insertContactAll() {
         execute {
             try {
                 TaySureCall.listContact = context.loadContactUser()
                 blockingUseCase.insertContactAll(TaySureCall.listContact)
-            }catch (e:Exception){e.printStackTrace()}
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 }

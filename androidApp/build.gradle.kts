@@ -10,11 +10,11 @@ plugins {
 
 android {
     namespace = "com.tay.taysecurity.android"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         applicationId = "com.tay.taysecurity.android"
-        minSdk = 28
-        targetSdk = 36
+        minSdk = 29
+        targetSdk = 37
         versionCode = 7
         versionName = "1.0.6"
     }
