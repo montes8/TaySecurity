@@ -2,6 +2,7 @@
 
 package com.tay.taysecurity.android.utils
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.app.role.RoleManager
 import android.content.Context
@@ -40,12 +41,14 @@ fun Context.uiTayViewCallButton(){
     }
     this.startActivity(contactsIntent)
 }
+fun Context.uiTayViewCallNumberButton() {
+    val dialIntent = Intent(Intent.ACTION_VIEW, Uri.parse("tel:123"))
 
-fun Context.uiTayViewCallNumberButton(){
-    val dialIntent = Intent(Intent.ACTION_DIAL).apply {
-        data = "tel:".toUri()
+    try {
+        startActivity(dialIntent)
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
-    this.startActivity(dialIntent)
 }
 
 fun Context.uiTayViewCall(){
@@ -57,6 +60,12 @@ fun Context.uiTayViewCall(){
     } catch (e: SecurityException) {
         Log.e("ERROR_CALL",e.message.toString())
     }
+}
+
+fun String.goCallNumber(context: Context){
+    val callIntent = Intent(Intent.ACTION_CALL)
+    callIntent.data = ("tel:$this").toUri()
+    context.startActivity(callIntent)
 }
 
 fun Application.loadContactUser(): List<ContactShared>{
@@ -147,7 +156,7 @@ inline fun <reified T> parseFromString( value: T): String {
 
 fun Uri.uiTayMetaDataImage(context: Context): UITayMetaDataImage {
     val uriToOpen = runCatching {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && scheme == "content") MediaStore.setRequireOriginal(this) else this
+        if (scheme == "content") MediaStore.setRequireOriginal(this) else this
     }.getOrDefault(this)
 
     return context.contentResolver.openInputStream(uriToOpen)?.use { stream ->
@@ -186,6 +195,7 @@ fun Context.validateCallPredeterminate(): Boolean{
         return this.packageName == telecomManager.defaultDialerPackage
 }
 
+@SuppressLint("ObsoleteSdkInt")
 fun  Context.validateSmsPredeterminate(): Boolean{
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         val roleManager = getSystemService(RoleManager::class.java)

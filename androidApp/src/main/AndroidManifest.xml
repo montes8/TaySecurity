@@ -60,6 +60,7 @@
     <queries>
         <intent>
             <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
         </intent>
     </queries>
 

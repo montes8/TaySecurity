@@ -25,8 +25,9 @@ class TaySPreferences(private val preference: TaySPreferenceManager):
 
     private fun String.toDataSecurity(): SecurityShared? {
         return try {
+            if (!this.trim().startsWith("{")) return null
             Gson().fromJson(this, SecurityShared::class.java)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             null
         }
     }

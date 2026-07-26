@@ -1,6 +1,5 @@
 package com.tay.taysecurity.android.ui.home.blocking
 
-
 import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +11,7 @@ import com.tay.taysecurity.model.SecurityShared
 import com.tay.taysecurity.usecases.BlockingUseCase
 import com.tay.taysecurity.usecases.TaySureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,14 +26,17 @@ class BlockingViewModel @Inject constructor(
         private set
 
     init {
-        loadSecurity()
-        insertContactAll()
+        execute {
+            delay(500)
+            loadSecurity()
+            insertContactAll()
+        }
     }
 
     private fun loadSecurity() {
         execute {
             val data = taySureUseCase.getDataSecurity() ?: SecurityShared()
-            uiState = uiState.copy(security = data)
+                uiState = uiState.copy(security = data)
         }
     }
 

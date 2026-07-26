@@ -2,10 +2,7 @@ package com.tay.taysecurity.android.ui.home.blocking
 
 import android.app.Activity
 import android.app.role.RoleManager
-import android.content.Intent
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -83,6 +80,7 @@ fun BlockingScreen() {
     }
 
     fun requestSmsRole(index: Int) {
+        // Si ya es la app predeterminada, simplemente actualizamos el estado al valor que el usuario activó
         if (context.validateSmsPredeterminate()) {
             viewModel.updateDataSecurity(true, index)
         } else {
