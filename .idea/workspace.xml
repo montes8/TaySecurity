@@ -9,39 +9,19 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb9b0720-e874-4592-8766-bb763e1b95f1" name="Changes" comment="clean">
+    <list default="true" id="eb9b0720-e874-4592-8766-bb763e1b95f1" name="Changes" comment="update version">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/checksums/checksums.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/checksums/md5-checksums.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.13/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/5d843728-b08c-4b6a-8bed-3f527a4b4e41/.globals.work.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/5d843728-b08c-4b6a-8bed-3f527a4b4e41/.strings.work.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/5d843728-b08c-4b6a-8bed-3f527a4b4e41/_androidApp.work.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/5d843728-b08c-4b6a-8bed-3f527a4b4e41/_shared.work.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/5d843728-b08c-4b6a-8bed-3f527a4b4e41/buildfingerprint.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/5d843728-b08c-4b6a-8bed-3f527a4b4e41/entry.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/5d843728-b08c-4b6a-8bed-3f527a4b4e41/projectfingerprint.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/5d843728-b08c-4b6a-8bed-3f527a4b4e41/work.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/configuration-cache/dvfncv75odykbf0tdzbtbf6jz/candidates.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/configuration-cache/dvfncv75odykbf0tdzbtbf6jz/candidates.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/component/navigation/NavigationHost.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/component/navigation/NavigationHost.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/model/UITayMetaDataImage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/model/UITayMetaDataImage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/blocking/BlockingScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/blocking/BlockingScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/blocking/BlockingViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/blocking/BlockingViewModel.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/blocking/SecurityUiState.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/blocking/SecurityUiState.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/call/CallSureScreen.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/image/ImageScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/image/ImageScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/security/SecurityScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/security/SecurityScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/utils/Extensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/utils/Extensions.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/shared/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/src/commonMain/kotlin/com/tay/taysecurity/model/SecurityShared.kt" beforeDir="false" afterPath="$PROJECT_DIR$/shared/src/commonMain/kotlin/com/tay/taysecurity/model/SecurityShared.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -228,14 +208,32 @@
       <option name="project" value="LOCAL" />
       <updated>1784491551732</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="refactor code">
+      <option name="closed" value="true" />
+      <created>1785100116827</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1785100116828</updated>
+    </task>
+    <task id="LOCAL-00004" summary="update version">
+      <option name="closed" value="true" />
+      <created>1785105333398</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1785105333399</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update navigation" />
     <MESSAGE value="update" />
     <MESSAGE value="clean" />
-    <option name="LAST_COMMIT_MESSAGE" value="clean" />
+    <MESSAGE value="refactor code" />
+    <MESSAGE value="update version" />
+    <option name="LAST_COMMIT_MESSAGE" value="update version" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">

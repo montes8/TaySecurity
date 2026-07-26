@@ -1,0 +1,21 @@
+# Gradle / Build (Aparece en tu captura)
+.gradle/
+.kotlin/
+build/
+**/build/
+
+# Android Studio / IntelliJ (Aparece en tu captura)
+.idea/
+*.iml
+.DS_Store
+
+# Archivos de configuración local y claves (Aparece en tu captura)
+local.properties
+keystore/
+*.keystore
+*.jks
+
+# iOS
+iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata/
+iosApp/iosApp.xcworkspace/xcuserdata/
+iosApp/DerivedData/
