@@ -12,6 +12,8 @@ build/
 .externalNativeBuild/
 .cxx/
 captures/
+gradlew
+gradlew.bat
 
 # IDE and Project settings
 .idea/
