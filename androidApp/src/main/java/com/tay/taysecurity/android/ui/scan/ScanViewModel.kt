@@ -158,7 +158,7 @@ class ScanViewModel @Inject constructor(
                 acquire()
             }
 
-            val nsdListener = startNsdDiscovery(context, nsdDevices)
+            val nsdListeners = startNsdDiscovery(context, nsdDevices)
 
             try {
                 coroutineScope {
@@ -206,7 +206,7 @@ class ScanViewModel @Inject constructor(
                     jobs.awaitAll()
                 }
             } finally {
-                stopNsdDiscovery(context, nsdListener)
+                stopNsdDiscovery(context, nsdListeners)
                 try {
                     multicastLock?.release()
                 } catch (_: Exception) {}
@@ -557,46 +557,68 @@ class ScanViewModel @Inject constructor(
     private fun startNsdDiscovery(
         context: Context,
         nsdDevices: ConcurrentHashMap<String, String>
-    ): NsdManager.DiscoveryListener? {
-        val nsdManager = context.getSystemService(Context.NSD_SERVICE) as? NsdManager ?: return null
+    ): List<NsdManager.DiscoveryListener> {
+        val nsdManager = context.getSystemService(Context.NSD_SERVICE) as? NsdManager ?: return emptyList()
+        val listeners = mutableListOf<NsdManager.DiscoveryListener>()
 
-        val listener = object : NsdManager.DiscoveryListener {
-            override fun onDiscoveryStarted(regType: String) {}
-            override fun onDiscoveryStopped(regType: String) {}
-            override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {}
-            override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) {}
+        val serviceTypes = listOf(
+            "_airplay._tcp.",
+            "_companion-link._tcp.",
+            "_device-info._tcp.",
+            "_smb._tcp.",
+            "_http._tcp.",
+            "_raop._tcp."
+        )
 
-            override fun onServiceFound(serviceInfo: NsdServiceInfo) {
-                try {
-                    nsdManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
-                        override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {}
-                        override fun onServiceResolved(resolvedInfo: NsdServiceInfo) {
-                            val hostIp = resolvedInfo.host?.hostAddress
-                            val serviceName = resolvedInfo.serviceName
-                            if (!hostIp.isNullOrBlank()) {
-                                nsdDevices[hostIp] = serviceName
+        for (serviceType in serviceTypes) {
+            val listener = object : NsdManager.DiscoveryListener {
+                override fun onDiscoveryStarted(regType: String) {
+                    Log.d("ScanDebug", "NSD Discovery Iniciado para $regType")
+                }
+                override fun onDiscoveryStopped(regType: String) {}
+                override fun onStartDiscoveryFailed(sType: String, errorCode: Int) {
+                    Log.d("ScanDebug", "NSD Discovery Error en $sType: $errorCode")
+                }
+                override fun onStopDiscoveryFailed(sType: String, errorCode: Int) {}
+
+                override fun onServiceFound(serviceInfo: NsdServiceInfo) {
+                    try {
+                        nsdManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
+                            override fun onResolveFailed(sInfo: NsdServiceInfo, eCode: Int) {}
+                            override fun onServiceResolved(resolvedInfo: NsdServiceInfo) {
+                                val hostIp = resolvedInfo.host?.hostAddress
+                                val serviceName = resolvedInfo.serviceName
+                                if (!hostIp.isNullOrBlank()) {
+                                    val cleanIp = hostIp.replace("%wlan0", "").replace("%1", "")
+                                    nsdDevices[cleanIp] = serviceName
+                                    Log.d("ScanDebug", "NSD DISPOSITIVO RESUELTO DINAMICAMENTE -> IP=$cleanIp, Nombre=$serviceName, Tipo=$serviceType")
+                                }
                             }
-                        }
-                    })
-                } catch (_: Exception) {}
+                        })
+                    } catch (_: Exception) {}
+                }
+
+                override fun onServiceLost(serviceInfo: NsdServiceInfo) {}
             }
 
-            override fun onServiceLost(serviceInfo: NsdServiceInfo) {}
+            try {
+                nsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, listener)
+                listeners.add(listener)
+            } catch (_: Exception) {}
         }
 
-        try {
-            nsdManager.discoverServices("_http._tcp.", NsdManager.PROTOCOL_DNS_SD, listener)
-            nsdManager.discoverServices("_airplay._tcp.", NsdManager.PROTOCOL_DNS_SD, listener)
-        } catch (_: Exception) {}
-
-        return listener
+        return listeners
     }
 
-    private fun stopNsdDiscovery(context: Context, listener: NsdManager.DiscoveryListener?) {
-        if (listener == null) return
+    private fun stopNsdDiscovery(context: Context, listeners: List<NsdManager.DiscoveryListener>) {
+        if (listeners.isEmpty()) return
         try {
-            val nsdManager = context.getSystemService(Context.NSD_SERVICE) as? NsdManager
-            nsdManager?.stopServiceDiscovery(listener)
+            val nsdManager = context.getSystemService(Context.NSD_SERVICE) as? NsdManager ?: return
+            for (listener in listeners) {
+                try {
+                    nsdManager.stopServiceDiscovery(listener)
+                } catch (_: Exception) {}
+            }
         } catch (_: Exception) {}
     }
 
@@ -889,6 +911,26 @@ class ScanViewModel @Inject constructor(
             socket.connect(InetSocketAddress(ip, port), timeoutMs)
             socket.close()
             true
+        } catch (_: java.net.ConnectException) {
+            // Un TCP RST (ConnectException) indica un host activo solo si el kernel de Android confirmo su MAC en la tabla de vecinos ARP
+            var isArpValid = false
+            try {
+                val process = ProcessBuilder("ip", "neigh").start()
+                val reader = process.inputStream.bufferedReader()
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    val currentLine = line ?: continue
+                    if (currentLine.startsWith(ip) || currentLine.contains(" $ip ")) {
+                        val lower = currentLine.lowercase(Locale.US)
+                        if (lower.contains("lladdr") && !lower.contains("failed") && !lower.contains("incomplete")) {
+                            isArpValid = true
+                            break
+                        }
+                    }
+                }
+                process.waitFor()
+            } catch (_: Exception) {}
+            isArpValid
         } catch (_: Exception) {
             false
         }
