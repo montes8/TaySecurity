@@ -1,21 +1,54 @@
-# Gradle / Build (Aparece en tu captura)
+# Built application files
+*.apk
+*.aar
+*.aab
+*.klib
+
+# Gradle and Build cache
 .gradle/
 .kotlin/
 build/
 **/build/
+.externalNativeBuild/
+.cxx/
+captures/
 
-# Android Studio / IntelliJ (Aparece en tu captura)
+# IDE and Project settings
 .idea/
 *.iml
-.DS_Store
+*.iws
+*.ipr
+out/
+.navigation/
 
-# Archivos de configuración local y claves (Aparece en tu captura)
+# Local configuration and keys/secrets
 local.properties
 keystore/
 *.keystore
 *.jks
+*.p12
+*.key
+*.pem
 
-# iOS
+# Memory & Crash Logs
+*.hprof
+*.log
+
+# macOS / OS generated files
+.DS_Store
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+
+# iOS / Xcode
 iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata/
+iosApp/iosApp.xcodeproj/xcuserdata/
 iosApp/iosApp.xcworkspace/xcuserdata/
 iosApp/DerivedData/
+iosApp/Pods/
+iosApp/build/
+.swiftpm/
+
+# Tooling / Agent Artifacts
+.artifacts/
