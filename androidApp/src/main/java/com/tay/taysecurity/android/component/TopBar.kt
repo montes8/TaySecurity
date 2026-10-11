@@ -55,12 +55,13 @@ fun TopBar(
 
 @Composable
 fun TopBarBack(
+    title: String = "Tay Security",
     openClick: () -> Unit
 ) {
     TopAppBar(
         contentColor = Color.Black,
         backgroundColor = Color.Black,
-        title = { Text("Tay Security", modifier = Modifier.fillMaxWidth(), color = Color.White,textAlign = TextAlign.Center) },
+        title = { Text(title, modifier = Modifier.fillMaxWidth(), color = Color.White,textAlign = TextAlign.Center) },
         navigationIcon = {
             IconButton(onClick = {
                 openClick.invoke()

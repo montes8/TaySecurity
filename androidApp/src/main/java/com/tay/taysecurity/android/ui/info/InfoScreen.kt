@@ -1,4 +1,4 @@
-package com.tay.taysecurity.android.ui.home.info
+package com.tay.taysecurity.android.ui.info
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -21,23 +21,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.TopBarBack
 import com.tay.taysecurity.android.model.InfoModel
 import com.tay.taysecurity.android.ui.home.extra.AndroidLogo
 import com.tay.taysecurity.android.utils.parseFromObjet
+import com.tay.taysecurity.android.utils.uiTayBackAction
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun InfoScreen(navController: NavHostController,dataInfo: String) {
+fun InfoScreen(dataInfo: String) {
     val data : InfoModel = parseFromObjet(dataInfo)
+
     Scaffold(
         topBar = {
-            TopBarBack {
-                navController.popBackStack()
-            }
+            TopBarBack(openClick =  uiTayBackAction() )
         }
     ){
         Column(modifier = Modifier.background(Color.Black)
@@ -72,6 +71,5 @@ fun InfoScreen(navController: NavHostController,dataInfo: String) {
             )
         }
     }
-
 
 }

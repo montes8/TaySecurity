@@ -15,9 +15,10 @@ import androidx.navigation.toRoute
 import com.tay.taysecurity.android.ui.home.ScreenHome
 import com.tay.taysecurity.android.ui.home.blocking.BlockingScreen
 import com.tay.taysecurity.android.ui.home.extra.ExtraScreen
-import com.tay.taysecurity.android.ui.home.image.ImageScreen
-import com.tay.taysecurity.android.ui.home.info.InfoScreen
+import com.tay.taysecurity.android.ui.image.ImageScreen
+import com.tay.taysecurity.android.ui.info.InfoScreen
 import com.tay.taysecurity.android.ui.home.security.SecurityScreen
+import com.tay.taysecurity.android.ui.scan.ScanScreen
 import kotlinx.serialization.Serializable
 
 @Composable
@@ -62,13 +63,17 @@ fun NavigationHostMain(
 
         composable<DestinationsMain.InfoScreen> { backStackEntry ->
             val infoArgs = backStackEntry.toRoute<DestinationsMain.InfoScreen>()
-            InfoScreen(navController,infoArgs.dataInfo)
+            InfoScreen(infoArgs.dataInfo)
 
         }
 
 
         composable<DestinationsMain.ImageScreen> {
             ImageScreen(navController)
+        }
+
+        composable<DestinationsMain.ScanScreen> {
+            ScanScreen()
         }
 
     }
@@ -97,5 +102,5 @@ sealed interface DestinationsMain {
     @Serializable data object HomeScreen : DestinationsMain
     @Serializable data class InfoScreen(val dataInfo : String) : DestinationsMain
     @Serializable data object ImageScreen : DestinationsMain
-
+    @Serializable data object ScanScreen : DestinationsMain
 }

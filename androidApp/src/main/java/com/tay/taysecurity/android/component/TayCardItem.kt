@@ -53,7 +53,7 @@ fun TayCardItemSwitch(
                 .padding(16.dp)) {
                 Text(
                     text = text,
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontFamily = FontFamily(Font(R.font.gabi_regular)),
                     fontWeight= FontWeight.Bold,
                     color = Color.White
@@ -61,7 +61,7 @@ fun TayCardItemSwitch(
                 Text(
                     modifier = Modifier.padding( top = 2.dp),
                     text = subText,
-                    fontSize = 13.sp,
+                    fontSize = 12.sp,
                     fontFamily = FontFamily(Font(R.font.gabi_regular)),
                     color = Color.White
                 )
@@ -69,10 +69,10 @@ fun TayCardItemSwitch(
 
             Row(
                 modifier = Modifier
-                    .height(30.dp)
-                    .width(70.dp)
+                    .height(25.dp)
+                    .width(60.dp)
                     .padding(end = 16.dp)
-                    .clip(RoundedCornerShape(30.dp))
+                    .clip(RoundedCornerShape(25.dp))
                     .border(1.dp, Color.Magenta, CircleShape)
                     .background(Color.White).uiTayNoRippleClickable{
                         tayClickItem.invoke(!state)
@@ -85,8 +85,8 @@ fun TayCardItemSwitch(
                     painter = painterResource(R.drawable.tay_circle_white),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(28.dp).padding(2.dp)
-                        .clip(CircleShape)                       // clip to the circle shape
+                        .size(24.dp).padding(2.dp)
+                        .clip(CircleShape)
                         .border(2.dp, Color.Black, CircleShape)
                         .background(Color.Magenta) ,
                     contentDescription = "",
@@ -121,7 +121,7 @@ fun TayCardItemNext(
                 Text(
                     modifier = Modifier.padding( top = 2.dp),
                     text = subText,
-                    fontSize = 13.sp,
+                    fontSize = 12.sp,
                     fontFamily = FontFamily(Font(R.font.gabi_regular)),
                     color = Color.White
                 )

@@ -62,7 +62,7 @@ fun SecurityScreen(navController: NavHostController
         Text(
             text = "Configuración de\nseguridad",
             color = Color.Black,
-            fontSize = 24.sp,
+            fontSize = 20.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.gabi_regular)),
             fontWeight= FontWeight.Bold
@@ -74,11 +74,17 @@ fun SecurityScreen(navController: NavHostController
             subText ="Esta opción te permitira acceder a la metadata de una imagen y ver toda suu información."){
             navController.navigate(DestinationsMain.ImageScreen)
         }
+        Spacer(modifier = Modifier.height(8.dp))
+        TayCardItemNext(
+            text = "Escaner Wifi",
+            subText ="Esta funcionalidad mostrara todos los dispositivos conectado a tu red wifi"){
+            navController.navigate(DestinationsMain.ScanScreen)
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Para usar esta funcionalidad debes habilitar modo desarrolador obten mas infomacion en la seccion de ayuda para saber como usarlo",
-            fontSize = 16.sp,
+            fontSize = 12.sp,
             color = Color.Black,
             textAlign = TextAlign.Start,
             fontFamily = FontFamily(Font(R.font.gabi_regular)),
@@ -113,7 +119,7 @@ fun SecurityScreen(navController: NavHostController
 
         Text(
             text = "Si no funciona, asegurese de haber definido esta app como ubicación de prueba como indica en la sección de ayuda.",
-            fontSize = 14.sp,
+            fontSize = 12.sp,
             color = Color.Red,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.gabi_regular)),

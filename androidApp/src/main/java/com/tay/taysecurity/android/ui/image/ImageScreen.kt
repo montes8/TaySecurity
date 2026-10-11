@@ -1,5 +1,6 @@
-package com.tay.taysecurity.android.ui.home.image
+package com.tay.taysecurity.android.ui.image
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -52,7 +53,7 @@ fun ImageScreen(navController: NavHostController) {
     val textData = remember { mutableStateOf(UI_TAY_EMPTY) }
 
     val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         imageUri = uri
         imageUri?.let {
@@ -63,7 +64,7 @@ fun ImageScreen(navController: NavHostController) {
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) {
-        galleryLauncher.launch("image/*")
+        galleryLauncher.launch(arrayOf("image/*"))
     }
 
     Scaffold(
@@ -94,12 +95,12 @@ fun ImageScreen(navController: NavHostController) {
                     // 3. Lógica para pedir el permiso antes de abrir la galería
                     val permissionCheck = ContextCompat.checkSelfPermission(
                         context,
-                        android.Manifest.permission.ACCESS_MEDIA_LOCATION
+                        Manifest.permission.ACCESS_MEDIA_LOCATION
                     )
                     if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                        galleryLauncher.launch("image/*")
+                        galleryLauncher.launch(arrayOf("image/*"))
                     } else {
-                        permissionLauncher.launch(android.Manifest.permission.ACCESS_MEDIA_LOCATION)
+                        permissionLauncher.launch(Manifest.permission.ACCESS_MEDIA_LOCATION)
                     }
                 }
             ) {

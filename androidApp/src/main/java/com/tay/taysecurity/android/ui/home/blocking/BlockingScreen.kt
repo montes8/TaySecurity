@@ -80,7 +80,6 @@ fun BlockingScreen() {
     }
 
     fun requestSmsRole(index: Int) {
-        // Si ya es la app predeterminada, simplemente actualizamos el estado al valor que el usuario activó
         if (context.validateSmsPredeterminate()) {
             viewModel.updateDataSecurity(true, index)
         } else {
@@ -105,7 +104,7 @@ fun BlockingScreen() {
         Text(
             text = stringResource(R.string.title_blocking_view),
             color = Color.Black,
-            fontSize = 24.sp,
+            fontSize = 20.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.gabi_regular)),
             fontWeight = FontWeight.Bold
@@ -115,7 +114,7 @@ fun BlockingScreen() {
         Text(
             text = stringResource(R.string.title_sub_blocking_view),
             color = Color.Magenta,
-            fontSize = 13.sp,
+            fontSize = 12.sp,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily(Font(R.font.gabi_regular))
         )

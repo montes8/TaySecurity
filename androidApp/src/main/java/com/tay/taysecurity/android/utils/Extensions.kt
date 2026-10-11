@@ -20,6 +20,7 @@ import android.telecom.Call
 import android.telecom.TelecomManager
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.core.net.toUri
 import androidx.exifinterface.media.ExifInterface
 import com.google.gson.Gson
@@ -29,6 +30,8 @@ import com.tay.taysecurity.model.ContactShared
 import com.tay.taysecurity.utils.SECURITY_EMPTY
 import java.io.File
 import java.io.IOException
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 
 
 fun Context.tayToast(message : String){
@@ -159,7 +162,13 @@ fun Uri.uiTayMetaDataImage(context: Context): UITayMetaDataImage {
         if (scheme == "content") MediaStore.setRequireOriginal(this) else this
     }.getOrDefault(this)
 
-    return context.contentResolver.openInputStream(uriToOpen)?.use { stream ->
+    val inputStream = runCatching {
+        context.contentResolver.openInputStream(uriToOpen)
+    }.getOrNull() ?: runCatching {
+        context.contentResolver.openInputStream(this)
+    }.getOrNull()
+
+    return inputStream?.use { stream ->
         val exif = ExifInterface(stream)
         val gps = FloatArray(2).also { exif.getLatLong(it) }
 
@@ -202,5 +211,13 @@ fun  Context.validateSmsPredeterminate(): Boolean{
         roleManager.isRoleHeld(RoleManager.ROLE_SMS)
     } else {
         Telephony.Sms.getDefaultSmsPackage(this) == this.packageName
+    }
+}
+
+@Composable
+fun uiTayBackAction(): () -> Unit {
+    val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    return remember(onBackPressedDispatcher) {
+        { onBackPressedDispatcher?.onBackPressed() }
     }
 }
