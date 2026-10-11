@@ -288,11 +288,12 @@ fun DeviceItemCard(device: DeviceScanResult) {
     val (icon, iconColor, badgeText) = when {
         device.isGateway -> Triple(Icons.Default.Router, Color.Magenta, "Router")
         device.isSelf -> Triple(Icons.Default.Smartphone, Color.Green, "Tu Móvil")
+        device.deviceType.contains("Windows", ignoreCase = true) || device.deviceType.contains("Laptop", ignoreCase = true) || device.deviceType.contains("Ordenador (Windows)", ignoreCase = true) || device.hostName.contains("PC", ignoreCase = true) || device.hostName.contains("Windows", ignoreCase = true) || device.hostName.contains("Desktop", ignoreCase = true) || device.hostName.contains("Laptop", ignoreCase = true) -> Triple(Icons.Default.Laptop, Color(0xFF00ADEF), "Laptop / PC")
+        device.deviceType.contains("Mac", ignoreCase = true) || device.hostName.contains("MacBook", ignoreCase = true) || device.hostName.contains("iMac", ignoreCase = true) -> Triple(Icons.Default.Computer, Color(0xFFA2AAAD), "Apple Mac")
+        (device.deviceType.contains("Apple iOS", ignoreCase = true) || device.deviceType.contains("iPhone", ignoreCase = true) || device.deviceType.contains("iPad", ignoreCase = true) || (device.deviceType.contains("iOS", ignoreCase = true) && !device.deviceType.contains("NetBIOS", ignoreCase = true) && !device.hostName.contains("NetBIOS", ignoreCase = true))) -> Triple(Icons.Default.PhoneIphone, Color(0xFFA2AAAD), "Apple iOS")
         device.deviceType.contains("Android", ignoreCase = true) -> Triple(Icons.Default.Android, Color(0xFF3DDC84), "Android")
-        device.deviceType.contains("iOS", ignoreCase = true) || device.deviceType.contains("iPhone", ignoreCase = true) || device.deviceType.contains("iPad", ignoreCase = true) -> Triple(Icons.Default.PhoneIphone, Color(0xFFA2AAAD), "Apple iOS")
-        device.deviceType.contains("Laptop", ignoreCase = true) || device.deviceType.contains("Ordenador", ignoreCase = true) -> Triple(Icons.Default.Laptop, Color(0xFF00ADEF), "Laptop / PC")
-        device.deviceType.contains("Mac", ignoreCase = true) -> Triple(Icons.Default.Computer, Color(0xFFA2AAAD), "Apple Mac")
-        device.deviceType.contains("TV", ignoreCase = true) -> Triple(Icons.Default.Tv, Color(0xFFFF9800), "Smart TV")
+        device.deviceType.contains("Móvil", ignoreCase = true) || device.deviceType.contains("Smartphone", ignoreCase = true) -> Triple(Icons.Default.Smartphone, Color(0xFF00BCD4), "Móvil")
+        device.deviceType.contains("TV", ignoreCase = true) || device.deviceType.contains("Media", ignoreCase = true) -> Triple(Icons.Default.Tv, Color(0xFFFF9800), "Smart TV")
         device.deviceType.contains("Impresora", ignoreCase = true) -> Triple(Icons.Default.Print, Color(0xFF9C27B0), "Impresora")
         else -> Triple(Icons.Default.Lan, Color.Cyan, "Red Local")
     }

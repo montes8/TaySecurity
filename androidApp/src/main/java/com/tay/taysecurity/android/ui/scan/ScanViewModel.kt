@@ -112,8 +112,6 @@ class ScanViewModel @Inject constructor(
         val localIp = uiState.localIp
         val gatewayIp = uiState.gatewayIp
 
-        Log.d("ScanDebug", "Iniciando escaneo. Local IP: $localIp, Gateway IP: $gatewayIp")
-
         // 1. Calcular rango exacto de las subredes
         val targetIps = LinkedHashSet<String>()
         val calculatedIps = getSubnetIpRange(dhcpInfo.ipAddress, dhcpInfo.netmask)
@@ -184,7 +182,6 @@ class ScanViewModel @Inject constructor(
                                 val result = scanAddress(ip, localIp, gatewayIp, nsdDevices)
                                 if (result != null) {
                                     foundDevices.add(result)
-                                    Log.d("ScanDebug", "Dispositivo encontrado: IP=$ip, Nombre=${result.hostName}, Tipo=${result.deviceType}")
                                 }
                                 val count = scannedCounter.incrementAndGet()
                                 val currentList = foundDevices.toList().sortedWith(
@@ -301,25 +298,41 @@ class ScanViewModel @Inject constructor(
         }
 
         if (reachable || ip == gatewayIp) {
-            var rawHostName = discoveredHostName ?: getHostName(ip)
-            if (rawHostName == null || rawHostName == ip) {
-                rawHostName = queryNetBiosName(ip)
-            }
-            if (rawHostName == null || rawHostName == ip) {
-                rawHostName = queryDeviceMdnsUnicast(ip, 300)
-            }
-            if (rawHostName == null || rawHostName == ip) {
-                rawHostName = queryHttpBanner(ip)
+            val netBiosInfo = queryNetBiosInfo(ip)
+            val ssdpInfo = querySsdpInfo(ip)
+            val httpTitleOrBanner = queryHttpBannerAndTitle(ip)
+            val unicastMdnsName = queryDeviceMdnsUnicast(ip, 300)
+            val canonicalDnsName = getHostName(ip)
+
+            val netBiosName = netBiosInfo?.name
+            val netBiosMac = netBiosInfo?.mac
+
+            val arpMacAddress = getMacAddressForIp(ip)
+            val macAddress = netBiosMac ?: arpMacAddress
+
+            val vendorName = lookupVendorByMac(macAddress)
+
+            val rawHostName = discoveredHostName 
+                ?: netBiosName 
+                ?: canonicalDnsName 
+                ?: unicastMdnsName 
+                ?: httpTitleOrBanner
+                ?: ssdpInfo?.serverOrModel
+
+            val defaultName = when {
+                ip == gatewayIp -> "Router Wi-Fi"
+                vendorName != null -> vendorName
+                netBiosName != null -> "PC Windows ($netBiosName)"
+                else -> "Dispositivo de red"
             }
 
-            val defaultName = if (ip == gatewayIp) "Router Wi-Fi" else "Dispositivo de red"
-            val hostName = rawHostName ?: defaultName
-            val type = determineDeviceType(ip, gatewayIp, hostName)
+            val initialHostName = if (rawHostName != null && rawHostName != ip) rawHostName else defaultName
+            val (inferredName, inferredType) = inferDeviceTypeAndName(ip, gatewayIp, initialHostName, macAddress)
 
             return@withContext DeviceScanResult(
                 ip = ip,
-                hostName = hostName,
-                deviceType = type,
+                hostName = inferredName,
+                deviceType = inferredType,
                 isGateway = ip == gatewayIp
             )
         }
@@ -338,7 +351,6 @@ class ScanViewModel @Inject constructor(
                 if (currentLine.contains(targetIp)) {
                     val lower = currentLine.lowercase(Locale.US)
                     if (lower.contains("lladdr") && !lower.contains("failed") && !lower.contains("incomplete")) {
-                        Log.d("ScanDebug", "ARP NEIGH DIRECTO ENCONTRADO para IP=$targetIp -> $currentLine")
                         return true
                     }
                 }
@@ -356,7 +368,6 @@ class ScanViewModel @Inject constructor(
                 if (currentLine.startsWith(targetIp) || currentLine.contains(" $targetIp ")) {
                     val lower = currentLine.lowercase(Locale.US)
                     if (lower.contains("lladdr") && !lower.contains("failed") && !lower.contains("incomplete")) {
-                        Log.d("ScanDebug", "ARP NEIGH GLOBAL ENCONTRADO para IP=$targetIp -> $currentLine")
                         return true
                     }
                 }
@@ -377,7 +388,6 @@ class ScanViewModel @Inject constructor(
                         val flags = parts[2]
                         val mac = parts[3]
                         if (flags != "0x0" && mac != "00:00:00:00:00:00") {
-                            Log.d("ScanDebug", "PROC NET ARP ENCONTRADO para IP=$targetIp -> MAC=$mac")
                             return true
                         }
                     }
@@ -431,10 +441,149 @@ class ScanViewModel @Inject constructor(
         return activeIps
     }
 
-    private fun queryNetBiosName(ip: String): String? {
+    private fun getMacAddressForIp(targetIp: String): String? {
+        try {
+            val process = ProcessBuilder("ip", "neigh").start()
+            val reader = process.inputStream.bufferedReader()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                val currentLine = line ?: continue
+                if (currentLine.startsWith(targetIp) || currentLine.contains(" $targetIp ")) {
+                    val lower = currentLine.lowercase(Locale.US)
+                    if (lower.contains("lladdr")) {
+                        val parts = lower.split("\\s+".toRegex())
+                        val lladdrIndex = parts.indexOf("lladdr")
+                        if (lladdrIndex != -1 && lladdrIndex + 1 < parts.size) {
+                            val mac = parts[lladdrIndex + 1].trim()
+                            if (mac.contains(":") && mac != "00:00:00:00:00:00") {
+                                return mac
+                            }
+                        }
+                    }
+                }
+            }
+            process.waitFor()
+        } catch (_: Exception) {}
+
+        try {
+            val process = ProcessBuilder("cat", "/proc/net/arp").start()
+            val reader = process.inputStream.bufferedReader()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                val currentLine = line ?: continue
+                if (currentLine.startsWith(targetIp) || currentLine.contains(" $targetIp ")) {
+                    val parts = currentLine.trim().split("\\s+".toRegex())
+                    if (parts.size >= 4) {
+                        val mac = parts[3].trim()
+                        if (mac.contains(":") && mac != "00:00:00:00:00:00") {
+                            return mac
+                        }
+                    }
+                }
+            }
+            process.waitFor()
+        } catch (_: Exception) {}
+
+        return null
+    }
+
+    private fun lookupVendorByMac(mac: String?): String? {
+        if (mac == null || mac.length < 8) return null
+        val cleanMac = mac.lowercase(Locale.US).replace("-", ":")
+        val prefix = cleanMac.take(8)
+
+        return when {
+            // Xiaomi / Redmi / POCO
+            prefix.startsWith("00:26:08") || prefix.startsWith("18:65:90") || prefix.startsWith("28:6a:ba") ||
+                    prefix.startsWith("38:f9:d3") || prefix.startsWith("64:09:80") || prefix.startsWith("70:10:5c") ||
+                    prefix.startsWith("8c:85:90") || prefix.startsWith("a4:50:46") || prefix.startsWith("bc:d2:95") ||
+                    prefix.startsWith("f8:a4:5f") || prefix.startsWith("04:cf:8c") || prefix.startsWith("0c:98:38") ||
+                    prefix.startsWith("14:ab:c5") || prefix.startsWith("20:47:da") || prefix.startsWith("34:80:b3") ||
+                    prefix.startsWith("3c:bd:3e") || prefix.startsWith("44:23:7c") || prefix.startsWith("50:ec:d8") ||
+                    prefix.startsWith("68:20:94") || prefix.startsWith("74:a7:ea") || prefix.startsWith("7c:1d:d9") ||
+                    prefix.startsWith("84:28:fd") || prefix.startsWith("88:c3:97") || prefix.startsWith("9c:20:7b") ||
+                    prefix.startsWith("a0:86:c6") || prefix.startsWith("b0:e2:35") || prefix.startsWith("c4:3c:b0") ||
+                    prefix.startsWith("d4:f5:13") || prefix.startsWith("e4:46:da") || prefix.startsWith("ec:d0:9f") -> "Xiaomi (Android)"
+
+            // Motorola / Lenovo
+            prefix.startsWith("00:0c:e7") || prefix.startsWith("00:14:a4") || prefix.startsWith("00:1a:66") ||
+                    prefix.startsWith("00:22:a3") || prefix.startsWith("14:30:04") || prefix.startsWith("30:96:fb") ||
+                    prefix.startsWith("40:88:05") || prefix.startsWith("70:56:81") || prefix.startsWith("7c:d9:ac") ||
+                    prefix.startsWith("84:a1:34") || prefix.startsWith("a4:08:ea") || prefix.startsWith("bc:f5:ac") ||
+                    prefix.startsWith("e0:1a:e2") || prefix.startsWith("f8:e0:79") || prefix.startsWith("00:11:09") ||
+                    prefix.startsWith("00:1e:45") || prefix.startsWith("18:82:8c") || prefix.startsWith("44:e1:37") ||
+                    prefix.startsWith("60:be:b5") || prefix.startsWith("88:71:b1") || prefix.startsWith("c8:1f:be") ||
+                    prefix.startsWith("d0:37:42") || prefix.startsWith("e8:91:20") || prefix.startsWith("f4:f5:db") -> "Motorola (Android)"
+
+            // Oppo / Realme / Vivo / OnePlus
+            prefix.startsWith("04:3c:d1") || prefix.startsWith("10:2a:b3") || prefix.startsWith("1c:77:f6") ||
+                    prefix.startsWith("28:a0:3b") || prefix.startsWith("3c:cd:93") || prefix.startsWith("4c:11:bf") ||
+                    prefix.startsWith("50:2b:73") || prefix.startsWith("64:a2:f9") || prefix.startsWith("70:8a:09") ||
+                    prefix.startsWith("8c:0b:92") || prefix.startsWith("98:10:94") || prefix.startsWith("a4:c7:de") ||
+                    prefix.startsWith("b4:6b:fc") || prefix.startsWith("c8:32:00") || prefix.startsWith("d4:89:50") ||
+                    prefix.startsWith("e8:b4:c8") || prefix.startsWith("f4:09:d8") -> "Oppo / Realme / Vivo (Android)"
+
+            // Huawei / Honor
+            prefix.startsWith("00:1e:10") || prefix.startsWith("00:25:9e") || prefix.startsWith("00:46:4b") ||
+                    prefix.startsWith("00:66:4b") || prefix.startsWith("00:e0:fc") || prefix.startsWith("04:02:1f") ||
+                    prefix.startsWith("08:19:a6") || prefix.startsWith("0c:37:dc") || prefix.startsWith("10:1b:54") ||
+                    prefix.startsWith("10:44:00") || prefix.startsWith("10:c6:1f") || prefix.startsWith("14:3d:f2") ||
+                    prefix.startsWith("14:a0:f8") || prefix.startsWith("18:c5:8a") || prefix.startsWith("1c:15:1f") ||
+                    prefix.startsWith("20:0b:c7") || prefix.startsWith("20:ab:48") || prefix.startsWith("24:09:95") ||
+                    prefix.startsWith("24:69:68") || prefix.startsWith("24:7f:20") || prefix.startsWith("24:df:6a") ||
+                    prefix.startsWith("28:31:52") || prefix.startsWith("28:5f:db") || prefix.startsWith("28:6e:d4") ||
+                    prefix.startsWith("2c:97:b1") || prefix.startsWith("30:74:96") || prefix.startsWith("30:d1:7e") ||
+                    prefix.startsWith("34:2e:b4") || prefix.startsWith("34:cd:6d") || prefix.startsWith("38:37:8b") -> "Huawei / Honor (Android)"
+
+            // Microsoft / Windows PC
+            prefix.startsWith("00:03:ff") || prefix.startsWith("00:0d:3a") || prefix.startsWith("00:12:5a") ||
+                    prefix.startsWith("00:15:5d") || prefix.startsWith("00:17:fa") || prefix.startsWith("00:1d:d8") ||
+                    prefix.startsWith("00:22:48") || prefix.startsWith("00:25:ae") || prefix.startsWith("00:50:f2") ||
+                    prefix.startsWith("28:18:78") || prefix.startsWith("30:59:b7") || prefix.startsWith("48:50:73") ||
+                    prefix.startsWith("50:1a:c5") || prefix.startsWith("58:fb:84") || prefix.startsWith("60:45:bd") ||
+                    prefix.startsWith("60:be:b5") || prefix.startsWith("70:b5:e8") || prefix.startsWith("7c:1e:52") ||
+                    prefix.startsWith("98:5f:d3") || prefix.startsWith("a0:ce:c8") || prefix.startsWith("b8:27:eb") ||
+                    prefix.startsWith("b8:31:b5") || prefix.startsWith("ba:00:2a") || prefix.startsWith("c0:25:e9") ||
+                    prefix.startsWith("dc:b4:c4") || prefix.startsWith("00:13:e8") || prefix.startsWith("00:14:22") ||
+                    prefix.startsWith("00:19:b9") || prefix.startsWith("00:1c:23") || prefix.startsWith("00:21:70") -> "PC Windows / Microsoft"
+
+            // Intel / Realtek / Dell / HP / Lenovo (Tarjetas Wi-Fi comunes de PC Windows)
+            prefix.startsWith("00:1b:21") || prefix.startsWith("00:1c:c0") || prefix.startsWith("00:1e:67") ||
+                    prefix.startsWith("00:21:6a") || prefix.startsWith("00:22:fb") || prefix.startsWith("00:23:14") ||
+                    prefix.startsWith("00:24:d7") || prefix.startsWith("00:27:0e") || prefix.startsWith("00:aa:00") ||
+                    prefix.startsWith("08:11:96") || prefix.startsWith("0c:8b:fd") || prefix.startsWith("10:02:b5") ||
+                    prefix.startsWith("10:08:b1") || prefix.startsWith("14:da:e9") || prefix.startsWith("18:03:73") ||
+                    prefix.startsWith("1c:69:7a") || prefix.startsWith("20:7d:74") || prefix.startsWith("24:4b:fe") ||
+                    prefix.startsWith("28:d2:44") || prefix.startsWith("2c:60:0c") || prefix.startsWith("30:52:cb") ||
+                    prefix.startsWith("34:13:e8") || prefix.startsWith("38:b1:db") || prefix.startsWith("3c:a8:2a") ||
+                    prefix.startsWith("40:16:9f") || prefix.startsWith("44:85:00") || prefix.startsWith("48:51:b7") ||
+                    prefix.startsWith("4c:1d:96") || prefix.startsWith("50:7b:9d") || prefix.startsWith("54:ee:75") ||
+                    prefix.startsWith("58:91:cf") || prefix.startsWith("5c:51:4f") || prefix.startsWith("60:1d:91") ||
+                    prefix.startsWith("64:00:6a") || prefix.startsWith("68:05:ca") || prefix.startsWith("6c:3b:e5") ||
+                    prefix.startsWith("70:1c:e7") || prefix.startsWith("74:70:fd") || prefix.startsWith("78:0c:b8") ||
+                    prefix.startsWith("7c:b0:c2") || prefix.startsWith("80:00:0b") || prefix.startsWith("84:3a:4b") ||
+                    prefix.startsWith("88:ae:dd") || prefix.startsWith("8c:dc:d4") || prefix.startsWith("90:2e:1c") ||
+                    prefix.startsWith("94:e6:f7") || prefix.startsWith("98:40:bb") || prefix.startsWith("9c:b6:d0") ||
+                    prefix.startsWith("a0:36:9f") || prefix.startsWith("a4:4e:31") || prefix.startsWith("a8:1e:84") ||
+                    prefix.startsWith("ac:72:89") || prefix.startsWith("b0:25:aa") || prefix.startsWith("b4:2e:99") ||
+                    prefix.startsWith("b8:81:98") || prefix.startsWith("bc:a8:a6") || prefix.startsWith("c0:3c:59") ||
+                    prefix.startsWith("c4:b3:01") || prefix.startsWith("c8:5b:76") || prefix.startsWith("cc:96:e5") ||
+                    prefix.startsWith("d0:57:7b") || prefix.startsWith("d8:9c:67") || prefix.startsWith("dc:71:96") ||
+                    prefix.startsWith("e0:d5:5e") || prefix.startsWith("e4:a7:a0") || prefix.startsWith("e8:b1:fc") ||
+                    prefix.startsWith("ec:88:8f") || prefix.startsWith("f0:1d:27") || prefix.startsWith("f4:06:16") ||
+                    prefix.startsWith("f8:32:e4") || prefix.startsWith("fc:34:97") -> "PC Windows / Microsoft"
+
+            else -> null
+        }
+    }
+
+    data class NetBiosInfo(val name: String, val mac: String?)
+    data class SsdpInfo(val serverOrModel: String)
+
+    private fun queryNetBiosInfo(ip: String): NetBiosInfo? {
         return try {
             val socket = DatagramSocket()
-            socket.soTimeout = 200
+            socket.soTimeout = 250
             val netBiosQuery = byteArrayOf(
                 0x80.toByte(), 0x94.toByte(), 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x20, 0x43, 0x4B, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41, 0x41,
@@ -456,8 +605,23 @@ class ScanViewModel @Inject constructor(
                     val nameBytes = ByteArray(15)
                     System.arraycopy(recvBuf, 57, nameBytes, 0, 15)
                     val computerName = String(nameBytes, Charsets.US_ASCII).trim()
+
+                    val unitIdOffset = 57 + (numNames * 18)
+                    var macStr: String? = null
+                    if (recvPacket.length >= unitIdOffset + 6) {
+                        macStr = String.format(
+                            Locale.US,
+                            "%02x:%02x:%02x:%02x:%02x:%02x",
+                            recvBuf[unitIdOffset].toInt() and 0xFF,
+                            recvBuf[unitIdOffset + 1].toInt() and 0xFF,
+                            recvBuf[unitIdOffset + 2].toInt() and 0xFF,
+                            recvBuf[unitIdOffset + 3].toInt() and 0xFF,
+                            recvBuf[unitIdOffset + 4].toInt() and 0xFF,
+                            recvBuf[unitIdOffset + 5].toInt() and 0xFF
+                        )
+                    }
                     if (computerName.isNotBlank()) {
-                        return computerName
+                        return NetBiosInfo(computerName, macStr)
                     }
                 }
             }
@@ -467,27 +631,66 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun queryHttpBanner(ip: String): String? {
+    private fun querySsdpInfo(ip: String): SsdpInfo? {
+        return try {
+            val socket = DatagramSocket()
+            socket.soTimeout = 250
+            val ssdpQuery = ("M-SEARCH * HTTP/1.1\r\n" +
+                    "HOST: 239.255.255.250:1900\r\n" +
+                    "MAN: \"ssdp:discover\"\r\n" +
+                    "MX: 1\r\n" +
+                    "ST: ssdp:all\r\n\r\n").toByteArray(Charsets.US_ASCII)
+
+            val address = InetAddress.getByName(ip)
+            val packet = DatagramPacket(ssdpQuery, ssdpQuery.size, address, 1900)
+            socket.send(packet)
+
+            val buf = ByteArray(1024)
+            val recvPacket = DatagramPacket(buf, buf.size)
+            socket.receive(recvPacket)
+            socket.close()
+
+            val response = String(buf, 0, recvPacket.length, Charsets.US_ASCII)
+            var serverOrModel: String? = null
+            for (line in response.split("\r\n")) {
+                val lineLower = line.lowercase(Locale.US)
+                if (lineLower.startsWith("server:") || lineLower.startsWith("usn:") || lineLower.startsWith("location:")) {
+                    serverOrModel = line.substringAfter(":").trim()
+                }
+            }
+            if (!serverOrModel.isNullOrBlank()) SsdpInfo(serverOrModel) else null
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun queryHttpBannerAndTitle(ip: String): String? {
         val ports = intArrayOf(80, 8080, 5000, 7000, 8000, 3000)
         for (port in ports) {
             try {
                 val socket = Socket()
                 socket.connect(InetSocketAddress(ip, port), 200)
                 val out = socket.getOutputStream()
-                out.write("HEAD / HTTP/1.1\r\nHost: $ip\r\nUser-Agent: TaySecurity\r\n\r\n".toByteArray(Charsets.US_ASCII))
+                out.write("GET / HTTP/1.1\r\nHost: $ip\r\nUser-Agent: Mozilla/5.0\r\nConnection: close\r\n\r\n".toByteArray(Charsets.US_ASCII))
                 out.flush()
 
-                val buf = ByteArray(512)
+                val buf = ByteArray(1024)
                 val read = socket.getInputStream().read(buf)
                 socket.close()
                 if (read > 0) {
                     val response = String(buf, 0, read, Charsets.US_ASCII)
                     val lower = response.lowercase(Locale.US)
-                    when {
-                        lower.contains("airtunes") || lower.contains("airplay") || lower.contains("darwin") || lower.contains("apple") -> return "Apple AirPlay / Mac"
-                        lower.contains("chromecast") || lower.contains("google") -> return "Google Chromecast"
-                        lower.contains("microsoft") || lower.contains("iis") -> return "PC Windows"
-                        lower.contains("router") || lower.contains("openwrt") -> return "Router / AP"
+                    if (lower.contains("<title>")) {
+                        val title = response.substringAfter("<title>", "").substringBefore("</title>", "").trim()
+                        if (title.isNotBlank() && title.length < 50) {
+                            return title
+                        }
+                    }
+                    for (line in response.split("\r\n")) {
+                        if (line.lowercase(Locale.US).startsWith("server:")) {
+                            val server = line.substringAfter(":").trim()
+                            if (server.isNotBlank()) return server
+                        }
                     }
                 }
             } catch (_: Exception) {}
@@ -527,7 +730,6 @@ class ScanViewModel @Inject constructor(
         } catch (_: Exception) {
             false
         }
-    }
     }
 
     private fun isDeviceReachable(ip: String, localIp: String): Boolean {
@@ -946,17 +1148,179 @@ class ScanViewModel @Inject constructor(
         }
     }
 
+    private fun inferDeviceTypeAndName(ip: String, gatewayIp: String, currentName: String, macAddress: String?): Pair<String, String> {
+        if (ip == gatewayIp || ip.endsWith(".1")) {
+            val name = if (currentName == "Dispositivo de red") "Router Wi-Fi" else currentName
+            return Pair(name, "Router / Gateway")
+        }
+
+        val lower = currentName.lowercase(Locale.US)
+
+        // 1. Windows PC / Laptop (Evaluado primero para evitar falsos positivos con Chrome)
+        if (lower.contains("desktop") || lower.contains("laptop") || lower.contains("pc") || lower.contains("win") || lower.contains("workstation") || lower.contains("microsoft") || lower.contains("dell") || lower.contains("hp") || lower.contains("lenovo") || lower.contains("thinkpad") || lower.contains("surface") || lower.contains("acer") || lower.contains("asus") || lower.contains("msi")) {
+            return Pair(currentName, "Ordenador (Windows)")
+        }
+
+        if (queryWsDiscovery(ip) != null || tryPort(ip, 5357, 100) || tryPort(ip, 445, 100) || tryPort(ip, 139, 100) || tryPort(ip, 135, 100) || tryPort(ip, 3389, 100)) {
+            val name = if (currentName == "Dispositivo de red") "PC / Laptop Windows" else currentName
+            return Pair(name, "Ordenador (Windows)")
+        }
+
+        // 2. Apple Mac / iOS
+        if (lower.contains("macbook") || lower.contains("imac") || lower.contains("mac") || lower.contains("apple") || lower.contains("darwin")) {
+            return Pair(currentName, "Ordenador (Mac)")
+        }
+        if (lower.contains("iphone") || lower.contains("ipad") || (lower.contains("ios") && !lower.contains("netbios"))) {
+            return Pair(currentName, "Móvil (Apple iOS)")
+        }
+
+        if (tryPort(ip, 5000, 100) || tryPort(ip, 7000, 100) || tryPort(ip, 5900, 100) || tryPort(ip, 631, 100)) {
+            val name = if (currentName == "Dispositivo de red") "MacBook / Dispositivo Apple" else currentName
+            return Pair(name, "Ordenador (Mac)")
+        }
+
+        // 3. Android
+        if (lower.contains("android") || lower.contains("galaxy") || lower.contains("samsung") || lower.contains("pixel") ||
+            lower.contains("xiaomi") || lower.contains("redmi") || lower.contains("poco") || lower.contains("oppo") ||
+            lower.contains("realme") || lower.contains("vivo") || lower.contains("oneplus") || lower.contains("huawei") ||
+            lower.contains("honor") || lower.contains("motorola") || lower.contains("moto") || lower.contains("nokia")) {
+            return Pair(currentName, "Móvil (Android)")
+        }
+
+        val castName = queryGoogleCastDeviceInfo(ip)
+        if (castName != null || tryPort(ip, 5555, 100)) {
+            val name = if (currentName == "Dispositivo de red" && castName != null) castName else if (currentName == "Dispositivo de red") "Móvil Android" else currentName
+            return Pair(name, "Móvil (Android)")
+        }
+
+        // 4. Por defecto para clientes en red Wi-Fi
+        val defaultName = if (currentName == "Dispositivo de red") "Móvil / Smartphone" else currentName
+        return Pair(defaultName, "Móvil (Android / iOS)")
+    }
+
+    private fun isRandomizedMac(mac: String): Boolean {
+        val clean = mac.replace("-", ":").lowercase(Locale.US)
+        if (clean.length >= 2) {
+            val secondChar = clean[1]
+            return secondChar == '2' || secondChar == '6' || secondChar == 'a' || secondChar == 'e'
+        }
+        return false
+    }
+
+    private fun queryWsDiscovery(ip: String): String? {
+        return try {
+            val socket = DatagramSocket()
+            socket.soTimeout = 250
+            val uuid = java.util.UUID.randomUUID().toString()
+            val probe = ("<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                    "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:wsa=\"http://schemas.xmlsoap.org/ws/2004/08/addressing\" xmlns:wsd=\"http://schemas.xmlsoap.org/ws/2005/04/discovery\">" +
+                    "<soap:Header><wsa:To>urn:schemas-xmlsoap-org:ws:2005:04:discovery</wsa:To>" +
+                    "<wsa:Action>http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe</wsa:Action>" +
+                    "<wsa:MessageID>urn:uuid:$uuid</wsa:MessageID></soap:Header>" +
+                    "<soap:Body><wsd:Probe/></soap:Body></soap:Envelope>").toByteArray(Charsets.UTF_8)
+
+            val address = InetAddress.getByName(ip)
+            val packet = DatagramPacket(probe, probe.size, address, 3702)
+            socket.send(packet)
+
+            val buf = ByteArray(2048)
+            val recvPacket = DatagramPacket(buf, buf.size)
+            socket.receive(recvPacket)
+            socket.close()
+
+            val xml = String(buf, 0, recvPacket.length, Charsets.UTF_8)
+            val lower = xml.lowercase(Locale.US)
+            if (lower.contains("microsoft") || lower.contains("windows") || lower.contains("wsd") || lower.contains("pub")) {
+                "PC Windows"
+            } else {
+                null
+            }
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun queryGoogleCastDeviceInfo(ip: String): String? {
+        return try {
+            val socket = Socket()
+            socket.connect(InetSocketAddress(ip, 8008), 200)
+            val out = socket.getOutputStream()
+            out.write("GET /setup/eureka/device_info HTTP/1.1\r\nHost: $ip:8008\r\nUser-Agent: Mozilla/5.0\r\n\r\n".toByteArray(Charsets.US_ASCII))
+            out.flush()
+
+            val buf = ByteArray(1024)
+            val read = socket.getInputStream().read(buf)
+            socket.close()
+            if (read > 0) {
+                val json = String(buf, 0, read, Charsets.UTF_8)
+                val lower = json.lowercase(Locale.US)
+                if (lower.contains("eureka") || lower.contains("chromecast") || lower.contains("model_name") || lower.contains("build_version")) {
+                    val name = json.substringAfter("\"name\":\"", "").substringBefore("\"", "").trim()
+                    if (name.isNotBlank() && name.length < 40) {
+                        return name
+                    }
+                    return "Móvil Android"
+                }
+            }
+            null
+        } catch (_: Exception) {
+            null
+        }
+    }
+
     private fun determineDeviceType(ip: String, gatewayIp: String, hostName: String): String {
         val lower = hostName.lowercase(Locale.US)
         return when {
             ip == gatewayIp -> "Router / Gateway"
-            lower.contains("macbook") || lower.contains("imac") || lower.contains("mac-mini") || lower.contains("apple") || lower.contains("darwin") || lower.contains("mac") -> "Ordenador (Mac)"
-            lower.contains("iphone") || lower.contains("ipad") || lower.contains("ios") -> "Móvil (Apple iOS)"
-            lower.contains("android") || lower.contains("galaxy") || lower.contains("pixel") || lower.contains("xiaomi") || lower.contains("redmi") || lower.contains("oppo") || lower.contains("realme") || lower.contains("huawei") -> "Móvil (Android)"
-            lower.contains("tv") || lower.contains("chromecast") || lower.contains("roku") || lower.contains("firestick") -> "Smart TV / Media"
-            lower.contains("printer") || lower.contains("epson") || lower.contains("hp") || lower.contains("canon") -> "Impresora"
-            lower.contains("desktop") || lower.contains("laptop") || lower.contains("pc") || lower.contains("win") -> "Ordenador / Laptop"
-            else -> "Dispositivo de red"
+
+            // Apple Mac
+            lower.contains("macbook") || lower.contains("imac") || lower.contains("mac-mini") ||
+                    lower.contains("mac-studio") || lower.contains("mac-pro") || lower.contains("apple") ||
+                    lower.contains("darwin") || lower.contains("mac") -> "Ordenador (Mac)"
+
+            // Apple iOS
+            lower.contains("iphone") || lower.contains("ipad") || lower.contains("ipod") ||
+                    lower.contains("watch") || lower.contains("ios") -> "Móvil (Apple iOS)"
+
+            // Android (Todas las marcas populares)
+            lower.contains("android") || lower.contains("galaxy") || lower.contains("samsung") ||
+                    lower.contains("pixel") || lower.contains("xiaomi") || lower.contains("redmi") ||
+                    lower.contains("poco") || lower.contains("oppo") || lower.contains("realme") ||
+                    lower.contains("vivo") || lower.contains("oneplus") || lower.contains("huawei") ||
+                    lower.contains("honor") || lower.contains("motorola") || lower.contains("moto") ||
+                    lower.contains("nokia") || lower.contains("zte") || lower.contains("tecno") ||
+                    lower.contains("infinix") || lower.contains("xperia") || lower.contains("lenovo") ||
+                    lower.contains("asus") || lower.contains("tcl") -> "Móvil (Android)"
+
+            // Windows PC (Todas las marcas y palabras clave)
+            lower.contains("desktop") || lower.contains("laptop") || lower.contains("pc") ||
+                    lower.contains("win") || lower.contains("windows") || lower.contains("workstation") ||
+                    lower.contains("surface") || lower.contains("thinkpad") || lower.contains("msi") ||
+                    lower.contains("dell") || lower.contains("hp") || lower.contains("acer") -> "Ordenador (Windows)"
+
+            // Smart TV / Multimedia
+            lower.contains("tv") || lower.contains("chromecast") || lower.contains("roku") ||
+                    lower.contains("firestick") || lower.contains("firetv") || lower.contains("bravia") ||
+                    lower.contains("webos") || lower.contains("tizen") || lower.contains("mibox") ||
+                    lower.contains("mi-box") || lower.contains("apple-tv") -> "Smart TV / Media"
+
+            // Impresoras
+            lower.contains("printer") || lower.contains("epson") || lower.contains("hp") ||
+                    lower.contains("canon") || lower.contains("brother") || lower.contains("xerox") ||
+                    lower.contains("lexmark") || lower.contains("ricoh") -> "Impresora"
+
+            else -> {
+                // Inspección dinámica por puerto/servicio cuando el nombre no es descriptivo
+                if (tryPort(ip, 5357, 100) || tryPort(ip, 445, 100) || tryPort(ip, 139, 100) || tryPort(ip, 135, 100)) {
+                    "Ordenador (Windows)"
+                } else if (tryPort(ip, 5555, 100) || tryPort(ip, 8008, 100)) {
+                    "Móvil (Android)"
+                } else if (tryPort(ip, 5000, 100) || tryPort(ip, 7000, 100) || tryPort(ip, 5900, 100)) {
+                    "Dispositivo Apple / Mac"
+                } else {
+                    "Dispositivo de red"
+                }
+            }
         }
     }
 
@@ -980,3 +1344,4 @@ class ScanViewModel @Inject constructor(
             0L
         }
     }
+}

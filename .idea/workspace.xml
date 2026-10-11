@@ -9,8 +9,11 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb9b0720-e874-4592-8766-bb763e1b95f1" name="Changes" comment="dele">
+    <list default="true" id="eb9b0720-e874-4592-8766-bb763e1b95f1" name="Changes" comment="detected mac pro">
+      <change afterPath="$PROJECT_DIR$/androidApp/proguard-rules.pro" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/androidApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/scan/ScanScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/scan/ScanScreen.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/scan/ScanViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/scan/ScanViewModel.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -446,7 +449,23 @@
       <option name="project" value="LOCAL" />
       <updated>1791701860191</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="v2">
+      <option name="closed" value="true" />
+      <created>1791753389542</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1791753389543</updated>
+    </task>
+    <task id="LOCAL-00010" summary="detected mac pro">
+      <option name="closed" value="true" />
+      <created>1791754017651</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1791754017651</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -457,7 +476,9 @@
     <MESSAGE value="update version" />
     <MESSAGE value="detected device" />
     <MESSAGE value="dele" />
-    <option name="LAST_COMMIT_MESSAGE" value="dele" />
+    <MESSAGE value="v2" />
+    <MESSAGE value="detected mac pro" />
+    <option name="LAST_COMMIT_MESSAGE" value="detected mac pro" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
