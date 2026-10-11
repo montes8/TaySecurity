@@ -24,6 +24,7 @@ import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 import java.net.InetSocketAddress
+import java.net.MulticastSocket
 import java.net.NetworkInterface
 import java.net.Socket
 import java.util.Collections
@@ -134,11 +135,6 @@ class ScanViewModel @Inject constructor(
             }
         }
 
-        // Subredes adicionales comunes
-        targetIps.addAll(generateSubnetIps("192.168.18"))
-        targetIps.addAll(generateSubnetIps("192.168.1"))
-        targetIps.addAll(generateSubnetIps("192.168.0"))
-
         val arpIps = getKernelArpTable()
         targetIps.addAll(arpIps)
 
@@ -168,6 +164,9 @@ class ScanViewModel @Inject constructor(
                 coroutineScope {
                     launch(Dispatchers.IO) {
                         listenMdnsResponses(nsdDevices, 3500)
+                    }
+                    launch(Dispatchers.IO) {
+                        resolveAppleLocalHostnames(nsdDevices)
                     }
 
                     if (localParts.size == 4) sendSubnetBroadcast("${localParts[0]}.${localParts[1]}.${localParts[2]}")
@@ -242,35 +241,52 @@ class ScanViewModel @Inject constructor(
         sendUdpProbes(ip)
 
         var reachable = false
-        val discoveredHostName: String? = nsdDevices[ip]
+        var discoveredHostName: String? = nsdDevices[ip]
 
         if (discoveredHostName != null) {
             reachable = true
         }
 
-        // 2. Consulta a la tabla de vecinos ARP del kernel de Android mediante "ip neigh"
+        // 2. Consulta mDNS Unicast directa con socket.receive() para capturar respuestas de Apple / Mac
         if (!reachable) {
-            val kernelArpIps = getKernelArpTable()
-            if (kernelArpIps.contains(ip)) {
+            val unicastName = queryDeviceMdnsUnicast(ip, 350)
+            if (unicastName != null) {
+                discoveredHostName = unicastName
                 reachable = true
             }
         }
 
-        // 3. Probar isReachable enlazando la interfaz de red activa (wlan0)
+        // 3. PING del sistema (ICMP nativo de Android)
+        if (!reachable) {
+            if (pingAddress(ip)) {
+                reachable = true
+            }
+        }
+
+        // 4. Consulta directa a la tabla de vecinos ARP de Android para esta IP
+        if (!reachable) {
+            if (checkIpInArpTable(ip)) {
+                reachable = true
+            }
+        }
+
+        // 5. Probar isReachable enlazando la interfaz de red activa (wlan0)
         if (!reachable) {
             reachable = isDeviceReachable(ip, localIp)
         }
 
-        // 4. Probar puertos TCP principales (Windows SMB 445/139/135, Mac 631/5000/7000/5900/22/3689, Web 80/443/8080/3000/5001/8000, iPhones 62078, Android 8008/5555)
+        // 6. Probar puertos TCP principales (Windows SMB/WSD/RPC 445/139/135/5357/3389, AirPlay 5000/7000, Mac 631/5900/22, Web 80/443/8080/3000/5001/8000, iPhones 62078, Android 8008/5555)
         if (!reachable) {
-            reachable = tryPort(ip, 80, 200) ||
-                    tryPort(ip, 443, 200) ||
-                    tryPort(ip, 631, 200) ||
-                    tryPort(ip, 445, 200) ||
+            reachable = tryPort(ip, 445, 200) ||
                     tryPort(ip, 139, 200) ||
                     tryPort(ip, 135, 200) ||
+                    tryPort(ip, 5357, 200) ||
+                    tryPort(ip, 3389, 200) ||
                     tryPort(ip, 5000, 200) ||
                     tryPort(ip, 7000, 200) ||
+                    tryPort(ip, 80, 200) ||
+                    tryPort(ip, 443, 200) ||
+                    tryPort(ip, 631, 200) ||
                     tryPort(ip, 5900, 200) ||
                     tryPort(ip, 22, 200) ||
                     tryPort(ip, 53, 200) ||
@@ -284,17 +300,20 @@ class ScanViewModel @Inject constructor(
                     tryPort(ip, 49153, 200)
         }
 
-        if (ip == "192.168.18.221" || ip.endsWith(".221")) {
-            Log.d("ScanDebug", "EVALUANDO MAC 192.168.18.221 -> reachable=$reachable, nsdName=$discoveredHostName, arp=${getKernelArpTable().contains(ip)}")
-        }
-
         if (reachable || ip == gatewayIp) {
             var rawHostName = discoveredHostName ?: getHostName(ip)
             if (rawHostName == null || rawHostName == ip) {
                 rawHostName = queryNetBiosName(ip)
             }
+            if (rawHostName == null || rawHostName == ip) {
+                rawHostName = queryDeviceMdnsUnicast(ip, 300)
+            }
+            if (rawHostName == null || rawHostName == ip) {
+                rawHostName = queryHttpBanner(ip)
+            }
 
-            val hostName = rawHostName ?: if (ip == gatewayIp) "Router Wi-Fi" else "Dispositivo de red"
+            val defaultName = if (ip == gatewayIp) "Router Wi-Fi" else "Dispositivo de red"
+            val hostName = rawHostName ?: defaultName
             val type = determineDeviceType(ip, gatewayIp, hostName)
 
             return@withContext DeviceScanResult(
@@ -306,6 +325,68 @@ class ScanViewModel @Inject constructor(
         }
 
         return@withContext null
+    }
+
+    private fun checkIpInArpTable(targetIp: String): Boolean {
+        // 1. Comando ip neigh show <ip>
+        try {
+            val process = ProcessBuilder("ip", "neigh", "show", targetIp).start()
+            val reader = process.inputStream.bufferedReader()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                val currentLine = line ?: continue
+                if (currentLine.contains(targetIp)) {
+                    val lower = currentLine.lowercase(Locale.US)
+                    if (lower.contains("lladdr") && !lower.contains("failed") && !lower.contains("incomplete")) {
+                        Log.d("ScanDebug", "ARP NEIGH DIRECTO ENCONTRADO para IP=$targetIp -> $currentLine")
+                        return true
+                    }
+                }
+            }
+            process.waitFor()
+        } catch (_: Exception) {}
+
+        // 2. ip neigh global
+        try {
+            val process = ProcessBuilder("ip", "neigh").start()
+            val reader = process.inputStream.bufferedReader()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                val currentLine = line ?: continue
+                if (currentLine.startsWith(targetIp) || currentLine.contains(" $targetIp ")) {
+                    val lower = currentLine.lowercase(Locale.US)
+                    if (lower.contains("lladdr") && !lower.contains("failed") && !lower.contains("incomplete")) {
+                        Log.d("ScanDebug", "ARP NEIGH GLOBAL ENCONTRADO para IP=$targetIp -> $currentLine")
+                        return true
+                    }
+                }
+            }
+            process.waitFor()
+        } catch (_: Exception) {}
+
+        // 3. Fallback mediante /proc/net/arp
+        try {
+            val process = ProcessBuilder("cat", "/proc/net/arp").start()
+            val reader = process.inputStream.bufferedReader()
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                val currentLine = line ?: continue
+                if (currentLine.startsWith(targetIp) || currentLine.contains(" $targetIp ")) {
+                    val parts = currentLine.trim().split("\\s+".toRegex())
+                    if (parts.size >= 4) {
+                        val flags = parts[2]
+                        val mac = parts[3]
+                        if (flags != "0x0" && mac != "00:00:00:00:00:00") {
+                            Log.d("ScanDebug", "PROC NET ARP ENCONTRADO para IP=$targetIp -> MAC=$mac")
+                            return true
+                        }
+                    }
+                }
+            }
+            process.waitFor()
+        } catch (_: Exception) {}
+
+        return false
     }
 
     private fun getKernelArpTable(): Set<String> {
@@ -384,6 +465,69 @@ class ScanViewModel @Inject constructor(
         } catch (_: Exception) {
             null
         }
+    }
+
+    private fun queryHttpBanner(ip: String): String? {
+        val ports = intArrayOf(80, 8080, 5000, 7000, 8000, 3000)
+        for (port in ports) {
+            try {
+                val socket = Socket()
+                socket.connect(InetSocketAddress(ip, port), 200)
+                val out = socket.getOutputStream()
+                out.write("HEAD / HTTP/1.1\r\nHost: $ip\r\nUser-Agent: TaySecurity\r\n\r\n".toByteArray(Charsets.US_ASCII))
+                out.flush()
+
+                val buf = ByteArray(512)
+                val read = socket.getInputStream().read(buf)
+                socket.close()
+                if (read > 0) {
+                    val response = String(buf, 0, read, Charsets.US_ASCII)
+                    val lower = response.lowercase(Locale.US)
+                    when {
+                        lower.contains("airtunes") || lower.contains("airplay") || lower.contains("darwin") || lower.contains("apple") -> return "Apple AirPlay / Mac"
+                        lower.contains("chromecast") || lower.contains("google") -> return "Google Chromecast"
+                        lower.contains("microsoft") || lower.contains("iis") -> return "PC Windows"
+                        lower.contains("router") || lower.contains("openwrt") -> return "Router / AP"
+                    }
+                }
+            } catch (_: Exception) {}
+        }
+        return null
+    }
+
+    private fun resolveAppleLocalHostnames(discoveredDevicesMap: ConcurrentHashMap<String, String>) {
+        val candidates = listOf(
+            "MacBook-Pro.local",
+            "MacBook-Air.local",
+            "MacBook.local",
+            "iMac.local",
+            "Mac-mini.local",
+            "Mac-Studio.local",
+            "iPhone.local",
+            "iPad.local"
+        )
+        for (name in candidates) {
+            try {
+                val addr = InetAddress.getByName(name)
+                val resolvedIp = addr.hostAddress
+                if (!resolvedIp.isNullOrBlank() && resolvedIp != "127.0.0.1") {
+                    val cleanName = name.removeSuffix(".local").replace("-", " ")
+                    discoveredDevicesMap[resolvedIp] = cleanName
+                    Log.d("ScanDebug", "RESOLUCION mDNS GENERICA -> $name -> IP=$resolvedIp")
+                }
+            } catch (_: Exception) {}
+        }
+    }
+
+    private fun pingAddress(ip: String): Boolean {
+        return try {
+            val process = ProcessBuilder("ping", "-c", "1", "-w", "1", ip).start()
+            val exitCode = process.waitFor()
+            exitCode == 0
+        } catch (_: Exception) {
+            false
+        }
+    }
     }
 
     private fun isDeviceReachable(ip: String, localIp: String): Boolean {
@@ -483,33 +627,64 @@ class ScanViewModel @Inject constructor(
         return ips
     }
 
+    @Suppress("DEPRECATION")
     private suspend fun listenMdnsResponses(
         discoveredDevicesMap: ConcurrentHashMap<String, String>,
         durationMs: Long
     ) = withContext(Dispatchers.IO) {
-        var socket: DatagramSocket? = null
+        var socket: MulticastSocket? = null
+        val group = InetAddress.getByName("224.0.0.251")
         try {
-            socket = DatagramSocket()
-            socket.broadcast = true
+            socket = MulticastSocket(null).apply {
+                reuseAddress = true
+                bind(InetSocketAddress(5353))
+                timeToLive = 255
+                soTimeout = 300
+            }
+            try {
+                socket.joinGroup(group)
+            } catch (_: Exception) {}
+
             val startTime = System.currentTimeMillis()
             val buffer = ByteArray(1472)
 
             while (System.currentTimeMillis() - startTime < durationMs && !socket.isClosed) {
                 try {
                     val packet = DatagramPacket(buffer, buffer.size)
-                    socket.soTimeout = 300
                     socket.receive(packet)
 
                     val ip = packet.address?.hostAddress ?: continue
                     val len = packet.length
-                    val name = extractDeviceNameFromPacket(packet.data, len) ?: "Dispositivo de red"
-                    discoveredDevicesMap[ip] = name
+                    val name = extractDeviceNameFromPacket(packet.data, len)
+                    if (name != null) {
+                        discoveredDevicesMap[ip] = name
+                        Log.d("ScanDebug", "MULTICAST mDNS CAPTURADO -> IP=$ip, Nombre=$name")
+                    }
+
+                    // Extraer IPv4 explícitas del cuerpo del paquete A-Record de mDNS
+                    for (i in 0 until len - 4) {
+                        val b1 = packet.data[i].toInt() and 0xFF
+                        val b2 = packet.data[i + 1].toInt() and 0xFF
+                        val b3 = packet.data[i + 2].toInt() and 0xFF
+                        val b4 = packet.data[i + 3].toInt() and 0xFF
+
+                        if (b1 == 192 && b2 == 168 && b4 in 1..254) {
+                            val extractedIp = "$b1.$b2.$b3.$b4"
+                            val currentName = name ?: "MacBook Pro (Apple)"
+                            discoveredDevicesMap[extractedIp] = currentName
+                            Log.d("ScanDebug", "IPv4 extraída de mDNS -> IP=$extractedIp, Nombre=$currentName")
+                        }
+                    }
                 } catch (_: Exception) {
-                    // Timeout por cada ciclo
+                    // Timeout por ciclo
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            Log.d("ScanDebug", "Error en MulticastSocket mDNS: ${e.message}")
         } finally {
+            try {
+                socket?.leaveGroup(group)
+            } catch (_: Exception) {}
             try {
                 socket?.close()
             } catch (_: Exception) {}
@@ -520,6 +695,11 @@ class ScanViewModel @Inject constructor(
         try {
             val strBuilder = StringBuilder()
             val namesFound = mutableListOf<String>()
+
+            val ignoredKeywords = setOf(
+                "local", "arpa", "in-addr", "dns-sd", "udp", "tcp", "services",
+                "device-info", "airplay", "http", "https", "comunion-link", "_tcp", "_udp"
+            )
 
             for (i in 0 until length) {
                 val b = data[i].toInt() and 0xFF
@@ -536,7 +716,7 @@ class ScanViewModel @Inject constructor(
                             lower.contains("galaxy") || lower.contains("android") || lower.contains("tv")) {
                             return candidate
                         }
-                        if (candidate.length >= 5 && !candidate.startsWith("http") && !candidate.startsWith("_")) {
+                        if (candidate.length >= 5 && !ignoredKeywords.contains(lower) && !candidate.startsWith("_")) {
                             namesFound.add(candidate)
                         }
                     }
@@ -552,7 +732,7 @@ class ScanViewModel @Inject constructor(
                     lower.contains("galaxy") || lower.contains("android") || lower.contains("tv")) {
                     return candidate
                 }
-                if (candidate.length >= 5 && !candidate.startsWith("http") && !candidate.startsWith("_")) {
+                if (candidate.length >= 5 && !ignoredKeywords.contains(lower) && !candidate.startsWith("_")) {
                     namesFound.add(candidate)
                 }
             }
@@ -608,6 +788,43 @@ class ScanViewModel @Inject constructor(
         } catch (_: Exception) {}
     }
 
+    private fun queryDeviceMdnsUnicast(ip: String, timeoutMs: Int = 300): String? {
+        var socket: DatagramSocket? = null
+        try {
+            socket = DatagramSocket()
+            socket.soTimeout = timeoutMs
+            val address = InetAddress.getByName(ip)
+
+            val mdnsPayload = createAppleMdnsQueryPayload()
+            val packet = DatagramPacket(mdnsPayload, mdnsPayload.size, address, 5353)
+            socket.send(packet)
+
+            val reversePayload = createReverseMdnsQueryPayload(ip)
+            if (reversePayload != null) {
+                val reversePacket = DatagramPacket(reversePayload, reversePayload.size, address, 5353)
+                socket.send(reversePacket)
+            }
+
+            val recvBuf = ByteArray(1472)
+            val recvPacket = DatagramPacket(recvBuf, recvBuf.size)
+            socket.receive(recvPacket)
+
+            val len = recvPacket.length
+            if (len > 12) {
+                val foundName = extractDeviceNameFromPacket(recvPacket.data, len)
+                Log.d("ScanDebug", "mDNS Unicast EXITOSO para IP=$ip -> len=$len, nombre=$foundName")
+                return foundName ?: "Dispositivo Apple / Mac"
+            }
+            return null
+        } catch (_: Exception) {
+            return null
+        } finally {
+            try {
+                socket?.close()
+            } catch (_: Exception) {}
+        }
+    }
+
     private fun createAppleMdnsQueryPayload(): ByteArray {
         val header = byteArrayOf(
             0x00, 0x00,
@@ -622,24 +839,48 @@ class ScanViewModel @Inject constructor(
             0x08, '_'.code.toByte(), 'a'.code.toByte(), 'i'.code.toByte(), 'r'.code.toByte(), 'p'.code.toByte(), 'l'.code.toByte(), 'a'.code.toByte(), 'y'.code.toByte(),
             0x04, '_'.code.toByte(), 't'.code.toByte(), 'c'.code.toByte(), 'p'.code.toByte(),
             0x05, 'l'.code.toByte(), 'o'.code.toByte(), 'c'.code.toByte(), 'a'.code.toByte(), 'l'.code.toByte(),
-            0x00, 0x00, 0x0C, 0x00, 0x01
+            0x00, 0x00, 0x0C, 0x80.toByte(), 0x01
         )
 
         val q2 = byteArrayOf(
-            0x0F, '_'.code.toByte(), 'c'.code.toByte(), 'o'.code.toByte(), 'm'.code.toByte(), 'a'.code.toByte(), 'n'.code.toByte(), 'i'.code.toByte(), 'o'.code.toByte(), 'n'.code.toByte(), '-'.code.toByte(), 'l'.code.toByte(), 'i'.code.toByte(), 'n'.code.toByte(), 'k'.code.toByte(),
+            0x0F, '_'.code.toByte(), 'c'.code.toByte(), 'o'.code.toByte(), 'm'.code.toByte(), 'a'.code.toByte(), 'n'.code.toByte(), 'i'.code.toByte(), 'o'.code.toByte(), 'n'.code.toByte(), '-'.code.toByte(), 'l'.code.toByte(), 'i'.code.toByte(), 'n'.code.toByte(), 'f'.code.toByte(),
             0x04, '_'.code.toByte(), 't'.code.toByte(), 'c'.code.toByte(), 'p'.code.toByte(),
             0x05, 'l'.code.toByte(), 'o'.code.toByte(), 'c'.code.toByte(), 'a'.code.toByte(), 'l'.code.toByte(),
-            0x00, 0x00, 0x0C, 0x00, 0x01
+            0x00, 0x00, 0x0C, 0x80.toByte(), 0x01
         )
 
         val q3 = byteArrayOf(
             0x0C, '_'.code.toByte(), 'd'.code.toByte(), 'e'.code.toByte(), 'v'.code.toByte(), 'i'.code.toByte(), 'c'.code.toByte(), 'e'.code.toByte(), '-'.code.toByte(), 'i'.code.toByte(), 'n'.code.toByte(), 'f'.code.toByte(), 'o'.code.toByte(),
             0x04, '_'.code.toByte(), 't'.code.toByte(), 'c'.code.toByte(), 'p'.code.toByte(),
             0x05, 'l'.code.toByte(), 'o'.code.toByte(), 'c'.code.toByte(), 'a'.code.toByte(), 'l'.code.toByte(),
-            0x00, 0x00, 0x0C, 0x00, 0x01
+            0x00, 0x00, 0x0C, 0x80.toByte(), 0x01
         )
 
         return header + q1 + q2 + q3
+    }
+
+    private fun createReverseMdnsQueryPayload(ip: String): ByteArray? {
+        val parts = ip.split(".")
+        if (parts.size != 4) return null
+        val revIp = "${parts[3]}.${parts[2]}.${parts[1]}.${parts[0]}.in-addr.arpa"
+        val header = byteArrayOf(
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x01,
+            0x00, 0x00,
+            0x00, 0x00,
+            0x00, 0x00
+        )
+        val baos = java.io.ByteArrayOutputStream()
+        baos.write(header)
+        for (part in revIp.split(".")) {
+            val bytes = part.toByteArray(Charsets.US_ASCII)
+            baos.write(bytes.size)
+            baos.write(bytes)
+        }
+        baos.write(0)
+        baos.write(byteArrayOf(0x00, 0x0C, 0x80.toByte(), 0x01))
+        return baos.toByteArray()
     }
 
     private fun tryPort(ip: String, port: Int, timeoutMs: Int): Boolean {
@@ -697,4 +938,3 @@ class ScanViewModel @Inject constructor(
             0L
         }
     }
-}
