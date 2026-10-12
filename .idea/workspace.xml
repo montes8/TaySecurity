@@ -9,12 +9,12 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eb9b0720-e874-4592-8766-bb763e1b95f1" name="Changes" comment="detected mac pro">
-      <change afterPath="$PROJECT_DIR$/androidApp/proguard-rules.pro" afterDir="false" />
+    <list default="true" id="eb9b0720-e874-4592-8766-bb763e1b95f1" name="Changes" comment="CONFIG PRO">
+      <change afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/stealth/StealthLockScreen.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/androidApp/src/main/res/drawable/ic_logo_sure.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/scan/ScanScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/scan/ScanScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/scan/ScanViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/scan/ScanViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/component/navigation/NavigationHost.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/component/navigation/NavigationHost.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeActivity.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +24,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[PhysicalDevice::serial=R7AT12ER92D]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[LocalEmulator::path=/Users/tayler/.android/avd/valu36.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -107,10 +107,15 @@
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/tayler/Desktop/project/kmm/TaySecurity&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/tayler/Desktop/project/kmm/TaySecurity/androidApp/src/main/res/drawable&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/androidApp/src/main/res/drawable" />
+    </key>
+  </component>
   <component name="RunManager" selected="Android App.androidApp">
     <configuration name="androidApp" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
       <module name="TaySecurity.androidApp" />
@@ -465,7 +470,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791754017651</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="CONFIG PRO">
+      <option name="closed" value="true" />
+      <created>1791761932122</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1791761932122</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -478,19 +491,20 @@
     <MESSAGE value="dele" />
     <MESSAGE value="v2" />
     <MESSAGE value="detected mac pro" />
-    <option name="LAST_COMMIT_MESSAGE" value="detected mac pro" />
+    <MESSAGE value="CONFIG PRO" />
+    <option name="LAST_COMMIT_MESSAGE" value="CONFIG PRO" />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
         <entry key="com.tay.taysecurity.android">
           <value>
-            <CheckInfo lastCheckTimestamp="1791670463484" />
+            <CheckInfo lastCheckTimestamp="1791765271026" />
           </value>
         </entry>
         <entry key="com.tay.taysecurity.android.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1791670463488" />
+            <CheckInfo lastCheckTimestamp="1791765271025" />
           </value>
         </entry>
       </map>

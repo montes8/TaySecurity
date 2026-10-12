@@ -21,6 +21,8 @@ import com.tay.taysecurity.android.ui.home.security.SecurityScreen
 import com.tay.taysecurity.android.ui.scan.ScanScreen
 import kotlinx.serialization.Serializable
 
+import com.tay.taysecurity.android.ui.stealth.StealthLockScreen
+
 @Composable
 fun NavigationHost(
     navController: NavHostController = rememberNavController(),
@@ -52,10 +54,21 @@ fun NavigationHost(
 fun NavigationHostMain(
     navController: NavHostController = rememberNavController()
 ) {
-    NavHost(navController = navController, startDestination = DestinationsMain.HomeScreen,
+    NavHost(navController = navController, startDestination = DestinationsMain.StealthLockScreen,
         exitTransition = {
             ExitTransition.None
         }) {
+
+        composable<DestinationsMain.StealthLockScreen> {
+            StealthLockScreen(
+                onUnlockSuccess = {
+                    navController.navigate(DestinationsMain.HomeScreen) {
+                        popUpTo<DestinationsMain.StealthLockScreen> { inclusive = true }
+                    }
+                }
+            )
+        }
+
         composable<DestinationsMain.HomeScreen> {
             ScreenHome(navController)
         }
@@ -99,6 +112,7 @@ sealed interface DestinationRoot {
 
 @Serializable
 sealed interface DestinationsMain {
+    @Serializable data object StealthLockScreen : DestinationsMain
     @Serializable data object HomeScreen : DestinationsMain
     @Serializable data class InfoScreen(val dataInfo : String) : DestinationsMain
     @Serializable data object ImageScreen : DestinationsMain
