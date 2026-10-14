@@ -17,13 +17,17 @@ import com.tay.taysecurity.android.component.drawer.Drawer
 import com.tay.taysecurity.android.component.navigation.BottomNavigationBar
 import com.tay.taysecurity.android.component.navigation.Destinations
 import com.tay.taysecurity.android.component.navigation.NavigationHost
+import com.tay.taysecurity.android.security.NavigationSecurityObserver
 import com.tay.taysecurity.android.utils.uiTayViewCallButton
 import com.tay.taysecurity.android.utils.uiTayViewCallNumberButton
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ScreenHome(navControllerMain: NavHostController){
+fun ScreenHome(
+    navControllerMain: NavHostController,
+    navigationSecurityObserver: NavigationSecurityObserver? = null
+){
     val context = LocalContext.current
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState(
@@ -60,6 +64,6 @@ fun ScreenHome(navControllerMain: NavHostController){
         drawerContent = { Drawer(scope, scaffoldState, navController, items = navigationItems) },
         drawerGesturesEnabled = true
     ){
-        NavigationHost(navController,navControllerMain)
+        NavigationHost(navController, navControllerMain, navigationSecurityObserver)
     }
 }

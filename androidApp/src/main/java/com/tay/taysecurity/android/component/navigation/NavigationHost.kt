@@ -6,12 +6,15 @@ import androidx.compose.material.icons.filled.AddModerator
 import androidx.compose.material.icons.filled.AppBlocking
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.tay.taysecurity.android.security.NavigationSecurityObserver
+import com.tay.taysecurity.android.security.SecureDestination
 import com.tay.taysecurity.android.ui.home.ScreenHome
 import com.tay.taysecurity.android.ui.home.blocking.BlockingScreen
 import com.tay.taysecurity.android.ui.home.extra.ExtraScreen
@@ -26,8 +29,17 @@ import com.tay.taysecurity.android.ui.stealth.StealthLockScreen
 @Composable
 fun NavigationHost(
     navController: NavHostController = rememberNavController(),
-    navControllerMain: NavHostController = rememberNavController()
+    navControllerMain: NavHostController = rememberNavController(),
+    navigationSecurityObserver: NavigationSecurityObserver? = null
 ) {
+    LaunchedEffect(navController) {
+        navigationSecurityObserver?.let { observer ->
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                observer.onDestinationChanged(destination)
+            }
+        }
+    }
+
     NavHost(navController = navController,
         startDestination = DestinationRoot.BlockingScreen,
        exitTransition = {
@@ -52,8 +64,17 @@ fun NavigationHost(
 
 @Composable
 fun NavigationHostMain(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    navigationSecurityObserver: NavigationSecurityObserver? = null
 ) {
+    LaunchedEffect(navController) {
+        navigationSecurityObserver?.let { observer ->
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                observer.onDestinationChanged(destination)
+            }
+        }
+    }
+
     NavHost(navController = navController, startDestination = DestinationsMain.StealthLockScreen,
         exitTransition = {
             ExitTransition.None
@@ -70,7 +91,7 @@ fun NavigationHostMain(
         }
 
         composable<DestinationsMain.HomeScreen> {
-            ScreenHome(navController)
+            ScreenHome(navController, navigationSecurityObserver)
         }
 
 
@@ -106,7 +127,7 @@ sealed class Destinations(
 @Serializable
 sealed interface DestinationRoot {
     @Serializable object BlockingScreen : DestinationRoot
-    @Serializable object SecurityScreen : DestinationRoot
+    @Serializable object SecurityScreen : DestinationRoot, SecureDestination
     @Serializable object ExtraScreen : DestinationRoot
 }
 

@@ -10,11 +10,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eb9b0720-e874-4592-8766-bb763e1b95f1" name="Changes" comment="CONFIG PRO">
-      <change afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/stealth/StealthLockScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/androidApp/src/main/res/drawable/ic_logo_sure.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/security/CustomViewBlockToast.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/security/NavigationSecurityObserver.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/security/SecureScreenManager.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/security/SecurityModule.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/androidApp/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/component/navigation/NavigationHost.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/component/navigation/NavigationHost.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/java/com/tay/taysecurity/android/ui/home/HomeScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/androidApp/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/androidApp/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +30,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[LocalEmulator::path=/Users/tayler/.android/avd/valu36.avd]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[PhysicalDevice::serial=R7AT12ER92D]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -381,6 +387,12 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="AppleRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" IS_LOCATION_SIMULATION_SUPPORTED="false" IS_LOCATION_SIMULATION_ALLOWED="true" APPLICATION_LANGUAGE="IDELaunchSchemeLanguageUseSystemLanguage" APPLICATION_REGION="" DEVELOPMENT_TEAM="" MAKE_ACTIVE="TRUE" SHOULD_DEBUG_EXTENSIONS="false">
+      <embedded_app_extension_list />
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -478,7 +490,15 @@
       <option name="project" value="LOCAL" />
       <updated>1791761932122</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="CONFIG PRO">
+      <option name="closed" value="true" />
+      <created>1791775646253</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1791775646253</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -499,12 +519,12 @@
       <map>
         <entry key="com.tay.taysecurity.android">
           <value>
-            <CheckInfo lastCheckTimestamp="1791765271026" />
+            <CheckInfo lastCheckTimestamp="1791946135656" />
           </value>
         </entry>
         <entry key="com.tay.taysecurity.android.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1791765271025" />
+            <CheckInfo lastCheckTimestamp="1791946135663" />
           </value>
         </entry>
       </map>

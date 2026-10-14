@@ -17,5 +17,6 @@
     <string name="sub_title_all_audio">Esta opción no permite grabar audios.</string>
     <string name="title_helps_view">Como usar las funcionalidades</string>
     <string name="title_sub_sure_view">Para utilizar estas funcionalidades debes activar el modo desarrollador y poner esta app se ubicación como predeterminada</string>
+    <string name="msg_screen_recording_security_policy">ValuSure No se permite capturar o grabar esta pantalla debido a las políticas de seguridad.</string>
 
 </resources>

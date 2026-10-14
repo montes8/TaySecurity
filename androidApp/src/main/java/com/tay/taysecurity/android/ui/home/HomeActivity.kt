@@ -2,13 +2,20 @@ package com.tay.taysecurity.android.ui.home
 
 import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.graphics.Typeface
+import android.graphics.Color as AndroidColor
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.app.ActivityCompat
@@ -18,16 +25,24 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.navigation.NavigationHostMain
+import com.tay.taysecurity.android.security.CustomViewBlockToast
+import com.tay.taysecurity.android.security.NavigationSecurityObserver
 import com.tay.taysecurity.android.utils.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var navigationSecurityObserver: NavigationSecurityObserver
+
     private val appUpdateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(this) }
     private val updateOptions = AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
+
+    private var privacyOverlayView: View? = null
 
     companion object {
         private const val UPDATE_CODE = 10001
@@ -38,17 +53,98 @@ class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        setContent { MyApplicationTheme{
-            NavigationHostMain()
-        }}
+        navigationSecurityObserver.attachActivity(this)
+        CustomViewBlockToast.registerScreenCaptureListener(this)
+        setContent {
+            MyApplicationTheme {
+                NavigationHostMain(navigationSecurityObserver = navigationSecurityObserver)
+            }
+        }
+        setupPrivacyOverlayView()
         validateVersionUpdate()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setupPrivacyOverlayView() {
+        val container = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            setBackgroundColor(AndroidColor.BLACK)
+
+            val logo = ImageView(this@HomeActivity).apply {
+                setImageResource(R.drawable.ic_logo_sure)
+                scaleType = ImageView.ScaleType.CENTER_INSIDE
+            }
+            val logoParams = LinearLayout.LayoutParams(140.dpToPx(), 140.dpToPx())
+            addView(logo, logoParams)
+
+            val title = TextView(this@HomeActivity).apply {
+                text = "TaySecurity"
+                setTextColor(AndroidColor.WHITE)
+                textSize = 22f
+                typeface = Typeface.DEFAULT_BOLD
+                gravity = Gravity.CENTER
+            }
+            val titleParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = 16.dpToPx()
+            }
+            addView(title, titleParams)
+
+            val subtitle = TextView(this@HomeActivity).apply {
+                text = "Aplicación Protegida"
+                setTextColor(AndroidColor.GRAY)
+                textSize = 14f
+                gravity = Gravity.CENTER
+            }
+            val subtitleParams = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = 6.dpToPx()
+            }
+            addView(subtitle, subtitleParams)
+
+            visibility = View.GONE
+        }
+
+        val params = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+
+        (window.decorView as ViewGroup).addView(container, params)
+        privacyOverlayView = container
+    }
+
+    private fun Int.dpToPx(): Int = (this * resources.displayMetrics.density).toInt()
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        privacyOverlayView?.apply {
+            bringToFront()
+            visibility = View.VISIBLE
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        privacyOverlayView?.visibility = View.GONE
+        navigationSecurityObserver.reapplySecurity()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        navigationSecurityObserver.detachActivity()
     }
 
     private fun initPermission() {
         val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
         } else {
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            arrayOf(READ_EXTERNAL_STORAGE)
         }
 
         val permissionsNotGranted = permissionsToRequest.filter { permission ->
