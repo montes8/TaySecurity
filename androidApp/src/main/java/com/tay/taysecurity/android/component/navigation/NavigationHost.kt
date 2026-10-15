@@ -22,6 +22,7 @@ import com.tay.taysecurity.android.ui.image.ImageScreen
 import com.tay.taysecurity.android.ui.info.InfoScreen
 import com.tay.taysecurity.android.ui.home.security.SecurityScreen
 import com.tay.taysecurity.android.ui.scan.ScanScreen
+import com.tay.taysecurity.android.ui.wiifi.NetworkScreen
 import kotlinx.serialization.Serializable
 
 import com.tay.taysecurity.android.ui.stealth.StealthLockScreen
@@ -110,6 +111,10 @@ fun NavigationHostMain(
             ScanScreen()
         }
 
+        composable<DestinationsMain.NetworkScreen> {
+            NetworkScreen()
+        }
+
     }
 }
 
@@ -137,5 +142,6 @@ sealed interface DestinationsMain {
     @Serializable data object HomeScreen : DestinationsMain
     @Serializable data class InfoScreen(val dataInfo : String) : DestinationsMain
     @Serializable data object ImageScreen : DestinationsMain
-    @Serializable data object ScanScreen : DestinationsMain
+    @Serializable data object ScanScreen : DestinationsMain, SecureDestination
+    @Serializable data object NetworkScreen : DestinationsMain, SecureDestination
 }

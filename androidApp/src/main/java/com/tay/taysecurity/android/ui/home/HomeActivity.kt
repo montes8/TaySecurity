@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -107,7 +108,6 @@ class HomeActivity : ComponentActivity() {
             }
             addView(subtitle, subtitleParams)
 
-            visibility = View.GONE
         }
 
         val params = ViewGroup.LayoutParams(
@@ -123,6 +123,7 @@ class HomeActivity : ComponentActivity() {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         privacyOverlayView?.apply {
             bringToFront()
             visibility = View.VISIBLE

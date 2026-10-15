@@ -12,7 +12,9 @@ import kotlin.reflect.KClass
 class SecureScreenManager(
     private val extraSecureClasses: Set<KClass<*>> = setOf(
         DestinationsMain.StealthLockScreen::class,
-        DestinationRoot.SecurityScreen::class
+        DestinationRoot.SecurityScreen::class,
+        DestinationsMain.ScanScreen::class,
+        DestinationsMain.NetworkScreen::class
     )
 ) {
     companion object {
@@ -66,8 +68,8 @@ class SecureScreenManager(
                 if (SecureDestination::class.java.isAssignableFrom(clazz)) {
                     return true
                 }
-            } catch (_: Exception) {
-                // Probar el siguiente formato de nombre
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
 

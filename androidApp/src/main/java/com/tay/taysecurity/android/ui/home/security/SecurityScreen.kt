@@ -76,9 +76,16 @@ fun SecurityScreen(navController: NavHostController
         }
         Spacer(modifier = Modifier.height(8.dp))
         TayCardItemNext(
-            text = "Escaner Wifi",
+            text = "Escaner Mobile",
             subText ="Esta funcionalidad mostrara todos los dispositivos conectado a tu red wifi"){
             navController.navigate(DestinationsMain.ScanScreen)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        TayCardItemNext(
+            text = "Escaner Red",
+            subText ="Esta funcionalidad mostrara todas la redes disponibles"){
+            navController.navigate(DestinationsMain.NetworkScreen)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
