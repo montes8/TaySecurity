@@ -28,8 +28,8 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.navigation.NavigationHostMain
-import com.tay.taysecurity.android.security.CustomViewBlockToast
 import com.tay.taysecurity.android.security.NavigationSecurityObserver
+import com.tay.taysecurity.android.security.SecuritySplashManager
 import com.tay.taysecurity.android.utils.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -55,7 +55,7 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         navigationSecurityObserver.attachActivity(this)
-        CustomViewBlockToast.registerScreenCaptureListener(this)
+        SecuritySplashManager.register(this)
         setContent {
             MyApplicationTheme {
                 NavigationHostMain(navigationSecurityObserver = navigationSecurityObserver)
@@ -138,6 +138,7 @@ class HomeActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        SecuritySplashManager.unregister(this)
         navigationSecurityObserver.detachActivity()
     }
 
