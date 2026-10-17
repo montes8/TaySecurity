@@ -13,7 +13,6 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -29,7 +28,6 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.tay.taysecurity.android.R
 import com.tay.taysecurity.android.component.navigation.NavigationHostMain
 import com.tay.taysecurity.android.security.NavigationSecurityObserver
-import com.tay.taysecurity.android.security.SecuritySplashManager
 import com.tay.taysecurity.android.utils.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -39,10 +37,8 @@ class HomeActivity : ComponentActivity() {
 
     @Inject
     lateinit var navigationSecurityObserver: NavigationSecurityObserver
-
     private val appUpdateManager: AppUpdateManager by lazy { AppUpdateManagerFactory.create(this) }
     private val updateOptions = AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
-
     private var privacyOverlayView: View? = null
 
     companion object {
@@ -55,7 +51,6 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         navigationSecurityObserver.attachActivity(this)
-        SecuritySplashManager.register(this)
         setContent {
             MyApplicationTheme {
                 NavigationHostMain(navigationSecurityObserver = navigationSecurityObserver)
@@ -123,7 +118,6 @@ class HomeActivity : ComponentActivity() {
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         privacyOverlayView?.apply {
             bringToFront()
             visibility = View.VISIBLE
@@ -138,7 +132,6 @@ class HomeActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        SecuritySplashManager.unregister(this)
         navigationSecurityObserver.detachActivity()
     }
 

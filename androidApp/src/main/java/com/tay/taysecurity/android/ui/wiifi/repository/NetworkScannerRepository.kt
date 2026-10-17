@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.wifi.ScanResult
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
@@ -65,6 +66,7 @@ class NetworkScannerRepositoryImpl @Inject constructor(
             val wifiManager =
                 context.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
             val wifiInfo: WifiInfo? = wifiManager?.connectionInfo
+            val linkProperties = connectivityManager.getLinkProperties(activeNetwork)
 
             val rawSsid = wifiInfo?.ssid?.replace("\"", "") ?: "Red Wi-Fi Conectada"
             val ssid = if (rawSsid == "<unknown ssid>" || rawSsid.isBlank()) "Wi-Fi Activo" else rawSsid
@@ -72,6 +74,9 @@ class NetworkScannerRepositoryImpl @Inject constructor(
             val linkSpeed = wifiInfo?.linkSpeed ?: 0
             val frequency = formatFrequency(wifiInfo?.frequency ?: 0)
             val bssid = wifiInfo?.bssid ?: "00:00:00:00:00:00"
+            val dnsServers = linkProperties?.dnsServers?.joinToString(", ") { it.hostAddress ?: "" }?.takeIf { it.isNotBlank() } ?: "No disponible"
+            val maxRx = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) wifiInfo?.maxSupportedRxLinkSpeedMbps ?: 0 else 0
+            val maxTx = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) wifiInfo?.maxSupportedTxLinkSpeedMbps ?: 0 else 0
 
             return ConnectedNetworkInfo(
                 ssid = ssid,
@@ -82,7 +87,11 @@ class NetworkScannerRepositoryImpl @Inject constructor(
                 frequencyGhz = frequency,
                 securityType = "WPA2/WPA3",
                 gateway = getGatewayIp(wifiManager),
-                bssid = bssid
+                bssid = bssid,
+                maxRxSpeedMbps = maxRx,
+                maxTxSpeedMbps = maxTx,
+                dnsServers = dnsServers,
+                subnetMask = "255.255.255.0"
             )
         } else {
             val telephonyManager =
@@ -98,7 +107,11 @@ class NetworkScannerRepositoryImpl @Inject constructor(
                 frequencyGhz = getNetworkTypeString(telephonyManager),
                 securityType = "Red Celular Encriptada",
                 gateway = "Operador Móvil",
-                bssid = "N/A"
+                bssid = "N/A",
+                maxRxSpeedMbps = 0,
+                maxTxSpeedMbps = 0,
+                dnsServers = "No disponible",
+                subnetMask = "N/A"
             )
         }
     }
@@ -113,6 +126,14 @@ class NetworkScannerRepositoryImpl @Inject constructor(
 
         return try {
             val scanResults = wifiManager.scanResults ?: emptyList()
+
+            val dualBandBaseSsids = scanResults.groupBy { getBaseSsid(it.SSID?.replace("\"", "") ?: "") }
+                .filter { (_, results) ->
+                    val has24 = results.any { it.frequency in 2400..2500 }
+                    val has5 = results.any { it.frequency in 4900..5900 }
+                    has24 && has5
+                }.keys
+
             scanResults.mapNotNull { result ->
                 val ssid = result.SSID?.replace("\"", "") ?: ""
                 if (ssid.isBlank()) return@mapNotNull null
@@ -121,8 +142,58 @@ class NetworkScannerRepositoryImpl @Inject constructor(
                 val capabilities = result.capabilities ?: ""
                 val isSecured = !capabilities.contains("OPEN") && !capabilities.contains("ESS")
                 val frequencyGhz = formatFrequency(result.frequency)
-
                 val isHotspot = isMobileHotspot(ssid)
+                val hasDual = dualBandBaseSsids.contains(getBaseSsid(ssid))
+
+                val wifiStandard = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    when (result.wifiStandard) {
+                        ScanResult.WIFI_STANDARD_LEGACY -> "Wi-Fi Legacy (802.11a/b/g)"
+                        ScanResult.WIFI_STANDARD_11N -> "Wi-Fi 4 (802.11n)"
+                        ScanResult.WIFI_STANDARD_11AC -> "Wi-Fi 5 (802.11ac)"
+                        ScanResult.WIFI_STANDARD_11AX -> "Wi-Fi 6 / 6E (802.11ax)"
+                        ScanResult.WIFI_STANDARD_11AD -> "Wi-Fi 6 (6GHz)"
+                        ScanResult.WIFI_STANDARD_11BE -> "Wi-Fi 7 (802.11be)"
+                        else -> "Estándar Desconocido"
+                    }
+                } else {
+                    "Wi-Fi Estándar"
+                }
+
+                val freqMHz = result.frequency
+                val rssi = result.level
+                val exp = (27.55 - (20 * kotlin.math.log10(freqMHz.toDouble())) + kotlin.math.abs(rssi.toDouble())) / 20.0
+                val estMeters = Math.pow(10.0, exp)
+                val distanceText = String.format(java.util.Locale.getDefault(), "~%.1f metros", estMeters)
+
+                val freq = result.frequency
+                val channel = when {
+                    freq == 2484 -> 14
+                    freq in 2412..2472 -> (freq - 2412) / 5 + 1
+                    freq in 5170..5825 -> (freq - 5000) / 5
+                    else -> 0
+                }
+
+                val channelWidth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    when (result.channelWidth) {
+                        ScanResult.CHANNEL_WIDTH_20MHZ -> "20 MHz"
+                        ScanResult.CHANNEL_WIDTH_40MHZ -> "40 MHz"
+                        ScanResult.CHANNEL_WIDTH_80MHZ -> "80 MHz"
+                        ScanResult.CHANNEL_WIDTH_160MHZ -> "160 MHz"
+                        else -> "20/40 MHz"
+                    }
+                } else {
+                    "20 MHz"
+                }
+
+                val isPasspoint = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) result.isPasspointNetwork else false
+                val venueName = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) result.venueName?.toString()?.takeIf { it.isNotBlank() } ?: "No especificado" else "No especificado"
+                val centerFreqs = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) "0: ${result.centerFreq0} MHz, 1: ${result.centerFreq1} MHz" else "N/A"
+                val beaconAgeMs = if (result.timestamp > 0) {
+                    val ageSec = (android.os.SystemClock.elapsedRealtimeNanos() / 1000 - result.timestamp) / 1000000.0
+                    String.format(java.util.Locale.getDefault(), "%.1fs", ageSec)
+                } else {
+                    "N/A"
+                }
 
                 AvailableWifiNetwork(
                     ssid = ssid,
@@ -132,9 +203,19 @@ class NetworkScannerRepositoryImpl @Inject constructor(
                     isSecured = isSecured,
                     securityType = parseSecurityType(capabilities),
                     frequencyGhz = frequencyGhz,
-                    isMobileHotspot = isHotspot
+                    isMobileHotspot = isHotspot,
+                    wifiStandard = wifiStandard,
+                    distanceText = distanceText,
+                    channel = channel,
+                    channelWidth = channelWidth,
+                    capabilities = capabilities,
+                    hasDualBand = hasDual,
+                    isPasspoint = isPasspoint,
+                    venueName = venueName,
+                    centerFreqs = centerFreqs,
+                    beaconAgeMs = beaconAgeMs
                 )
-            }.distinctBy { it.ssid }.sortedByDescending { it.signalPercentage }
+            }.distinctBy { it.bssid }.sortedByDescending { it.signalPercentage }
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
@@ -224,5 +305,12 @@ class NetworkScannerRepositoryImpl @Inject constructor(
         } catch (_: Exception) {
             "4G/5G"
         }
+    }
+
+    private fun getBaseSsid(ssid: String): String {
+        return ssid.lowercase()
+            .replace(Regex("(_5g|_5ghz| 5g| 5ghz|_5GHz|_5G)$"), "")
+            .replace(Regex("(_2g|_2ghz| 2g| 2ghz|_2GHz|_2G)$"), "")
+            .trim()
     }
 }

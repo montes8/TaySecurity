@@ -24,7 +24,7 @@ class NetworkViewModel @Inject constructor(
 
     fun startNetworkScan() {
         execute {
-            uiState = uiState.copy(isLoading = true, errorMessage = null)
+            uiState = uiState.copy(isLoading = true, availableWifiNetworks = emptyList(), errorMessage = null)
             delay(300)
 
             val hasPermission = repository.hasLocationPermission()

@@ -60,7 +60,8 @@ import com.tay.taysecurity.android.utils.uiTayBackAction
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ScanScreen(
-    viewModel: ScanViewModel = hiltViewModel()
+    viewModel: ScanViewModel = hiltViewModel(),
+    onOpenRouterAdmin: (String) -> Unit = {}
 ) {
     val state = viewModel.uiState
 
@@ -178,6 +179,33 @@ fun ScanScreen(
                             fontSize = 13.sp,
                             fontFamily = FontFamily(Font(R.font.gabi_regular))
                         )
+                    }
+
+                    if (state.isWifiConnected && state.gatewayIp.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(14.dp))
+                        Button(
+                            onClick = { onOpenRouterAdmin(state.gatewayIp) },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Magenta),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(46.dp),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Router,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Abrir Configuración del Router",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 13.sp,
+                                fontFamily = FontFamily(Font(R.font.gabi_regular))
+                            )
+                        }
                     }
                 }
             }

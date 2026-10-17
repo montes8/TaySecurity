@@ -66,7 +66,8 @@ fun NavigationHost(
 @Composable
 fun NavigationHostMain(
     navController: NavHostController = rememberNavController(),
-    navigationSecurityObserver: NavigationSecurityObserver? = null
+    navigationSecurityObserver: NavigationSecurityObserver? = null,
+    skipLockScreenInDebug: Boolean = com.tay.taysecurity.android.BuildConfig.DEBUG
 ) {
     LaunchedEffect(navController) {
         navigationSecurityObserver?.let { observer ->
@@ -76,10 +77,19 @@ fun NavigationHostMain(
         }
     }
 
-    NavHost(navController = navController, startDestination = DestinationsMain.StealthLockScreen,
+    val startDestination: DestinationsMain = if (skipLockScreenInDebug) {
+        DestinationsMain.HomeScreen
+    } else {
+        DestinationsMain.StealthLockScreen
+    }
+
+    NavHost(
+        navController = navController,
+        startDestination = startDestination,
         exitTransition = {
             ExitTransition.None
-        }) {
+        }
+    ) {
 
         composable<DestinationsMain.StealthLockScreen> {
             StealthLockScreen(
@@ -108,11 +118,75 @@ fun NavigationHostMain(
         }
 
         composable<DestinationsMain.ScanScreen> {
-            ScanScreen()
+            ScanScreen(
+                onOpenRouterAdmin = { gatewayIp ->
+                    navController.navigate(DestinationsMain.RouterAdminScreen(gatewayIp))
+                }
+            )
+        }
+
+        composable<DestinationsMain.RouterAdminScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<DestinationsMain.RouterAdminScreen>()
+            com.tay.taysecurity.android.ui.scan.RouterAdminScreen(
+                gatewayIp = args.gatewayIp,
+                onBack = { navController.popBackStack() }
+            )
         }
 
         composable<DestinationsMain.NetworkScreen> {
-            NetworkScreen()
+            NetworkScreen(
+                onNetworkClick = { network ->
+                    navController.navigate(
+                        DestinationsMain.NetworkDetailScreen(
+                            ssid = network.ssid,
+                            bssid = network.bssid,
+                            signalPercentage = network.signalPercentage,
+                            rssidBm = network.rssidBm,
+                            isSecured = network.isSecured,
+                            securityType = network.securityType,
+                            frequencyGhz = network.frequencyGhz,
+                            isMobileHotspot = network.isMobileHotspot,
+                            wifiStandard = network.wifiStandard,
+                            distanceText = network.distanceText,
+                            channel = network.channel,
+                            channelWidth = network.channelWidth,
+                            capabilities = network.capabilities,
+                            hasDualBand = network.hasDualBand,
+                            isPasspoint = network.isPasspoint,
+                            venueName = network.venueName,
+                            centerFreqs = network.centerFreqs,
+                            beaconAgeMs = network.beaconAgeMs
+                        )
+                    )
+                }
+            )
+        }
+
+        composable<DestinationsMain.NetworkDetailScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<DestinationsMain.NetworkDetailScreen>()
+            com.tay.taysecurity.android.ui.wiifi.NetworkDetailScreen(
+                network = com.tay.taysecurity.android.ui.wiifi.model.AvailableWifiNetwork(
+                    ssid = args.ssid,
+                    bssid = args.bssid,
+                    signalPercentage = args.signalPercentage,
+                    rssidBm = args.rssidBm,
+                    isSecured = args.isSecured,
+                    securityType = args.securityType,
+                    frequencyGhz = args.frequencyGhz,
+                    isMobileHotspot = args.isMobileHotspot,
+                    wifiStandard = args.wifiStandard,
+                    distanceText = args.distanceText,
+                    channel = args.channel,
+                    channelWidth = args.channelWidth,
+                    capabilities = args.capabilities,
+                    hasDualBand = args.hasDualBand,
+                    isPasspoint = args.isPasspoint,
+                    venueName = args.venueName,
+                    centerFreqs = args.centerFreqs,
+                    beaconAgeMs = args.beaconAgeMs
+                ),
+                onBack = { navController.popBackStack() }
+            )
         }
 
     }
@@ -143,5 +217,26 @@ sealed interface DestinationsMain {
     @Serializable data class InfoScreen(val dataInfo : String) : DestinationsMain
     @Serializable data object ImageScreen : DestinationsMain
     @Serializable data object ScanScreen : DestinationsMain, SecureDestination
+    @Serializable data class RouterAdminScreen(val gatewayIp: String) : DestinationsMain
     @Serializable data object NetworkScreen : DestinationsMain, SecureDestination
+    @Serializable data class NetworkDetailScreen(
+        val ssid: String,
+        val bssid: String,
+        val signalPercentage: Int,
+        val rssidBm: Int,
+        val isSecured: Boolean,
+        val securityType: String,
+        val frequencyGhz: String,
+        val isMobileHotspot: Boolean,
+        val wifiStandard: String,
+        val distanceText: String,
+        val channel: Int,
+        val channelWidth: String,
+        val capabilities: String,
+        val hasDualBand: Boolean,
+        val isPasspoint: Boolean,
+        val venueName: String,
+        val centerFreqs: String,
+        val beaconAgeMs: String
+    ) : DestinationsMain
 }

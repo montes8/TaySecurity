@@ -1,8 +1,13 @@
 package com.tay.taysecurity.android.ui.wiifi
 
 import android.annotation.SuppressLint
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,12 +42,15 @@ import androidx.compose.material.icons.filled.Router
 import androidx.compose.material.icons.filled.SignalCellularAlt
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tay.taysecurity.android.component.TopBarBack
 import com.tay.taysecurity.android.ui.wiifi.model.AvailableWifiNetwork
@@ -52,9 +60,29 @@ import com.tay.taysecurity.android.utils.uiTayBackAction
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun NetworkScreen(
-    viewModel: NetworkViewModel = hiltViewModel()
+    viewModel: NetworkViewModel = hiltViewModel(),
+    onNetworkClick: (AvailableWifiNetwork) -> Unit = {}
 ) {
     val state = viewModel.uiState
+    val context = LocalContext.current
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            viewModel.startNetworkScan()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.startNetworkScan()
+        val permissionCheck = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -102,6 +130,23 @@ fun NetworkScreen(
                 }
             }
 
+            if (state.isLoading) {
+                Spacer(modifier = Modifier.height(6.dp))
+                LinearProgressIndicator(
+                    color = Color.Magenta,
+                    backgroundColor = Color.DarkGray,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(6.dp)
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "Escaneando redes cercanas...",
+                    color = Color.Magenta,
+                    fontSize = 12.sp
+                )
+            }
+
             Spacer(modifier = Modifier.height(12.dp))
 
             LazyColumn(
@@ -127,11 +172,32 @@ fun NetworkScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Redes Wi-Fi y Zonas Móviles Cercanas (${state.availableWifiNetworks.size})",
+                            text = "Redes Wi-Fi y Zonas Móviles Cercanas (${state.availableWifiNetworks.size}) - Toca para ver detalles",
                             color = Color.White,
-                            fontSize = 15.sp,
+                            fontSize = 13.sp,
                             fontWeight = FontWeight.Bold
                         )
+                    }
+                }
+
+                if (state.isLoading) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                CircularProgressIndicator(color = Color.Magenta)
+                                Spacer(modifier = Modifier.height(12.dp))
+                                Text(
+                                    text = "Buscando redes cercanas y calculando distancias...",
+                                    color = Color.LightGray,
+                                    fontSize = 13.sp
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -156,6 +222,20 @@ fun NetworkScreen(
                                     color = Color.LightGray,
                                     fontSize = 12.sp
                                 )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Button(
+                                    onClick = {
+                                        permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                                    },
+                                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(
+                                        text = "Otorgar Permiso de Ubicación",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
                             }
                         }
                     }
@@ -180,7 +260,7 @@ fun NetworkScreen(
 
                 // 3. Lista de Redes Disponibles
                 items(state.availableWifiNetworks) { wifi ->
-                    AvailableWifiItem(wifi = wifi)
+                    AvailableWifiItem(wifi = wifi, onNetworkClick = onNetworkClick)
                 }
             }
         }
@@ -281,7 +361,10 @@ fun ConnectedNetworkCard(
 }
 
 @Composable
-fun AvailableWifiItem(wifi: AvailableWifiNetwork) {
+fun AvailableWifiItem(
+    wifi: AvailableWifiNetwork,
+    onNetworkClick: (AvailableWifiNetwork) -> Unit
+) {
     Card(
         shape = RoundedCornerShape(12.dp),
         backgroundColor = Color(0xFF1A1A1A),
@@ -289,7 +372,9 @@ fun AvailableWifiItem(wifi: AvailableWifiNetwork) {
             1.dp,
             if (wifi.isMobileHotspot) Color(0xFFFF9800) else Color(0xFF333333)
         ),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onNetworkClick(wifi) }
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
             Row(
@@ -329,6 +414,21 @@ fun AvailableWifiItem(wifi: AvailableWifiNetwork) {
                                     )
                                 }
                             }
+                            if (wifi.hasDualBand) {
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Card(
+                                    shape = RoundedCornerShape(4.dp),
+                                    backgroundColor = Color(0xFF00ACC1)
+                                ) {
+                                    Text(
+                                        text = "Dual-Band (2.4G & 5G)",
+                                        color = Color.White,
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
+                                    )
+                                }
+                            }
                         }
 
                         Text(
@@ -357,6 +457,26 @@ fun AvailableWifiItem(wifi: AvailableWifiNetwork) {
             }
 
             Spacer(modifier = Modifier.height(8.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Distancia: ${wifi.distanceText}",
+                    color = Color(0xFF00E676),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Canal ${wifi.channel} (${wifi.wifiStandard})",
+                    color = Color.Gray,
+                    fontSize = 11.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
 
             LinearProgressIndicator(
                 progress = wifi.signalPercentage / 100f,
